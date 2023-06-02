@@ -1,0 +1,260 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqsq3ww35ngrr"]
+
+[sub_resource type="GDScript" id="GDScript_mic37"]
+script/source = "extends Control
+
+func _ready():
+	restart()
+
+
+var problem: WFCSudokuProblem
+var solver: WFCSolver
+
+
+func restart():
+	var width: int = int((get_node('%WidthSlider') as Slider).value)
+	var height: int = int((get_node('%HeightSlider') as Slider).value)
+	var cells_container: GridContainer = get_node('%CellsContainer') as GridContainer
+	
+	for c in cells_container.get_children():
+		c.queue_free()
+	
+	for i in range(width * height):
+		var label: Label = Label.new()
+		label.text = '?'
+		label.custom_minimum_size = Vector2(20, 0)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		cells_container.add_child(label)
+	
+	cells_container.columns = width
+	
+	problem = WFCSudokuProblem.new(
+		width, height,
+		max(width, height)
+	)
+	solver = WFCSolver.new(problem)
+	solver.allow_backtracking = true
+	
+	last_known_values.clear()
+	
+	(get_node('%SizeLabel') as Label).text = '%dx%d, %d numbers' % \\
+		[problem.width, problem.height, problem.numbers]
+	
+	call_deferred(\"render_solver_state\")
+
+var last_known_values: PackedInt64Array
+
+func render_solver_state():
+	var state: WFCSolverState = solver.current_state
+	var cells_container: GridContainer = get_node('%CellsContainer') as GridContainer
+	
+	for i in range(problem.width * problem.height):
+		var label: Label = (cells_container.get_child(i) as Label)
+
+		if state == null:
+			label.text = '!'
+			label.modulate = Color.WHITE
+		else:
+			var solution: int = state.cell_solutions[i]
+			if solution == WFCSolverState.CELL_SOLUTION_FAILED:
+				label.text = '-'
+			elif solution == WFCSolverState.CELL_SOLUTION_UNSOLVED:
+				label.text = '?'
+			else:
+				label.text = '1234567890ABCDEFGHIJKLMNOPQRSTUVVXYZ'[solution]
+			
+			if solution == WFCSolverState.CELL_SOLUTION_UNSOLVED:
+				label.modulate = Color.WEB_GRAY
+			elif last_known_values.size() == 0:
+				label.modulate = Color.WHITE
+			elif last_known_values[i] != solution:
+				label.modulate = Color.RED
+			else:
+				label.modulate = label.modulate.lerp(Color.WHITE, 0.02)
+
+	if state != null:
+		last_known_values = state.cell_solutions.duplicate()
+	else:
+		last_known_values.clear()
+
+	var can_not_solve: bool = state == null or state.is_all_solved()
+	(get_node('%StepButton') as Button).disabled = can_not_solve
+	(get_node('%AutoSolve') as Button).disabled = can_not_solve
+	(get_node('%InstantSolve') as Button).disabled = can_not_solve
+
+
+func _on_step_button_pressed():
+	solver.solve_step()
+	
+	render_solver_state()
+
+
+func _on_reset_button_pressed():
+	restart()
+
+
+func _on_width_slider_value_changed(_value):
+	restart()
+
+
+func _on_height_slider_value_changed(_value):
+	restart()
+
+
+func _on_timer_timeout():
+	if solver.current_state == null or solver.current_state.is_all_solved():
+		$Timer.stop()
+		return
+	
+	solver.solve_step()
+	render_solver_state()
+
+
+func _on_auto_solve_pressed():
+	$Timer.start()
+
+
+func _on_instant_solve_pressed():
+	solver.solve()
+	render_solver_state()
+"
+
+[node name="sudoku_demo" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_mic37")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="WidthSlider" type="HSlider" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 36.0
+value = 9.0
+rounded = true
+tick_count = 36
+
+[node name="HeightSlider" type="HSlider" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 36.0
+value = 9.0
+rounded = true
+tick_count = 36
+
+[node name="SizeLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "100500x34234243"
+horizontal_alignment = 1
+
+[node name="CellsContainer" type="GridContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+columns = 4
+
+[node name="Label" type="Label" parent="VBoxContainer/CellsContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+text = "X"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label3" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label4" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label5" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label6" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label7" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label8" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label9" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label10" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label11" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label12" type="Label" parent="VBoxContainer/CellsContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="AutoSolve" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Solve"
+
+[node name="InstantSolve" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Solve now!"
+
+[node name="StepButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Step"
+
+[node name="ResetButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Reset"
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.01
+
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/WidthSlider" to="." method="_on_width_slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/HeightSlider" to="." method="_on_height_slider_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/AutoSolve" to="." method="_on_auto_solve_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/InstantSolve" to="." method="_on_instant_solve_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/StepButton" to="." method="_on_step_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

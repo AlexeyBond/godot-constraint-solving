@@ -11,9 +11,17 @@ config_version=5
 [application]
 
 config/name="gd4-test-2023-05-31"
-run/main_scene="res://test.tscn"
+run/main_scene="res://sudoku_demo.tscn"
 config/features=PackedStringArray("4.0", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/mode=3
+
+[editor]
+
+movie_writer/movie_file="D:/code/gd4-test-2023-05-31/video/test.avi"
 
 [editor_plugins]
 

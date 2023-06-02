@@ -1,0 +1,81 @@
+class_name WFCSudokuProblem
+
+extends WFCProblem
+
+var width: int
+var height: int
+var numbers: int
+
+func _init(w: int = 9, h: int = 9, numbers_: int = 9):
+	assert(numbers_ > 0)
+	assert(w > 0 and w <= numbers_)
+	assert(h > 0 and h <= numbers_)
+
+	width = w
+	height = h
+	numbers = numbers_
+
+func id_to_coords(cell_id: int) -> Vector2i:
+	@warning_ignore("integer_division")
+	return Vector2i(
+		cell_id % width,
+		cell_id / width,
+	)
+
+func coords_to_id(x: int, y: int) -> int:
+	return width * y + x
+
+func get_cell_count() -> int:
+	return width * height
+
+func get_default_constraints() -> BitSet:
+	return BitSet.new(numbers, true)
+
+func populate_initial_state(_state: WFCSolverState):
+	pass
+
+func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> BitSet:
+	var coords: Vector2i = id_to_coords(cell_id)
+	var constraints: BitSet = get_default_constraints()
+
+	for i in range(width):
+		var c: int = coords_to_id(i, coords.y)
+		if c != cell_id and state.is_cell_solved(c):
+			constraints.set_bit(
+				state.cell_solutions[c],
+				false,
+			)
+
+	for i in range(height):
+		var c: int = coords_to_id(coords.x, i)
+		if c != cell_id and state.is_cell_solved(c):
+			constraints.set_bit(
+				state.cell_solutions[c],
+				false,
+			)
+
+	return constraints
+
+func mark_related_cells(changed_cell_id: int, mark_cell: Callable):
+	var coords: Vector2i = id_to_coords(changed_cell_id)
+
+	for i in range(width):
+		if i != coords.x:
+			mark_cell.call(coords_to_id(i, coords.y))
+	for i in range(height):
+		if i != coords.y:
+			mark_cell.call(coords_to_id(coords.x, i))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
