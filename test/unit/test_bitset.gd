@@ -42,12 +42,12 @@ func test_init_all_set():
 	)
 
 
-func test_duplicate():
+func test_copy():
 	var bs = BitSet.new(129)
-	
+
 	bs.set_bit(1)
 	
-	var bs2 = bs.duplicate()
+	var bs2 = bs.copy()
 	
 	bs2.set_bit(128)
 	
@@ -122,7 +122,16 @@ func test_count_set_bits_with_skip():
 		5
 	)
 
-
+func test_intersection_check():
+	assert_true(
+		from_bits(129, [1,3,128])
+			.intersects_with(from_bits(257, [256, 128, 54]))
+	)
+	
+	assert_false(
+		from_bits(129, [1,3,128])
+			.intersects_with(from_bits(2, [0]))
+	)
 
 
 

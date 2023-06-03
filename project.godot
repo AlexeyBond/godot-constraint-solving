@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="gd4-test-2023-05-31"
-run/main_scene="res://sudoku_demo.tscn"
+run/main_scene="res://demo_wfc_2d_tilemap.tscn"
 config/features=PackedStringArray("4.0", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -21,7 +21,7 @@ window/size/mode=3
 
 [editor]
 
-movie_writer/movie_file="D:/code/gd4-test-2023-05-31/video/test.avi"
+movie_writer/movie_file="C:/Users/A.Bond/Desktop/test.avi"
 
 [editor_plugins]
 

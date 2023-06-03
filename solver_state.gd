@@ -69,11 +69,12 @@ func set_constraints(cell_id: int, constraints: BitSet, entropy: int = -1) -> bo
 	else:
 		if entropy < 0:
 			entropy = constraints.count_set_bits() - 1
-
-		cell_constraints[cell_id] = constraints
 		
 		assert(entropy > 0)
 		cell_solution_or_entropy[cell_id] = -entropy
+
+	cell_constraints[cell_id] = constraints
+
 	return should_backtrack
 
 func extract_changed_cells() -> PackedInt64Array:
@@ -106,9 +107,9 @@ func make_next() -> WFCSolverState:
 func pick_divergence_cell() -> int:
 	assert(unsolved_cells > 0)
 
-	var options: Array[int]
+	var options: Array[int] = []
 	var target_entropy: int = MAX_INT
-	
+
 	for i in range(cell_solution_or_entropy.size()):
 		var entropy: int = - cell_solution_or_entropy[i]
 

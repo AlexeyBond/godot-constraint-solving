@@ -36,7 +36,7 @@ func populate_initial_state(_state: WFCSolverState):
 
 func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> BitSet:
 	var coords: Vector2i = id_to_coords(cell_id)
-	var constraints: BitSet = state.cell_constraints[cell_id].duplicate()
+	var constraints: BitSet = state.cell_constraints[cell_id].copy()
 
 	for i in range(width):
 		var c: int = coords_to_id(i, coords.y)

@@ -1,8 +1,11 @@
-extends RefCounted
+extends Resource
 
 class_name BitSet
 
+@export
 var data: PackedInt64Array = PackedInt64Array()
+
+@export
 var size: int = 0
 
 const BITS_PER_INT = 64
@@ -43,9 +46,9 @@ func set_all():
 	data.set(fullElems, last)
 
 
-func duplicate() -> BitSet:
+func copy() -> BitSet:
 	var res : BitSet = BitSet.new(0)
-	
+
 	res.data = data.duplicate()
 	res.size = size
 	
@@ -73,7 +76,7 @@ func union(other: BitSet) -> BitSet:
 	if other.size > size:
 		return other.union(self)
 	
-	var res: BitSet = duplicate()
+	var res: BitSet = copy()
 	res.union_in_place(other)
 	return res
 
@@ -89,7 +92,7 @@ func intersect(other: BitSet) -> BitSet:
 	if other.size < size:
 		return other.intersect(self)
 
-	var res: BitSet = duplicate()
+	var res: BitSet = copy()
 	res.intersect_in_place(other)
 	return res
 
@@ -169,6 +172,14 @@ func get_only_set_bit() -> int:
 	return get_first_set_bit_index(el) + elem_index * BITS_PER_INT
 
 
+func intersects_with(other: BitSet) -> bool:
+	for i in range(min(data.size(), other.data.size())):
+		if (data[i] & other.data[i]) != 0:
+			return true
+
+	return false
+
+
 class BitSetIterator:
 	var arr: PackedInt64Array
 	var bit_index: int
@@ -240,6 +251,24 @@ func count_set_bits(pass_if_more_than: int = MAX_INT) -> int:
 				return res
 	
 	return res
+
+
+func format_bits() -> String:
+	var res: String = '('
+
+	for i in range(size):
+		if get_bit(i):
+			res += '1, '
+		else:
+			res += '0, '
+	
+	res += ')'
+	
+	return res
+
+
+
+
 
 
 
