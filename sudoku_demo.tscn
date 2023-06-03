@@ -4,6 +4,7 @@
 script/source = "extends Control
 
 func _ready():
+	$Timer.paused = true
 	restart()
 
 
@@ -39,6 +40,8 @@ func restart():
 	
 	(get_node('%SizeLabel') as Label).text = '%dx%d, %d numbers' % \\
 		[problem.width, problem.height, problem.numbers]
+
+	$Timer.paused = true
 	
 	call_deferred(\"render_solver_state\")
 
@@ -55,15 +58,15 @@ func render_solver_state():
 			label.text = '!'
 			label.modulate = Color.WHITE
 		else:
-			var solution: int = state.cell_solutions[i]
+			var solution: int = state.cell_solution_or_entropy[i]
 			if solution == WFCSolverState.CELL_SOLUTION_FAILED:
 				label.text = '-'
-			elif solution == WFCSolverState.CELL_SOLUTION_UNSOLVED:
+			elif solution < 0:
 				label.text = '?'
 			else:
 				label.text = '1234567890ABCDEFGHIJKLMNOPQRSTUVVXYZ'[solution]
 			
-			if solution == WFCSolverState.CELL_SOLUTION_UNSOLVED:
+			if solution < 0:
 				label.modulate = Color.WEB_GRAY
 			elif last_known_values.size() == 0:
 				label.modulate = Color.WHITE
@@ -73,14 +76,17 @@ func render_solver_state():
 				label.modulate = label.modulate.lerp(Color.WHITE, 0.02)
 
 	if state != null:
-		last_known_values = state.cell_solutions.duplicate()
+		last_known_values = state.cell_solution_or_entropy.duplicate()
 	else:
 		last_known_values.clear()
 
 	var can_not_solve: bool = state == null or state.is_all_solved()
-	(get_node('%StepButton') as Button).disabled = can_not_solve
-	(get_node('%AutoSolve') as Button).disabled = can_not_solve
-	(get_node('%InstantSolve') as Button).disabled = can_not_solve
+	var timer_running: bool = not $Timer.paused
+
+	(get_node('%StepButton') as Button).disabled = can_not_solve or timer_running
+	(get_node('%AutoSolve') as Button).disabled = can_not_solve or timer_running
+	(get_node('%InstantSolve') as Button).disabled = can_not_solve or timer_running
+	(get_node('%PauseButton') as Button).disabled = not timer_running
 
 
 func _on_step_button_pressed():
@@ -103,19 +109,24 @@ func _on_height_slider_value_changed(_value):
 
 func _on_timer_timeout():
 	if solver.current_state == null or solver.current_state.is_all_solved():
-		$Timer.stop()
-		return
-	
-	solver.solve_step()
+		$Timer.paused = true
+	else:
+		solver.solve_step()
+
 	render_solver_state()
 
 
 func _on_auto_solve_pressed():
-	$Timer.start()
+	$Timer.paused = false
 
 
 func _on_instant_solve_pressed():
 	solver.solve()
+	render_solver_state()
+
+
+func _on_pause_button_pressed():
+	$Timer.paused = true
 	render_solver_state()
 "
 
@@ -234,6 +245,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Solve"
 
+[node name="PauseButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Pause"
+
 [node name="InstantSolve" type="Button" parent="VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -250,10 +266,12 @@ text = "Reset"
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.01
+autostart = true
 
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/WidthSlider" to="." method="_on_width_slider_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/HeightSlider" to="." method="_on_height_slider_value_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/AutoSolve" to="." method="_on_auto_solve_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/PauseButton" to="." method="_on_pause_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/InstantSolve" to="." method="_on_instant_solve_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/StepButton" to="." method="_on_step_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/ResetButton" to="." method="_on_reset_button_pressed"]

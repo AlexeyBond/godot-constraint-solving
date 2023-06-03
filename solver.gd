@@ -10,11 +10,8 @@ func _make_initial_state(num_cells: int, initial_constraints: BitSet) -> WFCSolv
 	state.cell_constraints.resize(num_cells)
 	state.cell_constraints.fill(initial_constraints)
 	
-	state.cell_entropy.resize(num_cells)
-	state.cell_entropy.fill(initial_constraints.count_set_bits() - 1)
-	
-	state.cell_solutions.resize(num_cells)
-	state.cell_solutions.fill(WFCSolverState.CELL_SOLUTION_UNSOLVED)
+	state.cell_solution_or_entropy.resize(num_cells)
+	state.cell_solution_or_entropy.fill(-(initial_constraints.count_set_bits() - 1))
 
 	state.unsolved_cells = num_cells
 

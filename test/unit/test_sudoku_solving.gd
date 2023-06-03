@@ -4,13 +4,14 @@ func test_solve_sudoku():
 	var problem: WFCProblem = WFCSudokuProblem.new(9,9,9)
 	var solver: WFCSolver = WFCSolver.new(problem)
 	
+	solver.allow_backtracking = true
 	solver.solve()
 	
 	for row in range(9):
 		var arr: Array = []
 		
 		for col in range(9):
-			arr.append(solver.current_state.cell_solutions[problem.coords_to_id(row, col)])
+			arr.append(solver.current_state.cell_solution_or_entropy[problem.coords_to_id(row, col)])
 		
 		arr.sort()
 		
@@ -22,7 +23,7 @@ func test_solve_sudoku():
 		var arr: Array = []
 		
 		for row in range(9):
-			arr.append(solver.current_state.cell_solutions[problem.coords_to_id(row, col)])
+			arr.append(solver.current_state.cell_solution_or_entropy[problem.coords_to_id(row, col)])
 		
 		arr.sort()
 		
