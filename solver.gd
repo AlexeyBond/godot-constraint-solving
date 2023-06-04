@@ -2,7 +2,20 @@ class_name WFCSolver
 
 extends RefCounted
 
-@export var allow_backtracking = true
+class WFCSolverSettings extends Resource:
+	@export
+	var allow_backtracking: bool = true
+
+	@export
+	var require_backtracking: bool = false
+	
+	@export
+	var backtracking_limit: int = -1
+
+var backtracking_enabled: bool
+var settings: WFCSolverSettings
+
+var backtracking_count: int = 0
 
 func _make_initial_state(num_cells: int, initial_constraints: BitSet) -> WFCSolverState:
 	var state = WFCSolverState.new()
@@ -18,15 +31,22 @@ func _make_initial_state(num_cells: int, initial_constraints: BitSet) -> WFCSolv
 	return state
 
 var current_state: WFCSolverState
+var best_state: WFCSolverState
+
 var problem: WFCProblem
 
 
-func _init(problem_: WFCProblem):
+func _init(problem_: WFCProblem, settings_: WFCSolverSettings = WFCSolverSettings.new()):
+	settings = settings_
+	backtracking_enabled = settings.allow_backtracking
+
 	problem = problem_
 	current_state = _make_initial_state(
 		problem.get_cell_count(),
 		problem.get_default_constraints()
 	)
+	best_state = current_state
+
 	problem.populate_initial_state(current_state)
 
 
@@ -60,7 +80,7 @@ func _solve_constraints() -> bool:
 				)
 			)
 
-			if should_backtrack and allow_backtracking:
+			if should_backtrack and backtracking_enabled:
 				return true
 
 	@warning_ignore("assert_always_false")
@@ -73,7 +93,6 @@ func solve_step() -> bool:
 		true iff process has termitated (eighter successfully or with failure)
 	"""
 	assert(current_state != null)
-	assert(not current_state.is_all_solved())
 
 	if current_state.is_all_solved():
 		return true
@@ -81,15 +100,36 @@ func solve_step() -> bool:
 	var backtrack: bool = _solve_constraints()
 
 	if backtrack:
+		if settings.backtracking_limit > 0 and backtracking_count > settings.backtracking_limit:
+			print_debug('Backtracking limit exceeded, restarting from best state without backtracking')
+			
+			current_state = best_state
+			backtracking_enabled = false
+			
+			return false
+
+		backtracking_count += 1
+		
 		current_state = current_state.backtrack()
+
+		if current_state == null:
+			print_debug('Backtracking failed')
+			
+			if not settings.require_backtracking:
+				print_debug('Restarting from best state without backtracking')
+
+				current_state = best_state
+
 		return false
-	
+
 	if current_state.is_all_solved():
 		return true
+	elif current_state.unsolved_cells < best_state.unsolved_cells:
+		best_state = current_state
 
 	current_state.prepare_divergence()
 
-	if allow_backtracking:
+	if backtracking_enabled:
 		current_state = current_state.diverge()
 	else:
 		current_state.diverge_in_place()

@@ -27,6 +27,8 @@ var changed_cells: PackedInt64Array
 var divergence_cell: int = -1
 var divergence_options: Array[int]
 
+var divergence_candidates: Dictionary = {}
+
 func is_cell_solved(cell_id: int) -> bool:
 	return cell_solution_or_entropy[cell_id] >= 0
 
@@ -43,6 +45,8 @@ func _store_solution(cell_id: int, solution: int):
 
 	cell_solution_or_entropy[cell_id] = solution
 	unsolved_cells -= 1
+	
+	divergence_candidates.erase(cell_id)
 
 func set_solution(cell_id: int, solution: int):
 	var bs: BitSet = BitSet.new(cell_constraints[0].size)
@@ -72,6 +76,7 @@ func set_constraints(cell_id: int, constraints: BitSet, entropy: int = -1) -> bo
 		
 		assert(entropy > 0)
 		cell_solution_or_entropy[cell_id] = -entropy
+		divergence_candidates[cell_id] = true
 
 	cell_constraints[cell_id] = constraints
 
@@ -99,6 +104,7 @@ func make_next() -> WFCSolverState:
 	new.cell_constraints = cell_constraints.duplicate()
 	new.cell_solution_or_entropy = cell_solution_or_entropy.duplicate()
 	new.unsolved_cells = unsolved_cells
+	new.divergence_candidates = divergence_candidates.duplicate()
 
 	new.previous = self
 
@@ -109,8 +115,13 @@ func pick_divergence_cell() -> int:
 
 	var options: Array[int] = []
 	var target_entropy: int = MAX_INT
+	
+	var candidates = divergence_candidates.keys()
 
-	for i in range(cell_solution_or_entropy.size()):
+	if candidates.is_empty():
+		candidates = range(cell_solution_or_entropy.size())
+
+	for i in candidates:
 		var entropy: int = - cell_solution_or_entropy[i]
 
 		if entropy <= 0:
@@ -129,6 +140,7 @@ func pick_divergence_cell() -> int:
 
 func prepare_divergence():
 	divergence_cell = pick_divergence_cell()
+	divergence_candidates.erase(divergence_cell)
 	divergence_options.clear()
 
 	for option in cell_constraints[divergence_cell].iterator():

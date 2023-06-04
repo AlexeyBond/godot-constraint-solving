@@ -6,6 +6,8 @@ var rules: WFCRules2D
 var map: Node
 var rect: Rect2i
 
+var renderable_rect: Rect2i
+
 var axes: Array[Vector2i] = []
 var axis_matrices: Array[BitMatrix] = []
 
@@ -22,7 +24,8 @@ func _init(
 	rules = rules_
 	map = map_
 	rect = rect_
-	
+	renderable_rect = rect_
+
 	for i in range(rules.axes.size()):
 		axes.append(rules.axes[i])
 		axis_matrices.append(rules.axis_matrices[i])
@@ -62,10 +65,14 @@ func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> BitSet:
 	for i in range(axes.size()):
 		var other_pos: Vector2i = pos + axes[i]
 		
-		if not rect.has_point(other_pos):
+		if not rect.has_point(other_pos + rect.position):
 			continue
 		
 		var other_id: int = coord_to_id(other_pos)
+		
+		if state.cell_solution_or_entropy[other_id] == WFCSolverState.CELL_SOLUTION_FAILED:
+			continue
+
 		var other_constraint: BitSet = state.cell_constraints[other_id]
 		res.intersect_in_place(axis_matrices[i].transform(other_constraint))
 		
@@ -81,24 +88,44 @@ func mark_related_cells(changed_cell_id: int, mark_cell: Callable):
 	
 	for i in range(axes.size()):
 		var other_pos: Vector2i = pos + axes[i]
-		if rect.has_point(other_pos):
-			#print('mark ', other_pos, ' from ', pos)
+		if rect.has_point(other_pos + rect.position):
 			mark_cell.call(coord_to_id(other_pos))
 
 func render_state_to_map(state: WFCSolverState):
+	assert(rect.encloses(renderable_rect))
 	var mapper: Mapper2D = rules.mapper
+	
+	var render_rect_offset = renderable_rect.position - rect.position
 
-	for i in range(state.cell_solution_or_entropy.size()):
-		var cell: int = state.cell_solution_or_entropy[i]
-		
-		if cell == WFCSolverState.CELL_SOLUTION_FAILED:
-			cell = -1
+	for x in range(renderable_rect.size.x):
+		for y in range(renderable_rect.size.y):
+			var local_coord: Vector2i = Vector2i(x, y) + render_rect_offset
+			var cell: int = state.cell_solution_or_entropy[coord_to_id(local_coord)]
+			
+			if cell == WFCSolverState.CELL_SOLUTION_FAILED:
+				cell = -1
 
-		mapper.write_cell(
-			map,
-			id_to_coord(i),
-			cell
-		)
+			mapper.write_cell(
+				map,
+				local_coord + rect.position,
+				cell
+			)
+
+
+func get_dependencies_range() -> Vector2i:
+	var rx: int = 0
+	var ry: int = 0
+	
+	for a in axes:
+		rx = max(rx, abs(a.x))
+		ry = max(ry, abs(a.y))
+	
+	return Vector2i(rx, ry)
+
+
+
+
+
 
 
 
