@@ -168,9 +168,15 @@ func set_bit(bit_num: int, value: bool = true):
 	
 	if bit_num < STATIC_BITS:
 		if bit_num < BITS_PER_INT:
-			data0 |= (1 << bit_num)
+			if value:
+				data0 |= (1 << bit_num)
+			else:
+				data0 &= ~(1 << bit_num)
 		else:
-			data1 |= (1 << (bit_num - BITS_PER_INT))
+			if value:
+				data1 |= (1 << (bit_num - BITS_PER_INT))
+			else:
+				data1 &= (1 << (bit_num - BITS_PER_INT))
 		return
 	else:
 		bit_num -= STATIC_BITS
