@@ -50,7 +50,7 @@ func split_problem(problem_: WFCProblem) -> Array[Phase]:
 	var extra_overlap_max: Vector2i = extra_overlap_min + settings.extra_overlap % 2
 
 	if full_rect.size.x > full_rect.size.y:
-		var partitions = _split_range(
+		var partitions: PackedInt64Array = _split_range(
 			full_rect.position.x,
 			full_rect.size.x,
 			settings.max_threads * 2,
@@ -65,7 +65,7 @@ func split_problem(problem_: WFCProblem) -> Array[Phase]:
 				full_rect.size.y
 			))
 	else:
-		var partitions = _split_range(
+		var partitions: PackedInt64Array = _split_range(
 			full_rect.position.y,
 			full_rect.size.y,
 			settings.max_threads * 2,
@@ -98,10 +98,15 @@ func split_problem(problem_: WFCProblem) -> Array[Phase]:
 			
 			#print('subproblem for ', rect, ' renderable at ', renderable_rect)
 
+
+			var problem_settings: WFC2DProblem.WFC2DProblemSettings = WFC2DProblem.WFC2DProblemSettings.new()
+
+			problem_settings.rect = rect
+			problem_settings.rules = problem.rules
+
 			var sub_problem: WFC2DProblem = WFC2DProblem.new(
-				problem.rules,
+				problem_settings,
 				problem.map,
-				rect
 			)
 
 			sub_problem.renderable_rect = renderable_rect

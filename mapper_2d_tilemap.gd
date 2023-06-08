@@ -55,11 +55,7 @@ func get_used_rect(map_: Node) -> Rect2i:
 
 func read_cell(map_: Node, coords: Vector2i) -> int:
 	var map: TileMap = _ensure_tile_map(map_)
-	"""
-	Read cell from map and return a mapped code.
-	
-	Returns a negative value if cell is empty or mapping for the cell is missing.
-	"""
+
 	var attrs: Vector4i = _read_cell_attrs(map, coords)
 	
 	#print('read ', coords, ' -> ', attrs, ' -> ', attrs_to_id.get(attrs, -1))
@@ -69,11 +65,7 @@ func read_cell(map_: Node, coords: Vector2i) -> int:
 
 func write_cell(map_: Node, coords: Vector2i, code: int):
 	var map: TileMap = _ensure_tile_map(map_)
-	"""
-	Write a cell to map.
-	
-	code should be inside acceptable range for mapped codes.
-	"""
+
 	assert(tile_set != null)
 	assert(tile_set == map.tile_set)
 	_ensure_reverse_mapping()

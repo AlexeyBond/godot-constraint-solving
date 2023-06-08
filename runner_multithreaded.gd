@@ -46,10 +46,13 @@ func is_started() -> bool:
 	return current_phase >= 0
 
 func is_running() -> bool:
-	return not running_tasks.is_empty()
+	return not (running_tasks.is_empty() or interrupted)
 
 func interrupt():
 	interrupted = true
+
+	for task in running_tasks:
+		task.thread.wait_to_finish()
 
 func _run_solver(solver: WFCSolver):
 	while (not interrupted) and (not solver.solve_step()):
@@ -85,6 +88,9 @@ func start(problem: WFCProblem):
 	_start_phase(phases[0])
 	current_phase = 0
 
+signal partial_solution(problem: WFCProblem, solver_state: WFCSolverState)
+signal problem_solved(problem: WFCProblem, solver_state: WFCSolverState)
+
 func update():
 	assert(is_started())
 	assert(is_running())
@@ -94,10 +100,16 @@ func update():
 	for task in running_tasks:
 		if task.thread.is_alive():
 			alive_tasks += 1
+
+			var state: WFCSolverState = task.solver.current_state
+
+			if state != null:
+				partial_solution.emit(task.problem, state)
 		elif not task.completed:
 			task.thread.wait_to_finish()
 			task.completed = true
 			task_completed(task)
+			problem_solved.emit(task.problem, task.solver.current_state)
 
 
 	if alive_tasks == 0:

@@ -34,7 +34,6 @@ func restart():
 		max(width, height)
 	)
 	solver = WFCSolver.new(problem)
-	solver.allow_backtracking = true
 	
 	last_known_values.clear()
 	

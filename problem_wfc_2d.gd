@@ -2,29 +2,40 @@ extends WFCProblem
 
 class_name WFC2DProblem
 
+class WFC2DProblemSettings extends Resource:
+	@export
+	var rules: WFCRules2D
+
+	@export
+	var concurrent_extra_overlap: Vector2i = Vector2i(0, 0)
+
+	@export
+	var rect: Rect2i
+
 var rules: WFCRules2D
 var map: Node
 var rect: Rect2i
+
+var concurrent_extra_overlap: Vector2i
 
 var renderable_rect: Rect2i
 
 var axes: Array[Vector2i] = []
 var axis_matrices: Array[BitMatrix] = []
 
-func _init(
-	rules_: WFCRules2D,
-	map_: Node,
-	rect_: Rect2i,
-):
-	assert(rules_.mapper != null)
-	assert(rules_.mapper.supports_map(map_))
-	assert(rules_.mapper.size() > 0)
-	assert(rect_.has_area())
+func _init(settings: WFC2DProblemSettings, map_: Node):
+	assert(settings.rules.mapper != null)
+	assert(settings.rules.mapper.supports_map(map))
+	assert(settings.rules.mapper.size() > 0)
+	assert(settings.rect.has_area())
+	assert(settings.concurrent_extra_overlap.x >= 0)
+	assert(settings.concurrent_extra_overlap.y >= 0)
 
-	rules = rules_
 	map = map_
-	rect = rect_
-	renderable_rect = rect_
+	rules = settings.rules
+	rect = settings.rect
+	renderable_rect = settings.rect
+	concurrent_extra_overlap = settings.concurrent_extra_overlap
 
 	for i in range(rules.axes.size()):
 		axes.append(rules.axes[i])
@@ -122,6 +133,104 @@ func get_dependencies_range() -> Vector2i:
 	
 	return Vector2i(rx, ry)
 
+func _split_range(first: int, size: int, partitions: int, min_partition_size: int) -> PackedInt64Array:
+	assert(partitions > 0)
+
+	@warning_ignore("integer_division")
+	var approx_partition_size: int = size / partitions
+
+	if approx_partition_size < min_partition_size:
+		return _split_range(first, size, partitions - 1, min_partition_size)
+
+	var res: PackedInt64Array = []
+
+	for partition in range(partitions):
+		@warning_ignore("integer_division")
+		res.append((size * partition) / partitions)
+
+	res.append(first + size)
+
+	return res
+
+func split(concurrency_limit: int) -> Array[SubProblem]:
+	if concurrency_limit < 2:
+		return super.split(concurrency_limit)
+	
+	var rects: Array[Rect2i] = []
+	
+	var dependency_range: Vector2i = get_dependencies_range()
+	var overlap_min: Vector2i = dependency_range / 2
+	var overlap_max: Vector2i = overlap_min + dependency_range % 2
+
+	var extra_overlap_min: Vector2i = concurrent_extra_overlap / 2
+	var extra_overlap_max: Vector2i = extra_overlap_min + concurrent_extra_overlap % 2
+
+	if rect.size.x > rect.size.y:
+		var partitions: PackedInt64Array = _split_range(
+			rect.position.x,
+			rect.size.x,
+			concurrency_limit * 2,
+			dependency_range.x + concurrent_extra_overlap.x
+		)
+
+		for i in range(partitions.size() - 1):
+			rects.append(Rect2i(
+				partitions[i],
+				rect.position.x,
+				partitions[i + 1] - partitions[i],
+				rect.size.y
+			))
+	else:
+		var partitions: PackedInt64Array = _split_range(
+			rect.position.y,
+			rect.size.y,
+			concurrency_limit * 2,
+			dependency_range.y + concurrent_extra_overlap.y
+		)
+
+		for i in range(partitions.size() - 1):
+			rects.append(Rect2i(
+				rect.position.x,
+				partitions[i],
+				rect.size.x,
+				partitions[i + 1] - partitions[i]
+			))
+	
+	var res: Array[SubProblem] = []
+
+	for i in range(rects.size()):
+		var sub_renderable_rect: Rect2i = rects[i] \
+			.grow_individual(overlap_min.x, overlap_min.y, overlap_max.x, overlap_max.y) \
+			.intersection(rect)
+		
+		var sub_rect: Rect2i = renderable_rect \
+			.grow_individual(
+				extra_overlap_min.x, extra_overlap_min.y,
+				extra_overlap_max.x, extra_overlap_max.y
+			) \
+			.intersection(rect)
+		
+		#print('subproblem for ', rect, ' renderable at ', renderable_rect)
+		
+		var sub_settings: WFC2DProblemSettings = WFC2DProblemSettings.new()
+		sub_settings.rules = rules
+		sub_settings.rect = sub_rect
+		sub_settings.concurrent_extra_overlap = concurrent_extra_overlap
+
+		var sub_problem: WFC2DProblem = WFC2DProblem.new(sub_settings, map)
+		sub_problem.renderable_rect = renderable_rect
+		
+		var dependencies: PackedInt64Array = []
+		
+		if i > 0:
+			dependencies.append(i - 1)
+		
+		if i < (rects.size() - 1):
+			dependencies.append(i + 1)
+
+		res.append(SubProblem.new(sub_problem, dependencies))
+
+	return res
 
 
 
