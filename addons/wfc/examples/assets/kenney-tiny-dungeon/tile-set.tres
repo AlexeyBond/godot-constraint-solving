@@ -1,6 +1,6 @@
 [gd_resource type="TileSet" load_steps=3 format=3 uid="uid://dgefkshuslimj"]
 
-[ext_resource type="Texture2D" uid="uid://dafirfo2502o" path="res://assets/kenney-tiny-dungeon/tilemap_packed.png" id="1_gsvcg"]
+[ext_resource type="Texture2D" uid="uid://dafirfo2502o" path="res://addons/wfc/examples/assets/kenney-tiny-dungeon/tilemap_packed.png" id="1_gsvcg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_diu2c"]
 texture = ExtResource("1_gsvcg")

@@ -5,7 +5,7 @@ class_name WFCSolverRunner
 func start(_problem: WFCProblem):
 	assert(false)
 
-func undate():
+func update():
 	assert(false)
 
 func is_running() -> bool:
@@ -18,3 +18,11 @@ func is_started() -> bool:
 
 func interrupt():
 	assert(false)
+
+func get_progress() -> float:
+	assert(false)
+	return 0.0
+
+signal partial_solution(problem: WFCProblem, solver_state: WFCSolverState)
+signal sub_problem_solved(problem: WFCProblem, solver_state: WFCSolverState)
+signal all_solved

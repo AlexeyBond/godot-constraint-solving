@@ -72,6 +72,56 @@ func learn_negative_from(map: Node):
 	_learn_from(map, false)
 
 
+func get_influence_range() -> Vector2i:
+	"""
+	Returns distances along X and Y axes at wiich a certain cell stops
+	influencing domains of other cells along those axes.
+
+	Returned value will be equal to maximum allowed integer value if constraints
+	of some cell types may propogate infinitely.
+	E.g. if there are cell types 0 and 1 and the following combinations are
+	only allowed along horizontal X axis:
+		00 01 11
+	cell with type 1 wouldn't allow any cell types other than 1 to the left,
+	so all cells to the left must be of type 1 and x component of vector
+	returned by get_influence_range() will be 9223372036854775807.
+	But if we also allow combination of 10, then any cell can be place to the
+	left of cell of type 1, and x component of vector returned by
+	get_influence_range() will be 1.
+	"""
+	assert(axes.size() > 0)
+	assert(axis_matrices.size() == axes.size())
+
+	var res: Vector2i = Vector2i(0, 0)
+	
+	for a in range(len(axes)):
+		var matrix: BitMatrix = axis_matrices[a]
+		var axis: Vector2i = axes[a]
+
+		var forward_path: int = matrix.get_longest_path()
+
+		if forward_path <= 0:
+			if axis.x != 0:
+				res.x = BitSet.MAX_INT
+			if axis.y != 0:
+				res.y = BitSet.MAX_INT
+			continue
+
+		var backward_path: int = matrix.transpose().get_longest_path()
+
+		if backward_path <= 0:
+			if axis.x != 0:
+				res.x = BitSet.MAX_INT
+			if axis.y != 0:
+				res.y = BitSet.MAX_INT
+			continue
+
+		var longest_path: int = max(forward_path, backward_path)
+
+		res.x = max(res.x, abs(axis.x) * longest_path)
+		res.y = max(res.y, abs(axis.y) * longest_path)
+
+	return res
 
 
 

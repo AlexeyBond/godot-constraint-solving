@@ -25,7 +25,7 @@ var axis_matrices: Array[BitMatrix] = []
 
 func _init(settings: WFC2DProblemSettings, map_: Node):
 	assert(settings.rules.mapper != null)
-	assert(settings.rules.mapper.supports_map(map))
+	assert(settings.rules.mapper.supports_map(map_))
 	assert(settings.rules.mapper.size() > 0)
 	assert(settings.rect.has_area())
 	assert(settings.concurrent_extra_overlap.x >= 0)

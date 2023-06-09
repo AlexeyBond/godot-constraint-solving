@@ -1,4 +1,4 @@
-extends RefCounted
+extends WFCSolverRunner
 
 class_name WFCMultithreadedSolver
 
@@ -88,9 +88,6 @@ func start(problem: WFCProblem):
 	_start_phase(phases[0])
 	current_phase = 0
 
-signal partial_solution(problem: WFCProblem, solver_state: WFCSolverState)
-signal problem_solved(problem: WFCProblem, solver_state: WFCSolverState)
-
 func update():
 	assert(is_started())
 	assert(is_running())
@@ -109,7 +106,7 @@ func update():
 			task.thread.wait_to_finish()
 			task.completed = true
 			task_completed(task)
-			problem_solved.emit(task.problem, task.solver.current_state)
+			sub_problem_solved.emit(task.problem, task.solver.current_state)
 
 
 	if alive_tasks == 0:

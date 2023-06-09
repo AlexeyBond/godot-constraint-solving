@@ -87,6 +87,34 @@ func format_bits() -> String:
 	
 	return res
 
+func get_longest_path() -> int:
+	"""
+	For an NxN bit-matrix, replresenting links in a direct graph of N nodes,
+	returns the length of the longest path that is a shortest path between
+	certain two nodes.
+	
+	Returns -1 if graph consists of few unconnected sub-graphs (and thus paths
+	between some pairs of nodes do not exist).
+	"""
+	assert(width == height)
+
+	var all_set: BitSet = BitSet.new(width, true)
+	var longest_known_path: int = -1
+
+	for start in range(width):
+		var cur: BitSet = BitSet.new(width)
+		cur.set_bit(start, true)
+		
+		for path_len in range(1, width):
+			cur = transform(cur)
+			if cur.equals(all_set):
+				if path_len > longest_known_path:
+					longest_known_path = path_len
+
+				break
+
+	return longest_known_path
+
 
 
 
