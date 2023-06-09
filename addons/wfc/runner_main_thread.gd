@@ -9,8 +9,6 @@ class WFCMainThreadRunnerSettings extends Resource:
 
 var runner_settings: WFCMainThreadRunnerSettings = WFCMainThreadRunnerSettings.new()
 
-var solver_settings: WFCSolver.WFCSolverSettings = WFCSolver.WFCSolverSettings.new()
-
 var problem: WFCProblem = null
 var solver: WFCSolver = null
 

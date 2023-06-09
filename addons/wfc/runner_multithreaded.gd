@@ -1,124 +1,165 @@
 extends WFCSolverRunner
 
-class_name WFCMultithreadedSolver
+class_name WFCMultithreadedSolverRunner
 
-const _NO_REAL_MULTITHREADING = false
+const _STUB_NO_MULTITHREADING = false
 
-class Phase extends RefCounted:
-	var problems: Array[WFCProblem]
-	
-	func _init(problems_: Array[WFCProblem]):
-		problems = problems_
+class WFCMultithreadedSolverSettings extends Resource:
+	@export
+	var max_threads: int = clamp(OS.get_processor_count() - 1, 1, 4)
 
-class Task extends RefCounted:
+var runner_settings: WFCMultithreadedSolverSettings = WFCMultithreadedSolverSettings.new()
+
+class _Task extends RefCounted:
 	var problem: WFCProblem
-	var solver: WFCSolver
-	var thread: Thread
-	var completed: bool
-	
-	func _init(problem_: WFCProblem, solver_: WFCSolver, thread_: Thread):
+	var dependencies: PackedInt64Array
+	var solver: WFCSolver = null
+	var thread: Thread = null
+	var is_completed: bool = false
+
+	func _init(problem_: WFCProblem, dependencies_: PackedInt64Array):
 		problem = problem_
-		solver = solver_
-		thread = thread_
-		completed = false
+		dependencies = dependencies_
 
-func split_problem(_problem: WFCProblem) -> Array[Phase]:
-	@warning_ignore("assert_always_false")
-	assert(false)
-	return []
+	func is_started() -> bool:
+		return thread != null
 
+	func is_running() -> bool:
+		return thread != null and not is_completed
+	
+	func check_just_completed() -> bool:
+		if is_completed:
+			return false
 
-func task_completed(_task: Task):
-	pass
+		if thread.is_alive():
+			return false
 
+		is_completed = true
 
-var phases: Array[Phase]
+		return true
 
-var current_phase: int = -1
+	func is_blocked(tasks: Array[_Task]) -> bool:
+		for dep_index in dependencies:
+			if not tasks[dep_index].is_completed:
+				return true
+		
+		return false
 
+	func ensure_stopped():
+		if thread != null:
+			thread.wait_to_finish()
+	
+	func get_total_cells() -> int:
+		return problem.get_cell_count()
+	
+	func get_unsolved_cells() -> int:
+		if solver == null:
+			return get_total_cells()
+			
+		var state: WFCSolverState = solver.current_state
+
+		if state == null:
+			return 0
+
+		return state.unsolved_cells
+
+var tasks: Array[_Task] = []
 var interrupted: bool = false
 
-var running_tasks: Array[Task]
-
-var solver_settings: WFCSolver.WFCSolverSettings = WFCSolver.WFCSolverSettings.new()
-
-func is_started() -> bool:
-	return current_phase >= 0
-
-func is_running() -> bool:
-	return not (running_tasks.is_empty() or interrupted)
-
-func interrupt():
-	interrupted = true
-
-	for task in running_tasks:
-		task.thread.wait_to_finish()
-
-func _run_solver(solver: WFCSolver):
+func _thread_main(solver: WFCSolver):
 	while (not interrupted) and (not solver.solve_step()):
 		pass
 
 func _noop():
 	pass
 
-func _start_phase(phase: Phase):
-	for problem in phase.problems:
-		var solver: WFCSolver = WFCSolver.new(problem, solver_settings)
-		var thread: Thread = Thread.new()
+func _start_tasks(max_start: int) -> int:
+	var started: int = 0
+	for task in tasks:
+		if (not task.is_started()) and (not task.is_blocked(tasks)):
+			task.solver = WFCSolver.new(task.problem, solver_settings)
+			task.thread = Thread.new()
+			if _STUB_NO_MULTITHREADING:
+				task.thread.start(_noop)
+				task.solver.solve()
+			else:
+				task.thread.start(_thread_main.bind(task.solver))
 
-		if _NO_REAL_MULTITHREADING:
-			_run_solver(solver)
-			thread.start(_noop)
-		else:
-			thread.start(_run_solver.bind(solver))
+			started += 1
+			
+			if started >= max_start:
+				break
 
-		var task: Task = Task.new(problem, solver, thread)
-
-		running_tasks.append(task)
+	return started
 
 func start(problem: WFCProblem):
 	assert(not is_started())
-	assert(not is_running())
-	assert(phases.is_empty())
 
-	phases = split_problem(problem)
+	for sub_problem in problem.split(runner_settings.max_threads):
+		tasks.append(
+			_Task.new(sub_problem.problem, sub_problem.dependencies)
+		)
+	
+	var started: int = _start_tasks(runner_settings.max_threads)
 
-	assert(not phases.is_empty())
-
-	_start_phase(phases[0])
-	current_phase = 0
+	assert(started > 0)
 
 func update():
-	assert(is_started())
-	assert(is_running())
+	var unstarted: int = 0
+	var running: int = 0
+	var completed: int = 0
 
-	var alive_tasks: int = 0
-
-	for task in running_tasks:
-		if task.thread.is_alive():
-			alive_tasks += 1
-
-			var state: WFCSolverState = task.solver.current_state
-
-			if state != null:
-				partial_solution.emit(task.problem, state)
-		elif not task.completed:
-			task.thread.wait_to_finish()
-			task.completed = true
-			task_completed(task)
+	for task in tasks:
+		if task.is_completed:
+			completed += 1
+		elif not task.is_started():
+			unstarted += 1
+		elif task.check_just_completed():
 			sub_problem_solved.emit(task.problem, task.solver.current_state)
+			completed += 1
+		else:
+			partial_solution.emit(task.problem, task.solver.current_state)
+			running += 1
 
+	if unstarted == 0 and running == 0:
+		all_solved.emit()
+		return
 
-	if alive_tasks == 0:
-		running_tasks.clear()
+	if running < runner_settings.max_threads:
+		var started: int = _start_tasks(runner_settings.max_threads - running)
+
+		assert(running > 0 or started > 0)
+
+func is_running() -> bool:
+	if interrupted:
+		return false
 	
-		current_phase += 1
-		
-		if current_phase < phases.size():
-			_start_phase(phases[current_phase])
+	var running_tasks: int = 0
+	
+	for task in tasks:
+		if task.is_running():
+			running_tasks += 1
 
+	return running_tasks > 0
 
+func is_started() -> bool:
+	return not tasks.is_empty()
 
+func interrupt():
+	interrupted = true
+
+	for task in tasks:
+		task.ensure_stopped()
+
+func get_progress() -> float:
+	var total: int = 0
+	var unsolved: int = 0
+	
+	for task in tasks:
+		total += task.get_total_cells()
+		unsolved += task.get_unsolved_cells()
+	
+	return 1.0 - (float(unsolved) / float(total))
 
 
 

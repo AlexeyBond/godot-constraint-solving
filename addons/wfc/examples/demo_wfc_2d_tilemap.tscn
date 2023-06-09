@@ -11,7 +11,9 @@ var rules: WFCRules2D = WFCRules2D.new()
 var problem: WFC2DProblem
 var solver: WFCSolver
 
-var mt_solver: WFCMultithreadedSolver2D
+var runner: WFCSolverRunner
+
+#var mt_solver: WFCMultithreadedSolver2D
 
 func _ready():
 	mapper.learn_from($sample)
@@ -34,15 +36,26 @@ func _ready():
 	@warning_ignore(\"integer_division\")
 	problem = WFC2DProblem.new(problem_settings, $target)
 	
+	var r: WFCMultithreadedSolverRunner = WFCMultithreadedSolverRunner.new()
+	
+	r.solver_settings.backtracking_limit = 1000
+	r.solver_settings.require_backtracking = false
+	
+	r.start(problem)
+	r.partial_solution.connect(self._on_problem_solution)
+	r.sub_problem_solved.connect(self._on_problem_solution)
+
+	runner = r
+	
 	#solver = WFCSolver.new(problem)
 	#solver.allow_backtracking = true
 	
-	mt_solver = WFCMultithreadedSolver2D.new()
-	mt_solver.settings.max_threads = 4
-	mt_solver.settings.extra_overlap = Vector2i(1,1)
-	mt_solver.solver_settings.backtracking_limit = 1000
+	#mt_solver = WFCMultithreadedSolver2D.new()
+	#mt_solver.settings.max_threads = 4
+	#mt_solver.settings.extra_overlap = Vector2i(1,1)
+	#mt_solver.solver_settings.backtracking_limit = 1000
 
-	mt_solver.start(problem)
+	#mt_solver.start(problem)
 
 # var map_up_to_date = true
 
@@ -68,13 +81,22 @@ func _process(delta):
 	#	if false or solver.current_state.is_all_solved():
 	#		problem.render_state_to_map(solver.current_state)
 	
-	if mt_solver.is_running():
-		mt_solver.render_intermediate_solutions()
-		mt_solver.update()
-		spent_time += delta
-	elif not finished:
-		finished = true
-		print('Solved in %.1fs' % spent_time)
+	#if mt_solver.is_running():
+	#	mt_solver.render_intermediate_solutions()
+	#	mt_solver.update()
+	#	spent_time += delta
+	#elif not finished:
+	#	finished = true
+	#	print('Solved in %.1fs' % spent_time)
+	
+	if runner.is_running():
+		runner.update()
+
+func _on_problem_solution(problem_: WFCProblem, solver_state: WFCSolverState):
+	var p: WFC2DProblem = (problem_ as WFC2DProblem)
+	assert(p != null)
+	if solver_state != null:
+		p.render_state_to_map(solver_state)
 
 
 

@@ -2,6 +2,8 @@ extends RefCounted
 
 class_name WFCSolverRunner
 
+var solver_settings: WFCSolver.WFCSolverSettings = WFCSolver.WFCSolverSettings.new()
+
 func start(_problem: WFCProblem):
 	assert(false)
 
