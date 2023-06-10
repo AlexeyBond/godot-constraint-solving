@@ -115,6 +115,7 @@ func update():
 		elif not task.is_started():
 			unstarted += 1
 		elif task.check_just_completed():
+			task.thread.wait_to_finish()
 			sub_problem_solved.emit(task.problem, task.solver.current_state)
 			completed += 1
 		else:

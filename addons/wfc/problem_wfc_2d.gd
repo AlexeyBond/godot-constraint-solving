@@ -157,7 +157,13 @@ func split(concurrency_limit: int) -> Array[SubProblem]:
 	var influence_range: Vector2i = rules.get_influence_range()
 	var extra_overlap: Vector2i = Vector2i(0, 0)
 
-	if rect.size.x > rect.size.y:
+	var may_split_x: bool = influence_range.x < rect.size.x
+	var may_split_y: bool = influence_range.y < rect.size.y
+	
+	var split_x_overhead: int = influence_range.x * rect.size.y
+	var split_y_overhead: int = influence_range.y * rect.size.x
+
+	if may_split_x and ((not may_split_y) or (split_x_overhead <= split_x_overhead)):
 		extra_overlap.x = influence_range.x * 2
 
 		var partitions: PackedInt64Array = _split_range(
@@ -174,7 +180,7 @@ func split(concurrency_limit: int) -> Array[SubProblem]:
 				partitions[i + 1] - partitions[i],
 				rect.size.y
 			))
-	else:
+	elif may_split_y and ((not may_split_x) or (split_y_overhead <= split_x_overhead)):
 		extra_overlap.y = influence_range.y * 2
 
 		var partitions: PackedInt64Array = _split_range(
@@ -191,6 +197,8 @@ func split(concurrency_limit: int) -> Array[SubProblem]:
 				rect.size.x,
 				partitions[i + 1] - partitions[i]
 			))
+	else:
+		return super.split(concurrency_limit)
 
 	if rects.size() < 3:
 		return super.split(concurrency_limit)
