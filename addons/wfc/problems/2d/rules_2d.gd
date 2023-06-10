@@ -72,6 +72,10 @@ func learn_negative_from(map: Node):
 	_learn_from(map, false)
 
 
+func is_ready() -> bool:
+	return mapper != null and mapper.is_ready() and axis_matrices.size() == axes.size()
+
+
 func get_influence_range() -> Vector2i:
 	"""
 	Returns distances along X and Y axes at wiich a certain cell stops

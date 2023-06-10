@@ -4,11 +4,7 @@ class_name WFCMultithreadedSolverRunner
 
 const _STUB_NO_MULTITHREADING = false
 
-class WFCMultithreadedSolverSettings extends Resource:
-	@export
-	var max_threads: int = clamp(OS.get_processor_count() - 1, 1, 4)
-
-var runner_settings: WFCMultithreadedSolverSettings = WFCMultithreadedSolverSettings.new()
+var runner_settings: WFCMultithreadedRunnerSettings = WFCMultithreadedRunnerSettings.new()
 
 class _Task extends RefCounted:
 	var problem: WFCProblem
@@ -95,12 +91,12 @@ func _start_tasks(max_start: int) -> int:
 func start(problem: WFCProblem):
 	assert(not is_started())
 
-	for sub_problem in problem.split(runner_settings.max_threads):
+	for sub_problem in problem.split(runner_settings.get_max_threads()):
 		tasks.append(
 			_Task.new(sub_problem.problem, sub_problem.dependencies)
 		)
 	
-	var started: int = _start_tasks(runner_settings.max_threads)
+	var started: int = _start_tasks(runner_settings.get_max_threads())
 
 	assert(started > 0)
 
@@ -126,8 +122,8 @@ func update():
 		all_solved.emit()
 		return
 
-	if running < runner_settings.max_threads:
-		var started: int = _start_tasks(runner_settings.max_threads - running)
+	if running < runner_settings.get_max_threads():
+		var started: int = _start_tasks(runner_settings.get_max_threads() - running)
 
 		assert(running > 0 or started > 0)
 

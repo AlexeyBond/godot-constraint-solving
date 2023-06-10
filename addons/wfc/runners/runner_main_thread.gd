@@ -2,11 +2,6 @@ class_name WFCMainThreadSolverRunner
 
 extends WFCSolverRunner
 
-class WFCMainThreadRunnerSettings extends Resource:
-	@export
-	var max_ms_per_frame: int = 10
-
-
 var runner_settings: WFCMainThreadRunnerSettings = WFCMainThreadRunnerSettings.new()
 
 var problem: WFCProblem = null

@@ -40,9 +40,24 @@ func size() -> int:
 	return 0
 
 func supports_map(_map: Node) -> bool:
+	@warning_ignore("assert_always_false")
+	assert(false)
 	return false
 
 func clear():
 	@warning_ignore("assert_always_false")
 	assert(false)
+
+
+func is_ready() -> bool:
+	"""
+	Return true if this mapper is ready to read/write a map.
+	"""
+	return size() > 0
+
+
+
+
+
+
 

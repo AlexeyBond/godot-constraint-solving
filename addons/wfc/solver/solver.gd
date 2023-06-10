@@ -2,16 +2,6 @@ class_name WFCSolver
 
 extends RefCounted
 
-class WFCSolverSettings extends Resource:
-	@export
-	var allow_backtracking: bool = true
-
-	@export
-	var require_backtracking: bool = false
-	
-	@export
-	var backtracking_limit: int = -1
-
 var backtracking_enabled: bool
 var settings: WFCSolverSettings
 

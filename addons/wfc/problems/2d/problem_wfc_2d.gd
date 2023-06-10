@@ -78,11 +78,7 @@ func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> BitSet:
 
 		var other_constraint: BitSet = state.cell_constraints[other_id]
 		res.intersect_in_place(axis_matrices[i].transform(other_constraint))
-		
-		#print('\ttransform: ', other_constraint.format_bits(), ' -> ', axis_matrices[i].transform(other_constraint).format_bits())
-	
-	#print(state.cell_constraints[cell_id].format_bits(), ' -> ', res.format_bits())
-	
+
 	return res
 
 
