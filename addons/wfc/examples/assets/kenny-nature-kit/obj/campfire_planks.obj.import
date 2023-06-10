@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://difm6anuqkk1g"
+path="res://.godot/imported/campfire_planks.obj-c6191c0b211131435e1b2dc9c9fbbd7b.mesh"
+
+[deps]
+
+files=["res://.godot/imported/campfire_planks.obj-c6191c0b211131435e1b2dc9c9fbbd7b.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/campfire_planks.obj"
+dest_files=["res://.godot/imported/campfire_planks.obj-c6191c0b211131435e1b2dc9c9fbbd7b.mesh", "res://.godot/imported/campfire_planks.obj-c6191c0b211131435e1b2dc9c9fbbd7b.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

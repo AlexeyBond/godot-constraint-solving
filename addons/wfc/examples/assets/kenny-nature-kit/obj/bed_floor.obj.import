@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://0hep5tgwdhd4"
+path="res://.godot/imported/bed_floor.obj-8c8f5fb50e83446ee3c7023e584a82d5.mesh"
+
+[deps]
+
+files=["res://.godot/imported/bed_floor.obj-8c8f5fb50e83446ee3c7023e584a82d5.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/bed_floor.obj"
+dest_files=["res://.godot/imported/bed_floor.obj-8c8f5fb50e83446ee3c7023e584a82d5.mesh", "res://.godot/imported/bed_floor.obj-8c8f5fb50e83446ee3c7023e584a82d5.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

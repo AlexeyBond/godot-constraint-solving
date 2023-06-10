@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bi22feja8om7v"
+path="res://.godot/imported/bridge_stoneNarrow.obj-e923c69315f52cc90c4ca38e46a0727e.mesh"
+
+[deps]
+
+files=["res://.godot/imported/bridge_stoneNarrow.obj-e923c69315f52cc90c4ca38e46a0727e.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/bridge_stoneNarrow.obj"
+dest_files=["res://.godot/imported/bridge_stoneNarrow.obj-e923c69315f52cc90c4ca38e46a0727e.mesh", "res://.godot/imported/bridge_stoneNarrow.obj-e923c69315f52cc90c4ca38e46a0727e.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

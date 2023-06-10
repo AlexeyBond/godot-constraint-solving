@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b0ejiwdmbqvl7"
+path="res://.godot/imported/bridge_side_stone.obj-9c62fc7d9c99092cd9b719be299d36a3.mesh"
+
+[deps]
+
+files=["res://.godot/imported/bridge_side_stone.obj-9c62fc7d9c99092cd9b719be299d36a3.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/bridge_side_stone.obj"
+dest_files=["res://.godot/imported/bridge_side_stone.obj-9c62fc7d9c99092cd9b719be299d36a3.mesh", "res://.godot/imported/bridge_side_stone.obj-9c62fc7d9c99092cd9b719be299d36a3.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

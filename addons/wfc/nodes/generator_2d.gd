@@ -3,7 +3,7 @@ extends Node
 class_name WFC2DGenerator
 
 
-@export_node_path("TileMap")
+@export_node_path("TileMap", "GridMap")
 var target: NodePath
 
 @export
@@ -13,10 +13,10 @@ var rect: Rect2i
 @export_category("Rules")
 var rules: WFCRules2D = WFCRules2D.new()
 
-@export_node_path("TileMap")
+@export_node_path("TileMap", "GridMap")
 var positive_sample: NodePath
 
-@export_node_path("TileMap")
+@export_node_path("TileMap", "GridMap")
 var negative_sample: NodePath
 
 @export
@@ -67,6 +67,8 @@ func _create_mapper(map: Node) -> Mapper2D:
 	match map.get_class():
 		"TileMap":
 			return TileMapMapper.new()
+		"GridMap":
+			return Mapper2DGridMap.new()
 		var cname:
 			push_error("Unsupported map type for WFC2DGenerator: " + cname)
 			@warning_ignore("assert_always_false")
@@ -113,12 +115,17 @@ func start():
 			
 			if negative_sample_node != null:
 				rules.learn_negative_from(negative_sample_node)
-	
+
+		if OS.is_debug_build():
+			print_debug('Rules learned:\n', rules.format())
+			
+			print_debug('Influence range: ', rules.get_influence_range())
+
 	var problem_settings: WFC2DProblem.WFC2DProblemSettings = WFC2DProblem.WFC2DProblemSettings.new()
 	
 	problem_settings.rules = rules
 	problem_settings.rect = rect
-	
+
 	var problem: WFC2DProblem = WFC2DProblem.new(problem_settings, target_node)
 
 	_runner = _create_runner()

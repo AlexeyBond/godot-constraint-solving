@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://c3xxdbuij7rve"
+path="res://.godot/imported/crop_melon.obj-51a8a0f3b4188eb8360c6d7f297b5299.mesh"
+
+[deps]
+
+files=["res://.godot/imported/crop_melon.obj-51a8a0f3b4188eb8360c6d7f297b5299.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/crop_melon.obj"
+dest_files=["res://.godot/imported/crop_melon.obj-51a8a0f3b4188eb8360c6d7f297b5299.mesh", "res://.godot/imported/crop_melon.obj-51a8a0f3b4188eb8360c6d7f297b5299.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b3rixg1bwlg6u"
+path="res://.godot/imported/crop_pumpkin.obj-6fc20bba6da0d8d99e00611f52762ae7.mesh"
+
+[deps]
+
+files=["res://.godot/imported/crop_pumpkin.obj-6fc20bba6da0d8d99e00611f52762ae7.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/crop_pumpkin.obj"
+dest_files=["res://.godot/imported/crop_pumpkin.obj-6fc20bba6da0d8d99e00611f52762ae7.mesh", "res://.godot/imported/crop_pumpkin.obj-6fc20bba6da0d8d99e00611f52762ae7.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

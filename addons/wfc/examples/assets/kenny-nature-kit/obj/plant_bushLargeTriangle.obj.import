@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b0r3iw5lsemy7"
+path="res://.godot/imported/plant_bushLargeTriangle.obj-762dc72b8f3742ae45b82af97a613d25.mesh"
+
+[deps]
+
+files=["res://.godot/imported/plant_bushLargeTriangle.obj-762dc72b8f3742ae45b82af97a613d25.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/plant_bushLargeTriangle.obj"
+dest_files=["res://.godot/imported/plant_bushLargeTriangle.obj-762dc72b8f3742ae45b82af97a613d25.mesh", "res://.godot/imported/plant_bushLargeTriangle.obj-762dc72b8f3742ae45b82af97a613d25.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

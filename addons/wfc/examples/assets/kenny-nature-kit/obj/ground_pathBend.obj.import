@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://d0sg810axym2l"
+path="res://.godot/imported/ground_pathBend.obj-0dc4e3f807fdd2676128559b928b4e1e.mesh"
+
+[deps]
+
+files=["res://.godot/imported/ground_pathBend.obj-0dc4e3f807fdd2676128559b928b4e1e.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathBend.obj"
+dest_files=["res://.godot/imported/ground_pathBend.obj-0dc4e3f807fdd2676128559b928b4e1e.mesh", "res://.godot/imported/ground_pathBend.obj-0dc4e3f807fdd2676128559b928b4e1e.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

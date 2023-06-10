@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://c1ep8ugudsop7"
+path="res://.godot/imported/cliff_steps_stone.obj-4e1e5bb34fe49998431a416d6eae1be3.mesh"
+
+[deps]
+
+files=["res://.godot/imported/cliff_steps_stone.obj-4e1e5bb34fe49998431a416d6eae1be3.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_steps_stone.obj"
+dest_files=["res://.godot/imported/cliff_steps_stone.obj-4e1e5bb34fe49998431a416d6eae1be3.mesh", "res://.godot/imported/cliff_steps_stone.obj-4e1e5bb34fe49998431a416d6eae1be3.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

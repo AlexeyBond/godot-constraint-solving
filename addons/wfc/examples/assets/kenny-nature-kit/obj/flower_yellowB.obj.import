@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cfyqhc1u3fk3r"
+path="res://.godot/imported/flower_yellowB.obj-2a44f7551fb3b6d32fa53d8bd15da69e.mesh"
+
+[deps]
+
+files=["res://.godot/imported/flower_yellowB.obj-2a44f7551fb3b6d32fa53d8bd15da69e.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/flower_yellowB.obj"
+dest_files=["res://.godot/imported/flower_yellowB.obj-2a44f7551fb3b6d32fa53d8bd15da69e.mesh", "res://.godot/imported/flower_yellowB.obj-2a44f7551fb3b6d32fa53d8bd15da69e.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

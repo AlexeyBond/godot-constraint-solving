@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ced5k5uhsr0pl"
+path="res://.godot/imported/path_stoneCorner.obj-28a9174c5b547fc4df659d8f2153db2d.mesh"
+
+[deps]
+
+files=["res://.godot/imported/path_stoneCorner.obj-28a9174c5b547fc4df659d8f2153db2d.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/path_stoneCorner.obj"
+dest_files=["res://.godot/imported/path_stoneCorner.obj-28a9174c5b547fc4df659d8f2153db2d.mesh", "res://.godot/imported/path_stoneCorner.obj-28a9174c5b547fc4df659d8f2153db2d.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

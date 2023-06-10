@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ctpdv7wlxy07h"
+path="res://.godot/imported/stone_tallE.obj-9a28c19a20d17668b3238b7eec079783.mesh"
+
+[deps]
+
+files=["res://.godot/imported/stone_tallE.obj-9a28c19a20d17668b3238b7eec079783.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/stone_tallE.obj"
+dest_files=["res://.godot/imported/stone_tallE.obj-9a28c19a20d17668b3238b7eec079783.mesh", "res://.godot/imported/stone_tallE.obj-9a28c19a20d17668b3238b7eec079783.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

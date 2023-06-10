@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b45a6ck5hkdeh"
+path="res://.godot/imported/tree_tall_fall.obj-1a0ef62c83d226890cdc7b60b695b3bb.mesh"
+
+[deps]
+
+files=["res://.godot/imported/tree_tall_fall.obj-1a0ef62c83d226890cdc7b60b695b3bb.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/tree_tall_fall.obj"
+dest_files=["res://.godot/imported/tree_tall_fall.obj-1a0ef62c83d226890cdc7b60b695b3bb.mesh", "res://.godot/imported/tree_tall_fall.obj-1a0ef62c83d226890cdc7b60b695b3bb.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

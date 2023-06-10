@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dfvbvfatc3xe6"
+path="res://.godot/imported/crops_leafsStageA.obj-994783415043901fc7d03374c5dcde4a.mesh"
+
+[deps]
+
+files=["res://.godot/imported/crops_leafsStageA.obj-994783415043901fc7d03374c5dcde4a.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/crops_leafsStageA.obj"
+dest_files=["res://.godot/imported/crops_leafsStageA.obj-994783415043901fc7d03374c5dcde4a.mesh", "res://.godot/imported/crops_leafsStageA.obj-994783415043901fc7d03374c5dcde4a.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

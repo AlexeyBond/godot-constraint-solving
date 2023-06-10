@@ -1,0 +1,148 @@
+[gd_scene load_steps=30 format=3 uid="uid://c0qjyxsalmcvd"]
+
+[ext_resource type="ArrayMesh" uid="uid://dabm1p0wbykhn" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_grass.obj" id="1_825gh"]
+[ext_resource type="ArrayMesh" uid="uid://d0sg810axym2l" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathBend.obj" id="2_7j3fu"]
+[ext_resource type="ArrayMesh" uid="uid://r00u56lmxgej" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathBendBank.obj" id="3_5c2n8"]
+[ext_resource type="ArrayMesh" uid="uid://co5vrnac7cf47" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathCorner.obj" id="4_6nkci"]
+[ext_resource type="ArrayMesh" uid="uid://dt5y580783g10" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathCornerSmall.obj" id="5_tn4da"]
+[ext_resource type="ArrayMesh" uid="uid://hhg8clyg2kcc" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathCross.obj" id="6_7415p"]
+[ext_resource type="ArrayMesh" uid="uid://cdh2er7oeg8f7" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathEnd.obj" id="7_jsp2r"]
+[ext_resource type="ArrayMesh" uid="uid://counkqeylcguh" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathEndClosed.obj" id="8_1bapg"]
+[ext_resource type="ArrayMesh" uid="uid://c6s6ciybd3t1n" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathOpen.obj" id="9_vs68d"]
+[ext_resource type="ArrayMesh" uid="uid://cj83q0mkpm4r6" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathRocks.obj" id="10_ya2jp"]
+[ext_resource type="ArrayMesh" uid="uid://c6ie3d0k7eujo" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathSide.obj" id="11_g5qy5"]
+[ext_resource type="ArrayMesh" uid="uid://dlbk6ert6inxr" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathSideOpen.obj" id="12_bmuee"]
+[ext_resource type="ArrayMesh" uid="uid://c4eytjd4bumhj" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathSplit.obj" id="13_e5sl5"]
+[ext_resource type="ArrayMesh" uid="uid://dkwxnvvtj1n10" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathStraight.obj" id="14_lqjwp"]
+[ext_resource type="ArrayMesh" uid="uid://ccwxl3vwifvas" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathTile.obj" id="15_78v72"]
+[ext_resource type="ArrayMesh" uid="uid://b0sheaplhoatl" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverBend.obj" id="16_rbdye"]
+[ext_resource type="ArrayMesh" uid="uid://chnoarl5crf0o" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverBendBank.obj" id="17_qqi1s"]
+[ext_resource type="ArrayMesh" uid="uid://dl111qqacaysr" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverCorner.obj" id="18_ji5uc"]
+[ext_resource type="ArrayMesh" uid="uid://qjd1lbt2d5h2" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverCornerSmall.obj" id="19_r5qie"]
+[ext_resource type="ArrayMesh" uid="uid://dchl6v1r4bn8" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverCross.obj" id="20_n5cve"]
+[ext_resource type="ArrayMesh" uid="uid://gcf3cben2yqq" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverEnd.obj" id="21_g7sjx"]
+[ext_resource type="ArrayMesh" uid="uid://k8gvsmsnm1ne" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverEndClosed.obj" id="22_pug7o"]
+[ext_resource type="ArrayMesh" uid="uid://ce4kxxm3jw7ww" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverOpen.obj" id="23_8nc40"]
+[ext_resource type="ArrayMesh" uid="uid://xnuf8ddgtf1m" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverRocks.obj" id="24_aakgo"]
+[ext_resource type="ArrayMesh" uid="uid://rt7q8tbmfa7u" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverSide.obj" id="25_vy7i2"]
+[ext_resource type="ArrayMesh" uid="uid://dhkd0pghp8dy8" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverSideOpen.obj" id="26_cgp7c"]
+[ext_resource type="ArrayMesh" uid="uid://dr2wk1m8nogxm" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverSplit.obj" id="27_rdaoy"]
+[ext_resource type="ArrayMesh" uid="uid://c5f0hg2xu6nn3" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverStraight.obj" id="28_qqcnp"]
+[ext_resource type="ArrayMesh" uid="uid://bqko7vpbujscl" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverTile.obj" id="29_psfa5"]
+
+[node name="library-source" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_825gh")
+
+[node name="GroundPathBend" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+mesh = ExtResource("2_7j3fu")
+
+[node name="GroundPathBendBank" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+mesh = ExtResource("3_5c2n8")
+
+[node name="GroundPathCorner" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+mesh = ExtResource("4_6nkci")
+
+[node name="GroundPathCornerSmall" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 1)
+mesh = ExtResource("5_tn4da")
+
+[node name="GroundPathCross" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+mesh = ExtResource("6_7415p")
+
+[node name="GroundPathEnd" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 1)
+mesh = ExtResource("7_jsp2r")
+
+[node name="GroundPathEndClosed" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 2)
+mesh = ExtResource("8_1bapg")
+
+[node name="GroundPathOpen" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 2)
+mesh = ExtResource("9_vs68d")
+
+[node name="GroundPathRocks" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -1)
+mesh = ExtResource("10_ya2jp")
+
+[node name="GroundPathSide" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 3)
+mesh = ExtResource("11_g5qy5")
+
+[node name="GroundPathSideOpen" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 4)
+mesh = ExtResource("12_bmuee")
+
+[node name="GroundPathSplit" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+mesh = ExtResource("13_e5sl5")
+
+[node name="GroundPathStraight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -1)
+mesh = ExtResource("14_lqjwp")
+
+[node name="GroundPathTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+mesh = ExtResource("15_78v72")
+
+[node name="GroundRiverBend" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 5)
+mesh = ExtResource("16_rbdye")
+
+[node name="GroundRiverBendBank" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7)
+mesh = ExtResource("17_qqi1s")
+
+[node name="GroundRiverCorner" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
+mesh = ExtResource("18_ji5uc")
+
+[node name="GroundRiverCornerSmall" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 5)
+mesh = ExtResource("19_r5qie")
+
+[node name="GroundRiverCross" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 6)
+mesh = ExtResource("20_n5cve")
+
+[node name="GroundRiverEnd" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 5)
+mesh = ExtResource("21_g7sjx")
+
+[node name="GroundRiverEndClosed" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 7)
+mesh = ExtResource("22_pug7o")
+
+[node name="GroundRiverOpen" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 6)
+mesh = ExtResource("23_8nc40")
+
+[node name="GroundRiverRocks" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 4)
+mesh = ExtResource("24_aakgo")
+
+[node name="GroundRiverSide" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 7)
+mesh = ExtResource("25_vy7i2")
+
+[node name="GroundRiverSideOpen" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 5)
+mesh = ExtResource("26_cgp7c")
+
+[node name="GroundRiverSplit" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 7)
+mesh = ExtResource("27_rdaoy")
+
+[node name="GroundRiverStraight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 5)
+mesh = ExtResource("28_qqcnp")
+
+[node name="GroundRiverTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
+mesh = ExtResource("29_psfa5")

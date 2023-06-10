@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dbwulptqdee41"
+path="res://.godot/imported/fence_planksDouble.obj-57d66fe7912eb98120cb2cbe54150cf3.mesh"
+
+[deps]
+
+files=["res://.godot/imported/fence_planksDouble.obj-57d66fe7912eb98120cb2cbe54150cf3.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_planksDouble.obj"
+dest_files=["res://.godot/imported/fence_planksDouble.obj-57d66fe7912eb98120cb2cbe54150cf3.mesh", "res://.godot/imported/fence_planksDouble.obj-57d66fe7912eb98120cb2cbe54150cf3.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

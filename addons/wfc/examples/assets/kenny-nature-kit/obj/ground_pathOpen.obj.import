@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://c6s6ciybd3t1n"
+path="res://.godot/imported/ground_pathOpen.obj-11fc0acb49d0802303e87bdff0249c79.mesh"
+
+[deps]
+
+files=["res://.godot/imported/ground_pathOpen.obj-11fc0acb49d0802303e87bdff0249c79.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathOpen.obj"
+dest_files=["res://.godot/imported/ground_pathOpen.obj-11fc0acb49d0802303e87bdff0249c79.mesh", "res://.godot/imported/ground_pathOpen.obj-11fc0acb49d0802303e87bdff0249c79.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

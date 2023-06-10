@@ -104,11 +104,12 @@ func solve_step() -> bool:
 
 		if current_state == null:
 			print_debug('Backtracking failed')
-			
+
 			if not settings.require_backtracking:
 				print_debug('Restarting from best state without backtracking')
 
 				current_state = best_state
+				backtracking_enabled = false
 
 		return false
 

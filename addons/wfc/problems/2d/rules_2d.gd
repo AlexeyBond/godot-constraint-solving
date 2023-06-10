@@ -76,6 +76,18 @@ func is_ready() -> bool:
 	return mapper != null and mapper.is_ready() and axis_matrices.size() == axes.size()
 
 
+func format() -> String:
+	var res: String = ""
+
+	for i in range(len(axes)):
+		res += 'Axis ' + str(i) + ' (' + str(axes[i]) + '):\n'
+		res += axis_matrices[i].format_bits()
+		res += '\n'
+
+	return res
+
+const MAX_INT_32 = 2147483647
+
 func get_influence_range() -> Vector2i:
 	"""
 	Returns distances along X and Y axes at wiich a certain cell stops
@@ -88,7 +100,7 @@ func get_influence_range() -> Vector2i:
 		00 01 11
 	cell with type 1 wouldn't allow any cell types other than 1 to the left,
 	so all cells to the left must be of type 1 and x component of vector
-	returned by get_influence_range() will be 9223372036854775807.
+	returned by get_influence_range() will be 2147483647.
 	But if we also allow combination of 10, then any cell can be place to the
 	left of cell of type 1, and x component of vector returned by
 	get_influence_range() will be 1.
@@ -106,18 +118,18 @@ func get_influence_range() -> Vector2i:
 
 		if forward_path <= 0:
 			if axis.x != 0:
-				res.x = BitSet.MAX_INT
+				res.x = MAX_INT_32
 			if axis.y != 0:
-				res.y = BitSet.MAX_INT
+				res.y = MAX_INT_32
 			continue
 
 		var backward_path: int = matrix.transpose().get_longest_path()
 
 		if backward_path <= 0:
 			if axis.x != 0:
-				res.x = BitSet.MAX_INT
+				res.x = MAX_INT_32
 			if axis.y != 0:
-				res.y = BitSet.MAX_INT
+				res.y = MAX_INT_32
 			continue
 
 		var longest_path: int = max(forward_path, backward_path)

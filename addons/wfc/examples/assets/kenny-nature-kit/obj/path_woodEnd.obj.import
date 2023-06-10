@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dijp4scsqb0pn"
+path="res://.godot/imported/path_woodEnd.obj-66ab38e8b3fa9499eba5467059dd4552.mesh"
+
+[deps]
+
+files=["res://.godot/imported/path_woodEnd.obj-66ab38e8b3fa9499eba5467059dd4552.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/path_woodEnd.obj"
+dest_files=["res://.godot/imported/path_woodEnd.obj-66ab38e8b3fa9499eba5467059dd4552.mesh", "res://.godot/imported/path_woodEnd.obj-66ab38e8b3fa9499eba5467059dd4552.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

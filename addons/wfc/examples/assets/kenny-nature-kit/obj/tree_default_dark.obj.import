@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b6rjs7l1g2sw"
+path="res://.godot/imported/tree_default_dark.obj-cf06bcf511430794f756302b0c0ab8fd.mesh"
+
+[deps]
+
+files=["res://.godot/imported/tree_default_dark.obj-cf06bcf511430794f756302b0c0ab8fd.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/tree_default_dark.obj"
+dest_files=["res://.godot/imported/tree_default_dark.obj-cf06bcf511430794f756302b0c0ab8fd.mesh", "res://.godot/imported/tree_default_dark.obj-cf06bcf511430794f756302b0c0ab8fd.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://c40hhxg3j1x7w"
+path="res://.godot/imported/rock_smallE.obj-fa4bfe5ad06907b96b3856d2d493abeb.mesh"
+
+[deps]
+
+files=["res://.godot/imported/rock_smallE.obj-fa4bfe5ad06907b96b3856d2d493abeb.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/rock_smallE.obj"
+dest_files=["res://.godot/imported/rock_smallE.obj-fa4bfe5ad06907b96b3856d2d493abeb.mesh", "res://.godot/imported/rock_smallE.obj-fa4bfe5ad06907b96b3856d2d493abeb.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

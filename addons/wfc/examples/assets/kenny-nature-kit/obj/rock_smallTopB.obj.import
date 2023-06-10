@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dkbjdeug3k2ug"
+path="res://.godot/imported/rock_smallTopB.obj-871db8e9ddbab962bc664204e30d068a.mesh"
+
+[deps]
+
+files=["res://.godot/imported/rock_smallTopB.obj-871db8e9ddbab962bc664204e30d068a.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/rock_smallTopB.obj"
+dest_files=["res://.godot/imported/rock_smallTopB.obj-871db8e9ddbab962bc664204e30d068a.mesh", "res://.godot/imported/rock_smallTopB.obj-871db8e9ddbab962bc664204e30d068a.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

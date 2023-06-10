@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://qjd1lbt2d5h2"
+path="res://.godot/imported/ground_riverCornerSmall.obj-eb6e0899c428a95d9195f1ea53d5f592.mesh"
+
+[deps]
+
+files=["res://.godot/imported/ground_riverCornerSmall.obj-eb6e0899c428a95d9195f1ea53d5f592.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverCornerSmall.obj"
+dest_files=["res://.godot/imported/ground_riverCornerSmall.obj-eb6e0899c428a95d9195f1ea53d5f592.mesh", "res://.godot/imported/ground_riverCornerSmall.obj-eb6e0899c428a95d9195f1ea53d5f592.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cekwjua45gfvj"
+path="res://.godot/imported/plant_flatTall.obj-e74718178aee873a471e845d1e5874dd.mesh"
+
+[deps]
+
+files=["res://.godot/imported/plant_flatTall.obj-e74718178aee873a471e845d1e5874dd.mesh"]
+
+source_file="res://addons/wfc/examples/assets/kenny-nature-kit/obj/plant_flatTall.obj"
+dest_files=["res://.godot/imported/plant_flatTall.obj-e74718178aee873a471e845d1e5874dd.mesh", "res://.godot/imported/plant_flatTall.obj-e74718178aee873a471e845d1e5874dd.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
