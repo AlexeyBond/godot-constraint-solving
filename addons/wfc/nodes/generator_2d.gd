@@ -1,7 +1,7 @@
-extends Node
-
 class_name WFC2DGenerator
 
+extends Node
+## Generates content of a map (TileMap or GridMap) using WFC algorithm
 
 @export_node_path("TileMap", "GridMap")
 var target: NodePath
@@ -39,6 +39,10 @@ var start_on_ready: bool = false
 @export
 var render_intermediate_results: bool = false
 
+@export
+@export_category("Debug mode")
+var print_rules: bool = false
+
 signal done
 
 
@@ -63,18 +67,20 @@ func _create_runner() -> WFCSolverRunner:
 		return res
 
 
-func _create_mapper(map: Node) -> Mapper2D:
+func _create_mapper(map: Node) -> WFCMapper2D:
 	match map.get_class():
 		"TileMap":
-			return TileMapMapper.new()
+			return WFCTileMapMapper2D.new()
 		"GridMap":
-			return Mapper2DGridMap.new()
+			return WFCGridMapMapper2D.new()
 		var cname:
 			push_error("Unsupported map type for WFC2DGenerator: " + cname)
 			@warning_ignore("assert_always_false")
 			assert(false)
 			return null
 
+func _create_problem(settings: WFC2DProblem.WFC2DProblemSettings, map: Node) -> WFC2DProblem:
+	return WFC2DProblem.new(settings, map)
 
 func _exit_tree():
 	if _runner != null:
@@ -110,13 +116,13 @@ func start():
 		
 		rules.learn_from(positive_sample_node)
 		
-		if rules.complete_matrices and negative_sample != null:
+		if rules.complete_matrices and negative_sample != null and not negative_sample.is_empty():
 			var negative_sample_node: Node = get_node(negative_sample)
 			
 			if negative_sample_node != null:
 				rules.learn_negative_from(negative_sample_node)
 
-		if OS.is_debug_build():
+		if print_rules and OS.is_debug_build():
 			print_debug('Rules learned:\n', rules.format())
 			
 			print_debug('Influence range: ', rules.get_influence_range())
@@ -126,7 +132,7 @@ func start():
 	problem_settings.rules = rules
 	problem_settings.rect = rect
 
-	var problem: WFC2DProblem = WFC2DProblem.new(problem_settings, target_node)
+	var problem: WFC2DProblem = _create_problem(problem_settings, target_node)
 
 	_runner = _create_runner()
 	

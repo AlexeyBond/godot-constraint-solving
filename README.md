@@ -32,6 +32,16 @@ What's not (yet) implemented:
   Currently it's possible to "learn" WFC rules in running game only, not in editor.
   Rules can be edited by modifying sample maps, using standard editor tools.
   There is no special editor for WFC rules.
+- Better demo/examples.
 - Symmetry.
   In cases when a cell can be rotated (`GridMap`), the algorithm treats each combination of tile type and rotation as a separate tile type.
   So, you have to specify possible adjacent tiles for all rotations of each tile (in fact, just few are enough - the algorithm is able to infer other combinations automatically in most cases).
+
+
+## Copyright notes
+
+This addon is licenced under MIT licence.
+
+Examples/demos use [assets](https://github.com/AlexeyBond/godot-constraint-solving/tree/master/addons/wfc/examples/assets) from [Kenney](https://kenney.nl/).
+
+This addon uses [GUT](https://github.com/bitwes/Gut) for unit testing (not included in downloadable archive).

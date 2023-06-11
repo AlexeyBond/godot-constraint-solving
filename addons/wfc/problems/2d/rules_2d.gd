@@ -3,7 +3,7 @@ extends Resource
 class_name WFCRules2D
 
 @export
-var mapper: Mapper2D
+var mapper: WFCMapper2D
 
 @export
 var complete_matrices: bool = true
@@ -15,7 +15,7 @@ var axes: Array[Vector2i] = [
 ]
 
 @export
-var axis_matrices: Array[BitMatrix] = []
+var axis_matrices: Array[WFCBitMatrix] = []
 
 
 func _learn_from(map: Node, positive: bool):
@@ -53,7 +53,7 @@ func learn_from(map: Node):
 		assert(num_cell_types > 1)
 
 		for i in range(axes.size()):
-			axis_matrices.append(BitMatrix.new(num_cell_types, num_cell_types))
+			axis_matrices.append(WFCBitMatrix.new(num_cell_types, num_cell_types))
 
 	_learn_from(map, true)
 
@@ -111,7 +111,7 @@ func get_influence_range() -> Vector2i:
 	var res: Vector2i = Vector2i(0, 0)
 	
 	for a in range(len(axes)):
-		var matrix: BitMatrix = axis_matrices[a]
+		var matrix: WFCBitMatrix = axis_matrices[a]
 		var axis: Vector2i = axes[a]
 
 		var forward_path: int = matrix.get_longest_path()

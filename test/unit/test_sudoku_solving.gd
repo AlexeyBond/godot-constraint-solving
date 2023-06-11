@@ -4,7 +4,8 @@ func test_solve_sudoku():
 	var problem: WFCProblem = WFCSudokuProblem.new(9,9,9)
 	var solver: WFCSolver = WFCSolver.new(problem)
 	
-	solver.allow_backtracking = true
+	solver.settings.allow_backtracking = true
+	solver.settings.require_backtracking = true
 	solver.solve()
 	
 	for row in range(9):

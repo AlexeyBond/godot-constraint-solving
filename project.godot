@@ -27,7 +27,7 @@ movie_writer/movie_file="C:/Users/A.Bond/Desktop/test.avi"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/wfc/plugin.cfg")
 
 [rendering]
 

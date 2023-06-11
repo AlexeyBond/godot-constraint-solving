@@ -1,6 +1,6 @@
-extends Mapper2D
+extends WFCMapper2D
 
-class_name Mapper2DGridMap
+class_name WFCGridMapMapper2D
 
 @export
 var base_point: Vector3i = Vector3i(0, 0, 0)

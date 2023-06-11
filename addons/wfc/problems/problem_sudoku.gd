@@ -28,15 +28,15 @@ func coords_to_id(x: int, y: int) -> int:
 func get_cell_count() -> int:
 	return width * height
 
-func get_default_constraints() -> BitSet:
-	return BitSet.new(numbers, true)
+func get_default_constraints() -> WFCBitSet:
+	return WFCBitSet.new(numbers, true)
 
 func populate_initial_state(_state: WFCSolverState):
 	pass
 
-func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> BitSet:
+func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> WFCBitSet:
 	var coords: Vector2i = id_to_coords(cell_id)
-	var constraints: BitSet = state.cell_constraints[cell_id].copy()
+	var constraints: WFCBitSet = state.cell_constraints[cell_id].copy()
 
 	for i in range(width):
 		var c: int = coords_to_id(i, coords.y)

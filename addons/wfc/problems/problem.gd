@@ -7,18 +7,18 @@ func get_cell_count() -> int:
 	assert(false)
 	return -1
 
-func get_default_constraints() -> BitSet:
+func get_default_constraints() -> WFCBitSet:
 	@warning_ignore("assert_always_false")
 	assert(false)
-	return BitSet.new(0)
+	return WFCBitSet.new(0)
 
 func populate_initial_state(_state: WFCSolverState):
 	pass
 
-func compute_cell_constraints(_state: WFCSolverState, _cell_id: int) -> BitSet:
+func compute_cell_constraints(_state: WFCSolverState, _cell_id: int) -> WFCBitSet:
 	@warning_ignore("assert_always_false")
 	assert(false)
-	return BitSet.new(0)
+	return WFCBitSet.new(0)
 
 func mark_related_cells(_changed_cell_id: int, _mark_cell: Callable):
 	@warning_ignore("assert_always_false")

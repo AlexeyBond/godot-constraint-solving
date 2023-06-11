@@ -7,7 +7,7 @@ var settings: WFCSolverSettings
 
 var backtracking_count: int = 0
 
-func _make_initial_state(num_cells: int, initial_constraints: BitSet) -> WFCSolverState:
+func _make_initial_state(num_cells: int, initial_constraints: WFCBitSet) -> WFCSolverState:
 	var state = WFCSolverState.new()
 
 	state.cell_constraints.resize(num_cells)

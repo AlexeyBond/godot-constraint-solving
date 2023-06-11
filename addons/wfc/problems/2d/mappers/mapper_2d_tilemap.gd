@@ -1,6 +1,6 @@
-extends Mapper2D
+extends WFCMapper2D
 
-class_name TileMapMapper
+class_name WFCTileMapMapper2D
 
 @export
 var attrs_to_id: Dictionary = {}

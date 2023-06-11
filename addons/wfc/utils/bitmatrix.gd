@@ -1,9 +1,9 @@
 extends Resource
 
-class_name BitMatrix
+class_name WFCBitMatrix
 
 @export
-var rows: Array[BitSet]
+var rows: Array[WFCBitSet]
 
 var width: int
 var height: int
@@ -13,10 +13,10 @@ func _init(w: int, h: int):
 	height = h
 
 	for i in range(height):
-		rows.append(BitSet.new(width))
+		rows.append(WFCBitSet.new(width))
 
-func copy() -> BitMatrix:
-	var res: BitMatrix = BitMatrix.new(0, 0)
+func copy() -> WFCBitMatrix:
+	var res: WFCBitMatrix = WFCBitMatrix.new(0, 0)
 
 	res.width = width
 	res.height = height
@@ -31,8 +31,8 @@ func set_bit(x: int, y: int, value: bool = true):
 	
 	rows[y].set_bit(x, value)
 
-func transpose() -> BitMatrix:
-	var res: BitMatrix = BitMatrix.new(height, width)
+func transpose() -> WFCBitMatrix:
+	var res: WFCBitMatrix = WFCBitMatrix.new(height, width)
 	
 	for y in range(height):
 		for x in rows[y].iterator():
@@ -40,10 +40,10 @@ func transpose() -> BitMatrix:
 	
 	return res
 
-func transform(input: BitSet) -> BitSet:
+func transform(input: WFCBitSet) -> WFCBitSet:
 	assert(input.size == height)
 	
-	var res: BitSet = BitSet.new(width)
+	var res: WFCBitSet = WFCBitSet.new(width)
 	
 	for y in input.iterator():
 		res.union_in_place(rows[y])
@@ -66,10 +66,10 @@ func complete():
 	"""
 	# TODO: Find the right name for this operation
 	for i in range(height):
-		var ri: BitSet = rows[i]
+		var ri: WFCBitSet = rows[i]
 		for j in range(height):
 			if i != j:
-				var rj: BitSet = rows[j]
+				var rj: WFCBitSet = rows[j]
 				
 				if ri.intersects_with(rj):
 					rj.union_in_place(ri)
@@ -98,11 +98,11 @@ func get_longest_path() -> int:
 	"""
 	assert(width == height)
 
-	var all_set: BitSet = BitSet.new(width, true)
+	var all_set: WFCBitSet = WFCBitSet.new(width, true)
 	var longest_known_path: int = -1
 
 	for start in range(width):
-		var cur: BitSet = BitSet.new(width)
+		var cur: WFCBitSet = WFCBitSet.new(width)
 		cur.set_bit(start, true)
 		
 		for path_len in range(1, width):

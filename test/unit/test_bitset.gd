@@ -1,7 +1,7 @@
 extends GutTest
 
 func test_set_and_to_array():
-	var bs = BitSet.new(129)
+	var bs = WFCBitSet.new(129)
 
 	bs.set_bit(0)
 	bs.set_bit(0)
@@ -13,11 +13,11 @@ func test_set_and_to_array():
 		PackedInt64Array([0, 63, 128]),
 	)
 
-func assert_eq_bits(bs: BitSet, bits: Array):
+func assert_eq_bits(bs: WFCBitSet, bits: Array):
 	assert_eq_deep(bs.to_array(), PackedInt64Array(bits))
 
-func from_bits(size: int, bits: Array) -> BitSet:
-	var bs = BitSet.new(size)
+func from_bits(size: int, bits: Array) -> WFCBitSet:
+	var bs = WFCBitSet.new(size)
 	
 	for b in bits:
 		bs.set_bit(b)
@@ -26,7 +26,7 @@ func from_bits(size: int, bits: Array) -> BitSet:
 
 
 func test_init_all_set():
-	var bs = BitSet.new(65, true)
+	var bs = WFCBitSet.new(65, true)
 	
 	assert_eq_bits(
 		bs,
@@ -43,7 +43,7 @@ func test_init_all_set():
 
 
 func test_copy():
-	var bs = BitSet.new(129)
+	var bs = WFCBitSet.new(129)
 
 	bs.set_bit(1)
 	
@@ -69,7 +69,7 @@ func test_intersection():
 
 
 func test_get_bit_index():
-	var bs = BitSet.new(1)
+	var bs = WFCBitSet.new(1)
 
 	for i in range(64):
 		assert_eq(
@@ -83,28 +83,28 @@ func test_get_bit_index():
 
 func test_get_only_set_bit_one_bit():
 	for i in range(129):
-		var bs = BitSet.new(129)
+		var bs = WFCBitSet.new(129)
 		bs.set_bit(i)
 		assert_eq(bs.get_only_set_bit(), i)
 
 func test_get_only_set_bit_no_bits():
-	var bs = BitSet.new(129)
+	var bs = WFCBitSet.new(129)
 	
-	assert_eq(bs.get_only_set_bit(), BitSet.ONLY_BIT_NO_BITS_SET)
+	assert_eq(bs.get_only_set_bit(), WFCBitSet.ONLY_BIT_NO_BITS_SET)
 
 func test_get_only_set_bit_multiple_bits_one_word():
-	var bs = BitSet.new(129)
+	var bs = WFCBitSet.new(129)
 	bs.set_bit(1)
 	bs.set_bit(4)
 	
-	assert_eq(bs.get_only_set_bit(), BitSet.ONLY_BIT_MORE_BITS_SET)
+	assert_eq(bs.get_only_set_bit(), WFCBitSet.ONLY_BIT_MORE_BITS_SET)
 
 func test_get_only_set_bit_multiple_bits_multiple_words():
-	var bs = BitSet.new(129)
+	var bs = WFCBitSet.new(129)
 	bs.set_bit(1)
 	bs.set_bit(120)
 	
-	assert_eq(bs.get_only_set_bit(), BitSet.ONLY_BIT_MORE_BITS_SET)
+	assert_eq(bs.get_only_set_bit(), WFCBitSet.ONLY_BIT_MORE_BITS_SET)
 
 func test_count_set_bits():
 	assert_eq(

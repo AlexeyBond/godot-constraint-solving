@@ -1,6 +1,6 @@
 extends Resource
 
-class_name Mapper2D
+class_name WFCMapper2D
 
 func learn_from(_map: Node):
 	@warning_ignore("assert_always_false")

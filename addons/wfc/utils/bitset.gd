@@ -1,6 +1,6 @@
 extends Resource
 
-class_name BitSet
+class_name WFCBitSet
 
 @export
 var data0: int
@@ -74,8 +74,8 @@ func set_all():
 	dataX.set(fullElems, _n_bits_set(lastElemBits))
 
 
-func copy() -> BitSet:
-	var res : BitSet = BitSet.new(0)
+func copy() -> WFCBitSet:
+	var res : WFCBitSet = WFCBitSet.new(0)
 
 	res.data0 = data0
 	res.data1 = data1
@@ -88,7 +88,7 @@ func copy() -> BitSet:
 	return res
 
 
-func equals(other: BitSet) -> bool:
+func equals(other: WFCBitSet) -> bool:
 	if other.size != size:
 		return false
 	
@@ -105,7 +105,7 @@ func equals(other: BitSet) -> bool:
 	return true
 
 
-func union_in_place(other: BitSet):
+func union_in_place(other: WFCBitSet):
 	assert(other.size <= size)
 
 	data0 |= other.data0
@@ -115,16 +115,16 @@ func union_in_place(other: BitSet):
 		for i in range(other.dataX.size()):
 			dataX.set(i, dataX[i] | other.dataX[i])
 
-func union(other: BitSet) -> BitSet:
+func union(other: WFCBitSet) -> WFCBitSet:
 	if other.size > size:
 		return other.union(self)
 	
-	var res: BitSet = copy()
+	var res: WFCBitSet = copy()
 	res.union_in_place(other)
 	return res
 
 
-func intersect_in_place(other: BitSet):
+func intersect_in_place(other: WFCBitSet):
 	assert(other.size >= size)
 	
 	data0 &= other.data0
@@ -135,11 +135,11 @@ func intersect_in_place(other: BitSet):
 			dataX.set(i, dataX[i] & other.dataX[i])
 
 
-func intersect(other: BitSet) -> BitSet:
+func intersect(other: WFCBitSet) -> WFCBitSet:
 	if other.size < size:
 		return other.intersect(self)
 
-	var res: BitSet = copy()
+	var res: WFCBitSet = copy()
 	res.intersect_in_place(other)
 	return res
 
@@ -251,7 +251,7 @@ func get_only_set_bit() -> int:
 	return get_first_set_bit_index(get_elem(elem_index)) + elem_index * BITS_PER_INT
 
 
-func intersects_with(other: BitSet) -> bool:
+func intersects_with(other: WFCBitSet) -> bool:
 	if ((data0 & other.data0) != 0) || ((data1 & other.data1) != 0):
 		return true
 
@@ -272,12 +272,12 @@ func get_elem(n: int) -> int:
 
 
 class BitSetIterator:
-	var bs: BitSet
+	var bs: WFCBitSet
 	var bit_index: int
 	var arr_index: int
 	var cur_elem: int
 
-	func _init(bs_: BitSet):
+	func _init(bs_: WFCBitSet):
 		bs = bs_
 
 	func _iter_init(arg) -> bool:

@@ -74,9 +74,6 @@ data = {
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4dagv")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.673077, 0.303839, -0.674277, 0, 0.911712, 0.41083, 0.739572, -0.27652, 0.613652, 0, 7.73831, 0)
-
 [node name="generator" type="Node" parent="."]
 script = ExtResource("2_3emk2")
 target = NodePath("../target")
@@ -88,10 +85,13 @@ start_on_ready = true
 render_intermediate_results = true
 
 [node name="Node3D" type="Node3D" parent="."]
-transform = Transform3D(0.663743, 0, 0.747961, 0, 1, 0, -0.747961, 0, 0.663743, 0, 0, 0)
+transform = Transform3D(0.719961, 0, -0.694014, 0, 1, 0, 0.694014, 0, 0.719961, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 0.714082, 0.700062, 0, -0.700062, 0.714082, 0, 16.1111, 23.1593)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Node3D"]
+transform = Transform3D(-0.0221687, 0.410729, -0.911488, 1.68154e-09, 0.911712, 0.41083, 0.999755, 0.00910755, -0.0202115, 0, 7.73831, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

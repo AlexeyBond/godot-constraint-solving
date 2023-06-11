@@ -7,7 +7,7 @@ const MAX_INT: int = 9223372036854775807
 const CELL_SOLUTION_FAILED: int = MAX_INT
 
 var previous: WFCSolverState = null
-var cell_constraints: Array[BitSet]
+var cell_constraints: Array[WFCBitSet]
 
 """
 i'th element of cell_solution_or_entropy contains eighter:
@@ -49,11 +49,11 @@ func _store_solution(cell_id: int, solution: int):
 	divergence_candidates.erase(cell_id)
 
 func set_solution(cell_id: int, solution: int):
-	var bs: BitSet = BitSet.new(cell_constraints[0].size)
+	var bs: WFCBitSet = WFCBitSet.new(cell_constraints[0].size)
 	bs.set_bit(solution, true)
 	set_constraints(cell_id, bs, 0)
 
-func set_constraints(cell_id: int, constraints: BitSet, entropy: int = -1) -> bool:
+func set_constraints(cell_id: int, constraints: WFCBitSet, entropy: int = -1) -> bool:
 	var should_backtrack: bool = false
 
 	if cell_constraints[cell_id].equals(constraints):
@@ -63,11 +63,11 @@ func set_constraints(cell_id: int, constraints: BitSet, entropy: int = -1) -> bo
 
 	var only_bit: int = constraints.get_only_set_bit()
 
-	if only_bit == BitSet.ONLY_BIT_NO_BITS_SET:
+	if only_bit == WFCBitSet.ONLY_BIT_NO_BITS_SET:
 		_store_solution(cell_id, CELL_SOLUTION_FAILED)
 		entropy = 0
 		should_backtrack = true
-	elif only_bit != BitSet.ONLY_BIT_MORE_BITS_SET:
+	elif only_bit != WFCBitSet.ONLY_BIT_MORE_BITS_SET:
 		_store_solution(cell_id, only_bit)
 		entropy = 0
 	else:

@@ -16,7 +16,7 @@ var rect: Rect2i
 var renderable_rect: Rect2i
 
 var axes: Array[Vector2i] = []
-var axis_matrices: Array[BitMatrix] = []
+var axis_matrices: Array[WFCBitMatrix] = []
 
 func _init(settings: WFC2DProblemSettings, map_: Node):
 	assert(settings.rules.mapper != null)
@@ -47,11 +47,11 @@ func id_to_coord(id: int) -> Vector2i:
 func get_cell_count() -> int:
 	return rect.get_area()
 
-func get_default_constraints() -> BitSet:
-	return BitSet.new(rules.mapper.size(), true)
+func get_default_constraints() -> WFCBitSet:
+	return WFCBitSet.new(rules.mapper.size(), true)
 
 func populate_initial_state(state: WFCSolverState):
-	var mapper: Mapper2D = rules.mapper
+	var mapper: WFCMapper2D = rules.mapper
 
 	for x in range(rect.size.x):
 		for y in range(rect.size.y):
@@ -61,8 +61,8 @@ func populate_initial_state(state: WFCSolverState):
 			if cell >= 0:
 				state.set_solution(coord_to_id(pos), cell)
 
-func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> BitSet:
-	var res: BitSet = state.cell_constraints[cell_id].copy()
+func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> WFCBitSet:
+	var res: WFCBitSet = state.cell_constraints[cell_id].copy()
 	var pos: Vector2i = id_to_coord(cell_id)
 	
 	for i in range(axes.size()):
@@ -76,7 +76,7 @@ func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> BitSet:
 		if state.cell_solution_or_entropy[other_id] == WFCSolverState.CELL_SOLUTION_FAILED:
 			continue
 
-		var other_constraint: BitSet = state.cell_constraints[other_id]
+		var other_constraint: WFCBitSet = state.cell_constraints[other_id]
 		res.intersect_in_place(axis_matrices[i].transform(other_constraint))
 
 	return res
@@ -92,7 +92,7 @@ func mark_related_cells(changed_cell_id: int, mark_cell: Callable):
 
 func render_state_to_map(state: WFCSolverState):
 	assert(rect.encloses(renderable_rect))
-	var mapper: Mapper2D = rules.mapper
+	var mapper: WFCMapper2D = rules.mapper
 	
 	var render_rect_offset = renderable_rect.position - rect.position
 
