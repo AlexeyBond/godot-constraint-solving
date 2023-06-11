@@ -134,7 +134,7 @@ func _split_range(first: int, size: int, partitions: int, min_partition_size: in
 
 	for partition in range(partitions):
 		@warning_ignore("integer_division")
-		res.append((size * partition) / partitions)
+		res.append(first + (size * partition) / partitions)
 
 	res.append(first + size)
 
@@ -159,7 +159,7 @@ func split(concurrency_limit: int) -> Array[SubProblem]:
 	var split_x_overhead: int = influence_range.x * rect.size.y
 	var split_y_overhead: int = influence_range.y * rect.size.x
 
-	if may_split_x and ((not may_split_y) or (split_x_overhead <= split_x_overhead)):
+	if may_split_x and ((not may_split_y) or (split_x_overhead <= split_y_overhead)):
 		extra_overlap.x = influence_range.x * 2
 
 		var partitions: PackedInt64Array = _split_range(
@@ -194,9 +194,11 @@ func split(concurrency_limit: int) -> Array[SubProblem]:
 				partitions[i + 1] - partitions[i]
 			))
 	else:
+		print_debug("Could not split the problem. influence_range=", influence_range, ", overhead_x=", split_x_overhead, ", overhead_y=", split_y_overhead)
 		return super.split(concurrency_limit)
 
 	if rects.size() < 3:
+		print_debug("Could not split problem. produced_rects=", rects)
 		return super.split(concurrency_limit)
 
 	var res: Array[SubProblem] = []
