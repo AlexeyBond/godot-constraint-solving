@@ -7,7 +7,7 @@ const MAX_INT: int = 9223372036854775807
 const CELL_SOLUTION_FAILED: int = MAX_INT
 
 var previous: WFCSolverState = null
-var cell_constraints: Array[WFCBitSet]
+var cell_domains: Array[WFCBitSet]
 
 """
 i'th element of cell_solution_or_entropy contains eighter:
@@ -49,19 +49,19 @@ func _store_solution(cell_id: int, solution: int):
 	divergence_candidates.erase(cell_id)
 
 func set_solution(cell_id: int, solution: int):
-	var bs: WFCBitSet = WFCBitSet.new(cell_constraints[0].size)
+	var bs: WFCBitSet = WFCBitSet.new(cell_domains[0].size)
 	bs.set_bit(solution, true)
-	set_constraints(cell_id, bs, 0)
+	set_domain(cell_id, bs, 0)
 
-func set_constraints(cell_id: int, constraints: WFCBitSet, entropy: int = -1) -> bool:
+func set_domain(cell_id: int, domain: WFCBitSet, entropy: int = -1) -> bool:
 	var should_backtrack: bool = false
 
-	if cell_constraints[cell_id].equals(constraints):
+	if cell_domains[cell_id].equals(domain):
 		return should_backtrack
 
 	changed_cells.append(cell_id)
 
-	var only_bit: int = constraints.get_only_set_bit()
+	var only_bit: int = domain.get_only_set_bit()
 
 	if only_bit == WFCBitSet.ONLY_BIT_NO_BITS_SET:
 		_store_solution(cell_id, CELL_SOLUTION_FAILED)
@@ -72,13 +72,13 @@ func set_constraints(cell_id: int, constraints: WFCBitSet, entropy: int = -1) ->
 		entropy = 0
 	else:
 		if entropy < 0:
-			entropy = constraints.count_set_bits() - 1
+			entropy = domain.count_set_bits() - 1
 		
 		assert(entropy > 0)
 		cell_solution_or_entropy[cell_id] = -entropy
 		divergence_candidates[cell_id] = true
 
-	cell_constraints[cell_id] = constraints
+	cell_domains[cell_id] = domain
 
 	return should_backtrack
 
@@ -101,7 +101,7 @@ func backtrack() -> WFCSolverState:
 func make_next() -> WFCSolverState:
 	var new: WFCSolverState = WFCSolverState.new()
 
-	new.cell_constraints = cell_constraints.duplicate()
+	new.cell_domains = cell_domains.duplicate()
 	new.cell_solution_or_entropy = cell_solution_or_entropy.duplicate()
 	new.unsolved_cells = unsolved_cells
 	new.divergence_candidates = divergence_candidates.duplicate()
@@ -143,7 +143,7 @@ func prepare_divergence():
 	divergence_candidates.erase(divergence_cell)
 	divergence_options.clear()
 
-	for option in cell_constraints[divergence_cell].iterator():
+	for option in cell_domains[divergence_cell].iterator():
 		divergence_options.append(option)
 
 	divergence_options.shuffle()

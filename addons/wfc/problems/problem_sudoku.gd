@@ -28,20 +28,20 @@ func coords_to_id(x: int, y: int) -> int:
 func get_cell_count() -> int:
 	return width * height
 
-func get_default_constraints() -> WFCBitSet:
+func get_default_domain() -> WFCBitSet:
 	return WFCBitSet.new(numbers, true)
 
 func populate_initial_state(_state: WFCSolverState):
 	pass
 
-func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> WFCBitSet:
+func compute_cell_domain(state: WFCSolverState, cell_id: int) -> WFCBitSet:
 	var coords: Vector2i = id_to_coords(cell_id)
-	var constraints: WFCBitSet = state.cell_constraints[cell_id].copy()
+	var domain: WFCBitSet = state.cell_domains[cell_id].copy()
 
 	for i in range(width):
 		var c: int = coords_to_id(i, coords.y)
 		if c != cell_id and state.is_cell_solved(c):
-			constraints.set_bit(
+			domain.set_bit(
 				state.get_cell_solution(c),
 				false,
 			)
@@ -49,12 +49,12 @@ func compute_cell_constraints(state: WFCSolverState, cell_id: int) -> WFCBitSet:
 	for i in range(height):
 		var c: int = coords_to_id(coords.x, i)
 		if c != cell_id and state.is_cell_solved(c):
-			constraints.set_bit(
+			domain.set_bit(
 				state.get_cell_solution(c),
 				false,
 			)
 
-	return constraints
+	return domain
 
 func mark_related_cells(changed_cell_id: int, mark_cell: Callable):
 	var coords: Vector2i = id_to_coords(changed_cell_id)

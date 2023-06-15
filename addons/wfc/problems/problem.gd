@@ -7,7 +7,7 @@ func get_cell_count() -> int:
 	assert(false)
 	return -1
 
-func get_default_constraints() -> WFCBitSet:
+func get_default_domain() -> WFCBitSet:
 	@warning_ignore("assert_always_false")
 	assert(false)
 	return WFCBitSet.new(0)
@@ -15,7 +15,7 @@ func get_default_constraints() -> WFCBitSet:
 func populate_initial_state(_state: WFCSolverState):
 	pass
 
-func compute_cell_constraints(_state: WFCSolverState, _cell_id: int) -> WFCBitSet:
+func compute_cell_domain(_state: WFCSolverState, _cell_id: int) -> WFCBitSet:
 	@warning_ignore("assert_always_false")
 	assert(false)
 	return WFCBitSet.new(0)
