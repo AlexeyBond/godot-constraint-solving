@@ -65,6 +65,7 @@ data = {
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
 [node name="target" type="GridMap" parent="."]
+visible = false
 mesh_library = ExtResource("1_in0m7")
 cell_size = Vector3(1, 1, 1)
 data = {

@@ -26,6 +26,7 @@ Features:
 What's not (yet) implemented:
 - 3d map generation.
   Generation of 3d maps (for `GridMap`s or multi-layered `TileMap`s) is not yet implemented.
+- Wrapping.
 - Tile probabilities.
   It's currently not possible to control probabilities of certain tile types being "observed".
 - Rules editor.
@@ -37,11 +38,61 @@ What's not (yet) implemented:
   In cases when a cell can be rotated (`GridMap`), the algorithm treats each combination of tile type and rotation as a separate tile type.
   So, you have to specify possible adjacent tiles for all rotations of each tile (in fact, just few are enough - the algorithm is able to infer other combinations automatically in most cases).
 
+## How to use
+
+### WFC2DGenerator node
+
+The easiest way to use this addon to generate a map is by using a `WFC2DGenerator` node.
+
+To do so follow the following steps:
+
+1. Create (or use existing one) a tile set (if you're going to generate a 2d tile map) or mesh library (in case of a grid map).
+2. Make a map (a TileMap or GridMap) with examples of how your tiles should be used.
+3. Create a TileMap or GridMap generated map will be written to.
+   The new map should use the same tile set/mesh library as one created on step 2.
+   You may place some tiles on that map (eighter manually or procedurally), generator will take them into account and fill other cells accordingly.
+   But try to not create an unsolvable puzzle when doing so.
+4. Create a `WFC2DGenerator` node and set the following properties:
+   - `target` should point to a map node that will contain a generated map - one created at step 3
+   - `positive_sample` should point to a node that contains an example of a valid map - created at step 2
+   - `rect` should contain a rect of target map that will be filled by generator
+   - there are some other settings that may influence behavior and performance of the generator, feel free to experiment with those after you have a basic setup running
+5. Run the generator.
+   By default it will start as soon as a scene runs.
+   However, you can clear `start_on_ready` flag and call `start()` method on generator node manually.
+   For example, that can be useful if you fill some of cells in target map procedurally.
+
+The resulting setup may look like the following:
+
+![Example of WFC2DGenerator setup](screenshots/example-01.png)
+
+Examples of such setups can be found in [examples](addons/wfc/examples) folder.
+
+It may make sense to create and keep a minimal scene with generator, sample map and target map - just to ensure that samples are good enough to generate a good map with your tile set.
+
+If some of tile combinations produced by generator don't look good - try adding a negative samples map and place tose combinations there.
+
+### Advanced use
+
+`WFC2DGenerator` node is a high-level convenient wrapper for lower-level components.
+In some cases it may be useful to use the low-level components directly.
+See [sudoku demo](addons/wfc/examples/demo_sudoku.tscn) as an example.
+
+You can extend different classes of this addon to achieve a desired behavior different from what is available by default.
+For example, you can:
+- add support for different map types by implementing your own [`WFCMapper2D`](addons/wfc/problems/2d/mappers/mapper_2d.gd) subclass
+- add support of global constraints by extending [`WFC2DProblem`](addons/wfc/problems/2d/problem_wfc_2d.gd)
+- use your own versions of internal components with the same interface as `WFC2DGenerator` by creating your own subclass of `WFC2DGenerator`
+
+There is no detailed documentation (at least, for now) on how to use or extend internal components of the addon.
+So please refer to source code to find a way to do what you need and feel free to ask questions in [github issues](https://github.com/AlexeyBond/godot-constraint-solving/issues).
 
 ## Copyright notes
 
 This addon is licenced under MIT licence.
 
-Examples/demos use [assets](https://github.com/AlexeyBond/godot-constraint-solving/tree/master/addons/wfc/examples/assets) from [Kenney](https://kenney.nl/).
+Examples/demos use [assets](addons/wfc/examples/assets) from [Kenney](https://kenney.nl/).
 
 This addon uses [GUT](https://github.com/bitwes/Gut) for unit testing (not included in downloadable archive).
+
+The [logo](./icon.png) is generated using Stable Diffusion.
