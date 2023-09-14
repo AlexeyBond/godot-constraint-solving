@@ -1,0 +1,5 @@
+extends WFC2DPrecondition2DNullSettings
+class_name WFC2DPreconditionReadExistingSettings
+
+func create_precondition(parameters: WFC2DPrecondition2DNullSettings.CreationParameters) -> WFC2DPrecondition:
+	return WFC2DPreconditionReadExistingMap.new(parameters.target_node, parameters.problem_settings.rules.mapper)

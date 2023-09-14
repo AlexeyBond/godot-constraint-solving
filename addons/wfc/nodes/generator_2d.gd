@@ -23,6 +23,9 @@ var negative_sample: NodePath
 var solver_settings: WFCSolverSettings = WFCSolverSettings.new()
 
 @export
+var precondition: WFC2DPrecondition2DNullSettings
+
+@export
 @export_category("Runner")
 var multithreaded_runner_settings: WFCMultithreadedRunnerSettings = WFCMultithreadedRunnerSettings.new()
 
@@ -79,8 +82,26 @@ func _create_mapper(map: Node) -> WFCMapper2D:
 			assert(false)
 			return null
 
-func _create_problem(settings: WFC2DProblem.WFC2DProblemSettings, map: Node) -> WFC2DProblem:
-	return WFC2DProblem.new(settings, map)
+func _create_precondition(problem_settings: WFC2DProblem.WFC2DProblemSettings, map: Node) -> WFC2DPrecondition:
+	var settings: WFC2DPrecondition2DNullSettings = self.precondition
+
+	if settings == null:
+		settings = WFC2DPreconditionReadExistingSettings.new()
+
+	var parameters: WFC2DPrecondition2DNullSettings.CreationParameters = WFC2DPrecondition2DNullSettings.CreationParameters.new()
+
+	parameters.target_node = map
+	parameters.problem_settings = problem_settings
+	parameters.base_node = self
+
+	return settings.create_precondition(parameters)
+
+func _create_problem(
+	settings: WFC2DProblem.WFC2DProblemSettings,
+	map: Node,
+	precondition: WFC2DPrecondition
+) -> WFC2DProblem:
+	return WFC2DProblem.new(settings, map, precondition)
 
 func _exit_tree():
 	if _runner != null:
@@ -132,7 +153,12 @@ func start():
 	problem_settings.rules = rules
 	problem_settings.rect = rect
 
-	var problem: WFC2DProblem = _create_problem(problem_settings, target_node)
+	var precondition: WFC2DPrecondition = _create_precondition(problem_settings, target_node)
+
+	# TODO: Call this in separate thread if long-running generators will be used to generate preconditions
+	precondition.prepare()
+
+	var problem: WFC2DProblem = _create_problem(problem_settings, target_node, precondition)
 
 	_runner = _create_runner()
 	

@@ -12,7 +12,7 @@ config_version=5
 
 config/name="WFC (Wave Function Collapse) for Godot 4"
 run/main_scene="res://addons/wfc/examples/demo_wfc_2d_tilemap.tscn"
-config/features=PackedStringArray("4.0", "GL Compatibility")
+config/features=PackedStringArray("4.1", "GL Compatibility")
 config/icon="res://icon.png"
 
 [display]
