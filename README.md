@@ -9,7 +9,8 @@ Features:
 - **Multithreading**.
   Generation of a 2d map using WFC algorithm can be split into few tasks.
   Some of the tasks can be executed concurrently.
-  The algorithm is able to detect cases when it's impossible to split the task and fallback to single-threaded generation in such cases.
+  The algorithm is (in most cases) able to detect if it's impossible to split the task.
+  It falls back to single-threaded generation in such cases.
 - **Learning from example**.
   2d WFC generator is able to infer rules from an example of a valid map.
   The algorithm also tries to infer some valid cell combinations beyond those provided in the example.

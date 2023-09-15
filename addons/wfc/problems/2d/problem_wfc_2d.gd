@@ -62,8 +62,10 @@ func populate_initial_state(state: WFCSolverState):
 			var domain: WFCBitSet = precondition.read_domain(pos + rect.position)
 
 			if domain != null:
-				state.set_domain(coord_to_id(pos), domain)
-	
+				var bt: bool = state.set_domain(coord_to_id(pos), domain)
+
+				assert(not bt)
+
 	# Read cells generated on previous stages
 	for read_rect in init_read_rects:
 		var pos_delta: Vector2i = read_rect.position - rect.position
@@ -72,7 +74,7 @@ func populate_initial_state(state: WFCSolverState):
 			for y in range(read_rect.size.y):
 				var pos: Vector2i = Vector2i(x, y)
 				var solution: int = mapper.read_cell(map, read_rect.position + pos)
-				
+
 				if solution >= 0:
 					state.set_solution(
 						coord_to_id(pos + pos_delta),
@@ -112,7 +114,7 @@ func render_state_to_map(state: WFCSolverState):
 	assert(rect.encloses(renderable_rect))
 	var mapper: WFCMapper2D = rules.mapper
 	
-	var render_rect_offset = renderable_rect.position - rect.position
+	var render_rect_offset: Vector2i = renderable_rect.position - rect.position
 
 	for x in range(renderable_rect.size.x):
 		for y in range(renderable_rect.size.y):

@@ -143,6 +143,21 @@ func intersect(other: WFCBitSet) -> WFCBitSet:
 	res.intersect_in_place(other)
 	return res
 
+func xor_in_place(other: WFCBitSet):
+	assert(other.size == size)
+	
+	data0 ^= other.data0
+	data1 ^= other.data1
+	
+	if size > STATIC_BITS:
+		for i in range(dataX.size()):
+			dataX.set(i, dataX[i] ^ other.dataX[i])
+
+func invert() -> WFCBitSet:
+	var res: WFCBitSet = WFCBitSet.new(size, true)
+	res.xor_in_place(self)
+	return res
+
 func get_bit(bit_num: int) -> bool:
 	if bit_num > size:
 		return false
@@ -250,6 +265,16 @@ func get_only_set_bit() -> int:
 
 	return get_first_set_bit_index(get_elem(elem_index)) + elem_index * BITS_PER_INT
 
+func is_empty() -> bool:
+	if data0 != 0 or data1 != 0:
+		return false
+
+	if size > STATIC_BITS:
+		for d in dataX:
+			if d != 0:
+				return false
+
+	return true
 
 func intersects_with(other: WFCBitSet) -> bool:
 	if ((data0 & other.data0) != 0) || ((data1 & other.data1) != 0):

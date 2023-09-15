@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://y3crs2dictbq"]
+
+[ext_resource type="Script" path="res://addons/wfc/nodes/generator_2d.gd" id="1_73cd8"]
+[ext_resource type="TileSet" uid="uid://dgefkshuslimj" path="res://addons/wfc/examples/assets/kenney-tiny-dungeon/tile-set.tres" id="2_lbwo1"]
+
+[node name="demo_wfc_2d_tilemap_bad_rules" type="Node2D"]
+
+[node name="WFC2DGenerator" type="Node" parent="."]
+script = ExtResource("1_73cd8")
+target = NodePath("../target")
+rect = Rect2i(0, 0, 121, 68)
+positive_sample = NodePath("../sample")
+start_on_ready = true
+print_rules = true
+
+[node name="sample" type="TileMap" parent="."]
+tile_set = ExtResource("2_lbwo1")
+format = 2
+layer_0/tile_data = PackedInt32Array(0, 720896, 5, 65536, 589824, 7, 131071, 65536, 5, 196607, 65536, 5, 131072, 65536, 5, -65536, 65536, 5, -65535, 65536, 5, 1, 65536, 5, 65537, 720896, 5)
+
+[node name="target" type="TileMap" parent="."]
+tile_set = ExtResource("2_lbwo1")
+format = 2

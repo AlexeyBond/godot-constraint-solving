@@ -91,25 +91,33 @@ func solve_step() -> bool:
 
 	if backtrack:
 		if settings.backtracking_limit > 0 and backtracking_count > settings.backtracking_limit:
-			print_debug('Backtracking limit exceeded, restarting from best state without backtracking')
-			
+			print_debug(
+				'Backtracking limit exceeded after ',
+				backtracking_count,
+				' attempt(s), restarting from best state without backtracking',
+			)
+
 			current_state = best_state
 			backtracking_enabled = false
-			
+
 			return false
 
-		backtracking_count += 1
-		
 		current_state = current_state.backtrack()
 
 		if current_state == null:
-			print_debug('Backtracking failed')
+			print_debug(
+				'Backtracking failed completely after ',
+				backtracking_count,
+				' attempt(s)',
+			)
 
 			if not settings.require_backtracking:
 				print_debug('Restarting from best state without backtracking')
 
 				current_state = best_state
 				backtracking_enabled = false
+
+		backtracking_count += 1
 
 		return false
 
