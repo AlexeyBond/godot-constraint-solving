@@ -28,7 +28,6 @@ rect = Rect2i(0, 0, 121, 68)
 positive_sample = NodePath("../sample")
 negative_sample = NodePath("../negative_sample")
 multithreaded_runner_settings = SubResource("Resource_uafrt")
-start_on_ready = null
 render_intermediate_results = true
 
 [node name="sample" type="TileMap" parent="."]

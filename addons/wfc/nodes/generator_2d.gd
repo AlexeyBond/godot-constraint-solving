@@ -70,7 +70,7 @@ func _create_runner() -> WFCSolverRunner:
 func _create_mapper(map: Node) -> WFCMapper2D:
 	match map.get_class():
 		"TileMap":
-			return WFCTileMapMapper2D.new()
+			return WFCLayeredTileMapMapper2D.new()
 		"GridMap":
 			return WFCGridMapMapper2D.new()
 		var cname:
