@@ -8,6 +8,9 @@ var attrs_to_id: Dictionary = {}
 @export
 var tile_set: TileSet = null
 
+@export
+var layers: Array[int] = []
+
 # Nested Arrays types aren't supported but this is an Array[Array[Vector4i]]
 var id_to_attrs: Array
 
@@ -28,6 +31,8 @@ func _read_cell_attrs(map: TileMap, coords: Vector2i, layers: int) -> Array[Vect
 func learn_from(map_: Node):
 	var map: TileMap = _ensure_tile_map(map_)
 	var layers = map.get_layers_count()
+	if len(layers) == 0:
+		layers = range(map.get_layers_count())
 
 	assert(tile_set == null or tile_set == map.tile_set)
 	tile_set = map.tile_set
