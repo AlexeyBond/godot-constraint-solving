@@ -28,7 +28,6 @@ func _read_cell_attrs(map: TileMap, coords: Vector2i, layers: int) -> Array[Vect
 func learn_from(map_: Node):
 	var map: TileMap = _ensure_tile_map(map_)
 	var layers = map.get_layers_count()
-	print('Sample map named {1} has {0} layers'.format([layers, map.name]))
 
 	assert(tile_set == null or tile_set == map.tile_set)
 	tile_set = map.tile_set
@@ -58,7 +57,6 @@ func get_used_rect(map_: Node) -> Rect2i:
 func read_cell(map_: Node, coords: Vector2i) -> int:
 	var map: TileMap = _ensure_tile_map(map_)
 	var layers = map.get_layers_count()
-
 	var attrs: Array[Vector4i] = _read_cell_attrs(map, coords, layers)
 	
 	# print('read ', coords, ' -> ', attrs, ' -> ', attrs_to_id.get(attrs, -1))

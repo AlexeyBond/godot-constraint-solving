@@ -43,6 +43,8 @@ var render_intermediate_results: bool = false
 @export_category("Debug mode")
 var print_rules: bool = false
 
+var start_time: float
+
 signal done
 
 
@@ -88,6 +90,7 @@ func _exit_tree():
 		_runner = null
 
 func start():
+	start_time = Time.get_ticks_msec()
 	assert(_runner == null)
 	assert(target != null)
 	assert(rect.has_area())
@@ -110,10 +113,11 @@ func start():
 		
 		if rules.mapper == null:
 			rules.mapper = _create_mapper(target_node)
-
+		var start_learn = Time.get_ticks_msec()
 		if not rules.mapper.is_ready():
 			rules.mapper.learn_from(positive_sample_node)
-		
+		var elapsed = (Time.get_ticks_msec() - start_learn);
+		print("Learn: %dms"%elapsed)
 		rules.learn_from(positive_sample_node)
 		
 		if rules.complete_matrices and negative_sample != null and not negative_sample.is_empty():
@@ -138,7 +142,7 @@ func start():
 	
 	_runner.start(problem)
 
-	_runner.all_solved.connect(func(): done.emit())
+	_runner.all_solved.connect(func(): done.emit(); print(str(Time.get_ticks_msec() - start_time) + "ms"))
 	_runner.sub_problem_solved.connect(_on_solved)
 	_runner.partial_solution.connect(_on_partial_solution)
 
