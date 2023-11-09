@@ -113,7 +113,6 @@ func start():
 		var start_learn = Time.get_ticks_msec()
 		if not rules.mapper.is_ready():
 			rules.mapper.learn_from(positive_sample_node)
-		var elapsed = (Time.get_ticks_msec() - start_learn);
 		rules.learn_from(positive_sample_node)
 		
 		if rules.complete_matrices and negative_sample != null and not negative_sample.is_empty():
@@ -159,10 +158,3 @@ func _ready():
 func _process(_delta):
 	if _runner != null and _runner.is_running():
 		_runner.update()
-
-
-
-
-
-
-

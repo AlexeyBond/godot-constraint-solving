@@ -21,7 +21,8 @@ func _ensure_tile_map(node: Node) -> TileMap:
 
 func _read_cell_attrs(map: TileMap, coords: Vector2i) -> Array[Vector4i]:
 	var cells: Array[Vector4i] = []
-	for layer in layers:
+	for i in range(len(layers)):
+		var layer := layers[i]
 		var source: int = map.get_cell_source_id(layer, coords)
 		var atlas_coords: Vector2i = map.get_cell_atlas_coords(layer, coords)
 		var alt: int = map.get_cell_alternative_tile(layer, coords)
@@ -36,7 +37,8 @@ func learn_from(map_: Node):
 
 	assert(tile_set == null or tile_set == map.tile_set)
 	tile_set = map.tile_set
-	for layer in layers:
+	for i in range(len(layers)):
+		var layer := layers[i]
 		for cell in map.get_used_cells(layer):
 			var cell_attrs: Array[Vector4i] = _read_cell_attrs(map, cell)
 
@@ -75,11 +77,12 @@ func write_cell(map_: Node, coords: Vector2i, code: int):
 	assert(tile_set == map.tile_set)
 	_ensure_reverse_mapping()
 	assert(code < id_to_attrs.size())
-	for layer in layers:
+	for i in range(len(layers)):
+		var layer := layers[i]
 		if code < 0:
 			map.erase_cell(layer, coords)
 		else:
-			var attrs: Vector4i = id_to_attrs[code][layer]
+			var attrs: Vector4i = id_to_attrs[code][i]
 			map.set_cell(
 				layer, 
 				coords,
