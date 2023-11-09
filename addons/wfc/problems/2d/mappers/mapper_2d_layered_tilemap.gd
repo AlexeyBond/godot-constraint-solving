@@ -19,9 +19,9 @@ func _ensure_tile_map(node: Node) -> TileMap:
 	
 	return node as TileMap
 
-func _read_cell_attrs(map: TileMap, coords: Vector2i, layers: int) -> Array[Vector4i]:
+func _read_cell_attrs(map: TileMap, coords: Vector2i) -> Array[Vector4i]:
 	var cells: Array[Vector4i] = []
-	for layer in range(layers):
+	for layer in layers:
 		var source: int = map.get_cell_source_id(layer, coords)
 		var atlas_coords: Vector2i = map.get_cell_atlas_coords(layer, coords)
 		var alt: int = map.get_cell_alternative_tile(layer, coords)
@@ -30,15 +30,14 @@ func _read_cell_attrs(map: TileMap, coords: Vector2i, layers: int) -> Array[Vect
 
 func learn_from(map_: Node):
 	var map: TileMap = _ensure_tile_map(map_)
-	var layers = map.get_layers_count()
 	if len(layers) == 0:
 		layers = range(map.get_layers_count())
 
 	assert(tile_set == null or tile_set == map.tile_set)
 	tile_set = map.tile_set
-	for layer in range(layers):
+	for layer in layers:
 		for cell in map.get_used_cells(layer):
-			var cell_attrs: Array[Vector4i] = _read_cell_attrs(map, cell, layers)
+			var cell_attrs: Array[Vector4i] = _read_cell_attrs(map, cell)
 
 			if cell_attrs not in attrs_to_id:
 				attrs_to_id[cell_attrs] = attrs_to_id.size()
@@ -61,8 +60,7 @@ func get_used_rect(map_: Node) -> Rect2i:
 
 func read_cell(map_: Node, coords: Vector2i) -> int:
 	var map: TileMap = _ensure_tile_map(map_)
-	var layers = map.get_layers_count()
-	var attrs: Array[Vector4i] = _read_cell_attrs(map, coords, layers)
+	var attrs: Array[Vector4i] = _read_cell_attrs(map, coords)
 	
 	# print('read ', coords, ' -> ', attrs, ' -> ', attrs_to_id.get(attrs, -1))
 
@@ -71,13 +69,12 @@ func read_cell(map_: Node, coords: Vector2i) -> int:
 
 func write_cell(map_: Node, coords: Vector2i, code: int):
 	var map: TileMap = _ensure_tile_map(map_)
-	var layers = map.get_layers_count()
 
 	assert(tile_set != null)
 	assert(tile_set == map.tile_set)
 	_ensure_reverse_mapping()
 	assert(code < id_to_attrs.size())
-	for layer in range(layers):
+	for layer in layers:
 		if code < 0:
 			map.erase_cell(layer, coords)
 		else:
