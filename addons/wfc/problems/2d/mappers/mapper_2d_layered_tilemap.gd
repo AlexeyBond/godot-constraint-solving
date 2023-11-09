@@ -31,7 +31,8 @@ func _read_cell_attrs(map: TileMap, coords: Vector2i) -> Array[Vector4i]:
 func learn_from(map_: Node):
 	var map: TileMap = _ensure_tile_map(map_)
 	if len(layers) == 0:
-		layers = range(map.get_layers_count())
+		for i in range(map.get_layers_count()):
+			layers.append(i)
 
 	assert(tile_set == null or tile_set == map.tile_set)
 	tile_set = map.tile_set
