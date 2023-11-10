@@ -110,7 +110,6 @@ func start():
 		
 		if rules.mapper == null:
 			rules.mapper = _create_mapper(target_node)
-		var start_learn = Time.get_ticks_msec()
 		if not rules.mapper.is_ready():
 			rules.mapper.learn_from(positive_sample_node)
 		rules.learn_from(positive_sample_node)
