@@ -70,7 +70,7 @@ func _create_runner() -> WFCSolverRunner:
 func _create_mapper(map: Node) -> WFCMapper2D:
 	match map.get_class():
 		"TileMap":
-			return WFCTileMapMapper2D.new()
+			return WFCLayeredTileMapMapper2D.new()
 		"GridMap":
 			return WFCGridMapMapper2D.new()
 		var cname:
@@ -110,10 +110,8 @@ func start():
 		
 		if rules.mapper == null:
 			rules.mapper = _create_mapper(target_node)
-
 		if not rules.mapper.is_ready():
 			rules.mapper.learn_from(positive_sample_node)
-		
 		rules.learn_from(positive_sample_node)
 		
 		if rules.complete_matrices and negative_sample != null and not negative_sample.is_empty():
@@ -159,10 +157,3 @@ func _ready():
 func _process(_delta):
 	if _runner != null and _runner.is_running():
 		_runner.update()
-
-
-
-
-
-
-
