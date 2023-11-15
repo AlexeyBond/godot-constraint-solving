@@ -21,6 +21,16 @@ func read_cell(_map: Node, _coords: Vector2i) -> int:
 	assert(false)
 	return -1
 
+func read_tile_meta(_tile: int, _meta_name: String) -> Array:
+	"""
+	Read metadata attribute values associated with given cell type.
+	
+	May return array of multiple values if cell type consists of multiple objects having metadata.
+	E.g. combinations of different tiles in multi-layer tilemap.
+	"""
+	@warning_ignore("assert_always_false")
+	assert(false)
+	return []
 
 func write_cell(_map: Node, _coords: Vector2i, _code: int):
 	"""

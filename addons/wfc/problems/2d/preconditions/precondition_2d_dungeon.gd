@@ -42,32 +42,31 @@ func id_to_coord(i: int) -> Vector2i:
 func read_at(c: Vector2i) -> int:
 	return state[coord_to_id(c)]
 
-func learn_classes(node: Node, mapper: WFCMapper2D):
-	var used_rect: Rect2i = mapper.get_used_rect(node)
-
-	assert(used_rect.size.y == 1 or used_rect.size.y == 2)
-
-	passable_domain = WFCBitSet.new(mapper.size())
-
-	for i in range(used_rect.size.x):
-		var read: int = mapper.read_cell(node, Vector2i(i, 0))
-		
-		if read >= 0:
-			passable_domain.set_bit(read)
+func _meta_to_bool(meta: Array) -> bool:
+	for x in meta:
+		if x:
+			return true
 	
+	return false
+
+func learn_classes(
+	mapper: WFCMapper2D,
+	road_class: String = "wfc_dungeon_road",
+	wall_class: String = "wfc_dungeon_wall",
+):
+	passable_domain = WFCBitSet.new(mapper.size())
 	walls_domain = WFCBitSet.new(mapper.size())
 	
-	for i in range(used_rect.size.x):
-		var read: int = mapper.read_cell(node, Vector2i(i, 1))
-		
-		if read >= 0:
-			walls_domain.set_bit(read)
+	for i in range(mapper.size()):
+		if _meta_to_bool(mapper.read_tile_meta(i, road_class)):
+			passable_domain.set_bit(i)
+		if _meta_to_bool(mapper.read_tile_meta(i, wall_class)):
+			walls_domain.set_bit(i)
+
+	assert(not passable_domain.is_empty())
 
 	if walls_domain.is_empty():
 		walls_domain = passable_domain.invert()
-
-	print_debug("Passage domain: ", passable_domain.format_bits())
-	print_debug("Walls domain:   ", walls_domain.format_bits())
 
 func _replace_rect(r: Rect2i, from: int, to: int) -> int:
 	var replaced_area: int = 0

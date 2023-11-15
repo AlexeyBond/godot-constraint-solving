@@ -69,6 +69,35 @@ func read_cell(map_: Node, coords: Vector2i) -> int:
 
 	return attrs_to_id.get(attrs, -1)
 
+func read_tile_meta(tile: int, meta_name: String) -> Array:
+	if tile < 0:
+		return []
+	_ensure_reverse_mapping()
+	assert(tile < id_to_attrs.size())
+
+	var data_layer := tile_set.get_custom_data_layer_by_name(meta_name)
+
+	if data_layer < 0:
+		return []
+
+	var result := []
+	var all_attrs = id_to_attrs[tile]
+	
+	for i in range(len(layers)):
+		var attrs = all_attrs[i]
+
+		if attrs.x < 0 or attrs.y < 0 or attrs.z < 0 or attrs.w < 0:
+			continue
+
+		var source := tile_set.get_source(attrs.x)
+		
+		if source is TileSetAtlasSource:
+			var td := (source as TileSetAtlasSource).get_tile_data(Vector2i(attrs.y, attrs.z), attrs.w)
+			result.append(td.get_custom_data_by_layer_id(data_layer))
+		elif source is TileSetScenesCollectionSource:
+			pass # TODO
+
+	return result
 
 func write_cell(map_: Node, coords: Vector2i, code: int):
 	var map: TileMap = _ensure_tile_map(map_)

@@ -5,6 +5,8 @@ class_name WFCGridMapMapper2D
 @export
 var base_point: Vector3i = Vector3i(0, 0, 0)
 
+@export
+var mesh_library: MeshLibrary
 
 @export_enum("X", "Y", "Z")
 var x_axis: int = Vector3i.AXIS_X
@@ -44,6 +46,11 @@ func _ensure_grid_map(node: Node) -> GridMap:
 func learn_from(map_: Node):
 	var map: GridMap = _ensure_grid_map(map_)
 	
+	if mesh_library == null:
+		mesh_library = map.mesh_library
+
+	assert(mesh_library == map.mesh_library)
+
 	for used_coord in map.get_used_cells():
 		var mesh_id: int = map.get_cell_item(used_coord)
 		var orientation: int = map.get_cell_item_orientation(used_coord)
@@ -95,10 +102,32 @@ func _ensure_reverse_mapping():
 	for attrs in attrs_to_id.keys():
 		_id_to_attrs[attrs_to_id[attrs]] = attrs
 
+const _NO_META_SENTINEL = '_NO_META_SENTINEL@@@'
+
+func read_tile_meta(tile: int, meta_name: String) -> Array:
+	if tile < 0:
+		return []
+
+	_ensure_reverse_mapping()
+	assert(tile < _id_to_attrs.size())
+	
+	var attrs := _id_to_attrs[tile]
+	var value = mesh_library.get_item_mesh(attrs.x).get_meta(meta_name, _NO_META_SENTINEL)
+
+	if _NO_META_SENTINEL == value:
+		# get_meta would generate error on missing meta if default value is null,
+		# so we use a sentinel value to indicate if there is no meta.
+		return []
+	else:
+		return [value]
+
 func write_cell(map_: Node, coords: Vector2i, code: int):
 	assert(code < size())
+	assert(mesh_library != null)
 
 	var map: GridMap = _ensure_grid_map(map_)
+	
+	assert(map.mesh_library == mesh_library)
 	
 	_ensure_reverse_mapping()
 	
