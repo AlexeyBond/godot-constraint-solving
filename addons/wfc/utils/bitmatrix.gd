@@ -89,7 +89,7 @@ func format_bits() -> String:
 
 func get_longest_path() -> int:
 	"""
-	For an NxN bit-matrix, replresenting links in a direct graph of N nodes,
+	For an NxN bit-matrix, representing links in a direct graph of N nodes,
 	returns the length of the longest path that is a shortest path between
 	certain two nodes.
 	
