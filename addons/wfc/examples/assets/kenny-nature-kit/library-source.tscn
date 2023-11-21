@@ -32,7 +32,7 @@
 
 [node name="library-source" type="Node3D"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="GroundGrass" type="MeshInstance3D" parent="."]
 mesh = ExtResource("1_825gh")
 
 [node name="GroundPathBend" type="MeshInstance3D" parent="."]
