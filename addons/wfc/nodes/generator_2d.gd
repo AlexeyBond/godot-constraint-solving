@@ -183,3 +183,9 @@ func _ready():
 func _process(_delta):
 	if _runner != null and _runner.is_running():
 		_runner.update()
+
+func get_progress() -> float:
+	if _runner == null:
+		return 0
+
+	return _runner.get_progress()

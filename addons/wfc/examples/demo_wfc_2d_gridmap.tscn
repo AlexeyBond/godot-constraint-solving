@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://dvfxwumivfg4a"]
+[gd_scene load_steps=12 format=3 uid="uid://dvfxwumivfg4a"]
 
 [ext_resource type="MeshLibrary" uid="uid://310b3aggjq0d" path="res://addons/wfc/examples/assets/kenny-nature-kit/meshlib.meshlib" id="1_in0m7"]
 [ext_resource type="Script" path="res://addons/wfc/nodes/generator_2d.gd" id="2_3emk2"]
 [ext_resource type="Script" path="res://addons/wfc/problems/2d/rules_2d.gd" id="3_o4j22"]
 [ext_resource type="Script" path="res://addons/wfc/solver/solver_settings.gd" id="4_hielr"]
+[ext_resource type="PackedScene" uid="uid://dt2nffs32s7o1" path="res://addons/wfc/examples/helpers/progress_indicator.tscn" id="5_o86r7"]
 
 [sub_resource type="GDScript" id="GDScript_f3n0e"]
 script/source = "extends Node3D
@@ -86,7 +87,7 @@ start_on_ready = true
 render_intermediate_results = true
 
 [node name="Node3D" type="Node3D" parent="."]
-transform = Transform3D(0.719961, 0, -0.694014, 0, 1, 0, 0.694014, 0, 0.719961, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 0.714082, 0.700062, 0, -0.700062, 0.714082, 0, 16.1111, 23.1593)
@@ -98,3 +99,6 @@ transform = Transform3D(-0.0221687, 0.410729, -0.911488, 1.68154e-09, 0.911712, 
 libraries = {
 "": SubResource("AnimationLibrary_dt8hv")
 }
+
+[node name="progressIndicator" parent="." node_paths=PackedStringArray("generator") instance=ExtResource("5_o86r7")]
+generator = NodePath("../generator")

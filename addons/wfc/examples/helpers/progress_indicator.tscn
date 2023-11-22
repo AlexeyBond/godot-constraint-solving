@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://dt2nffs32s7o1"]
+
+[sub_resource type="GDScript" id="GDScript_3tvrq"]
+script/source = "extends CanvasLayer
+
+@export
+var generator: WFC2DGenerator
+
+func _ready():
+	%ProgressBar.min_value = 0
+	%ProgressBar.max_value = 1.0
+	%ProgressBar.step = 0.001
+
+func _process(delta):
+	%ProgressBar.value = generator.get_progress()
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6msag"]
+bg_color = Color(0.6, 0.6, 0.6, 0.807843)
+
+[node name="progressIndicator" type="CanvasLayer" node_paths=PackedStringArray("generator")]
+script = SubResource("GDScript_3tvrq")
+generator = NodePath("")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+custom_minimum_size = Vector2(0, 100)
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="CenterContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_6msag")

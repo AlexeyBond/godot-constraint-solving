@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://5lfhjokuwwss"]
+[gd_scene load_steps=11 format=3 uid="uid://5lfhjokuwwss"]
 
 [ext_resource type="Script" path="res://addons/wfc/nodes/generator_2d.gd" id="1_coqxp"]
 [ext_resource type="Script" path="res://addons/wfc/problems/2d/mappers/mapper_2d_layered_tilemap.gd" id="2_qtvm1"]
 [ext_resource type="Script" path="res://addons/wfc/runners/runner_multithreaded_settings.gd" id="2_uvgvv"]
 [ext_resource type="TileSet" uid="uid://dgefkshuslimj" path="res://addons/wfc/examples/assets/kenney-tiny-dungeon/tile-set.tres" id="3_6hook"]
 [ext_resource type="Script" path="res://addons/wfc/problems/2d/rules_2d.gd" id="3_t7txd"]
+[ext_resource type="PackedScene" uid="uid://dt2nffs32s7o1" path="res://addons/wfc/examples/helpers/progress_indicator.tscn" id="6_d5dbh"]
 
 [sub_resource type="GDScript" id="GDScript_sq3cg"]
 script/source = "extends Node2D
@@ -105,3 +106,6 @@ layer_2/y_sort_enabled = false
 layer_2/y_sort_origin = 0
 layer_2/z_index = 0
 layer_2/tile_data = PackedInt32Array()
+
+[node name="progressIndicator" parent="." node_paths=PackedStringArray("generator") instance=ExtResource("6_d5dbh")]
+generator = NodePath("../generator")
