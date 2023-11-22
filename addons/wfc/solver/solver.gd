@@ -80,7 +80,7 @@ func _propagate_constraints() -> bool:
 func solve_step() -> bool:
 	"""
 	Returns:
-		true iff process has termitated (eighter successfully or with failure)
+		true iff process has termitated (either successfully or with failure)
 	"""
 	assert(current_state != null)
 

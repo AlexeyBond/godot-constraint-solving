@@ -90,7 +90,7 @@ const MAX_INT_32 = 2147483647
 
 func get_influence_range() -> Vector2i:
 	"""
-	Returns distances along X and Y axes at wiich a certain cell stops
+	Returns distances along X and Y axes at which a certain cell stops
 	influencing domains of other cells along those axes.
 
 	Returned value will be equal to maximum allowed integer value if constraints
@@ -138,21 +138,3 @@ func get_influence_range() -> Vector2i:
 		res.y = max(res.y, abs(axis.y) * longest_path)
 
 	return res
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
