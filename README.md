@@ -5,7 +5,7 @@
 Features:
 - **Backtracking** support.
   This addon implements backtracking, so it's possible to generate maps that are guaranteed to have no broken cells.
-  However, it may take a lot more time (and more memory) so it's possible to disable backtracking or limit the number of attemts.
+  However, it may take a lot more time (and more memory) so it's possible to disable backtracking or limit the number of attempts.
 - **Multithreading**.
   Generation of a 2d map using WFC algorithm can be split into few tasks.
   Some of the tasks can be executed concurrently.
@@ -13,7 +13,7 @@ Features:
 - **Learning from example**.
   2d WFC generator is able to infer rules from an example of a valid map.
   The algorithm also tries to infer some valid cell combinations beyond those provided in the example.
-  In cases when algorithm produces some invalid or not-nice-looking cell combinations, it's possible to also provide examples of cell combinations that should not appear in the final result.
+  In cases when the algorithm produces some invalid or not-nice-looking cell combinations, it's possible to also provide examples of cell combinations that should not appear in the final result.
   Or stop the generator from searching for additional cell combinations and provide all possible combinations in the initial example.
 - Supports **different node types**:
 	- `TileMap`
@@ -50,7 +50,7 @@ To do so follow the following steps:
 2. Make a map (a TileMap or GridMap) with examples of how your tiles should be used.
 3. Create a TileMap or GridMap generated map will be written to.
    The new map should use the same tile set/mesh library as one created on step 2.
-   You may place some tiles on that map (eighter manually or procedurally), generator will take them into account and fill other cells accordingly.
+   You may place some tiles on that map (either manually or procedurally), generator will take them into account and fill other cells accordingly.
    But try to not create an unsolvable puzzle when doing so.
 4. Create a `WFC2DGenerator` node and set the following properties:
    - `target` should point to a map node that will contain a generated map - one created at step 3
@@ -70,7 +70,7 @@ Examples of such setups can be found in [examples](addons/wfc/examples) folder.
 
 It may make sense to create and keep a minimal scene with generator, sample map and target map - just to ensure that samples are good enough to generate a good map with your tile set.
 
-If some of tile combinations produced by generator don't look good - try adding a negative samples map and place tose combinations there.
+If some of tile combinations produced by generator don't look good - try adding a negative samples map and place those combinations there.
 
 ### Advanced use
 
