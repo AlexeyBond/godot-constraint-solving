@@ -29,7 +29,7 @@ const STATE_PASSAGE = 2
 
 func coord_to_id(c: Vector2i) -> int:
 	assert(rect.has_point(c))
-	
+
 	var rel_c: Vector2i = c - rect.position
 
 	return rel_c.x + rel_c.y * rect.size.x
@@ -46,7 +46,7 @@ func _meta_to_bool(meta: Array) -> bool:
 	for x in meta:
 		if x:
 			return true
-	
+
 	return false
 
 func learn_classes(
@@ -56,7 +56,7 @@ func learn_classes(
 ):
 	passable_domain = WFCBitSet.new(mapper.size())
 	walls_domain = WFCBitSet.new(mapper.size())
-	
+
 	for i in range(mapper.size()):
 		if _meta_to_bool(mapper.read_tile_meta(i, road_class)):
 			passable_domain.set_bit(i)
@@ -106,7 +106,7 @@ func _get_start_point() -> Vector2i:
 class _GrowthPoint:
 	var position: Vector2i
 	var direction: Vector2i
-	
+
 	func _init(p: Vector2i, d: Vector2i):
 		self.position = p
 		self.direction = d
@@ -119,6 +119,11 @@ class _GrowthPoint:
 
 		if reverse:
 			self.direction *= -1
+
+	func rotated(reverse: bool) -> _GrowthPoint:
+		var gp := _GrowthPoint.new(position, direction)
+		gp.rotate(reverse)
+		return gp
 
 func _free_space_around(r: Rect2i):
 	_replace_rect(
@@ -156,8 +161,6 @@ func _generate(start_point: Vector2i, start_directions: Array[Vector2i]):
 
 	var passable_rect: Rect2i = _get_safe_passable_rect()
 
-	print('Total rect: ', rect, ' passable rect: ', passable_rect)
-
 	assert(passable_area_ratio > 0.0 and passable_area_ratio < 1.0)
 	var remaining_area: int = passable_area_ratio * passable_rect.get_area()
 	assert(remaining_area > 0)
@@ -192,9 +195,14 @@ func _generate(start_point: Vector2i, start_directions: Array[Vector2i]):
 
 		_free_space_around(road_rect)
 
-		gp.rotate(randf() > 0.5)
-
-		growth_points.push_back(gp)
+		if randf() < fork_probability:
+			growth_points.push_back(gp.rotated(true))
+			growth_points.push_back(gp.rotated(false))
+			if randf() < full_fork_probability:
+				growth_points.push_back(gp)
+		else:
+			gp.rotate(randf() > 0.5)
+			growth_points.push_back(gp)
 
 func prepare():
 	assert(rect.has_area())
@@ -202,9 +210,6 @@ func prepare():
 	state.resize(rect.get_area())
 
 	_generate(_get_start_point(), [Vector2i.DOWN, Vector2i.UP])
-	#var test_road_rect: Rect2i = Rect2i(10, 10, 100, 1)
-	#_replace_rect(test_road_rect, STATE_WALL, STATE_PASSAGE)
-	#_replace_rect(test_road_rect.grow(2), STATE_WALL, STATE_FREE)
 
 
 func read_domain(coords: Vector2i) -> WFCBitSet:

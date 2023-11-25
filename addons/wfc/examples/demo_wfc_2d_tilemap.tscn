@@ -32,6 +32,19 @@ backtracking_limit = -1
 
 [sub_resource type="Resource" id="Resource_26rrk"]
 script = ExtResource("2_71acl")
+wall_border_size = Vector2i(1, 2)
+free_gap = Vector2i(2, 2)
+room_half_size_base = Vector2i(2, 2)
+room_half_size_variation = Vector2i(2, 2)
+room_probability = 0.5
+road_len_base = 15
+road_len_variation = 5
+fork_probability = 0.5
+full_fork_probability = 0.5
+passable_area_ratio = 0.1
+iterations_limit = 1000
+road_class = "wfc_dungeon_road"
+wall_class = "wfc_dungeon_wall"
 
 [sub_resource type="Resource" id="Resource_uafrt"]
 script = ExtResource("3_iuw6v")
