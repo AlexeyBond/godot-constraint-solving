@@ -30,6 +30,8 @@ What's not (yet) implemented:
 - Wrapping.
 - Tile probabilities.
   It's currently not possible to control probabilities of certain tile types being "observed".
+- Lazy/dynamic generation.
+  For some games it may make sense to generate parts of level dynamically when they are (about to) become visible to player.
 - Rules editor.
   Currently it's possible to "learn" WFC rules in running game only, not in editor.
   Rules can be edited by modifying sample maps, using standard editor tools.
@@ -38,6 +40,14 @@ What's not (yet) implemented:
 - Symmetry.
   In cases when a cell can be rotated (`GridMap`), the algorithm treats each combination of tile type and rotation as a separate tile type.
   So, you have to specify possible adjacent tiles for all rotations of each tile (in fact, just few are enough - the algorithm is able to infer other combinations automatically in most cases).
+
+## Installing
+
+This addon is [available in Godot Asset Library](https://godotengine.org/asset-library/asset/1951) and thus can be installed using editor's built-in addon manager.
+Alternatievely, you can download an archive from [releases page](https://github.com/AlexeyBond/godot-constraint-solving/releases) or from current branch.
+
+**Important:** in order to make `WFC2DGenerator` node available, you should enable the plugin in project settings after adding addon files to the project:
+![Screenshot of project settings dialog with plugin enabled](screenshots/enable_plugin.png)
 
 ## How to use
 
@@ -72,6 +82,17 @@ Examples of such setups can be found in [examples](addons/wfc/examples) folder.
 It may make sense to create and keep a minimal scene with generator, sample map and target map - just to ensure that samples are good enough to generate a good map with your tile set.
 
 If some of tile combinations produced by generator don't look good - try adding a negative samples map and place those combinations there.
+
+### Preconditions
+
+By default the generator will read exsting tiles from a map node it generates content for and will place other tiles to make them fit with existing ones.
+This behavior makes it possible to combine WFC with other procedural generation algorithms (or manually pre-made level pieces): the previous algorithm may place some tiles and let WFC fill the remaining space.
+However, this way it is only possible to specify the exact tile that should be placed in specific cell.
+The preconditions API allows to limit possible cell contents in a more flexible way - by defining a set of tiles allowed in given cell.
+
+The addon includes a [precondition](addons/wfc/problems/2d/preconditions/precondition_2d_dungeon.gd) ([example](addons/wfc/examples/demo_wfc_2d_tilemap_dungeon.tscn)) that generates a random set of connected road cells surrounded by wall cells a.k.a. a "dungeon".
+The user can configure which tiles are "roads" and which are "walls" using custom data layers (in case of `TileMap`s) or metadata (in case of `GridMap`s) of the tiles.
+It isn't likely to fit specific needs of any actual game but it may serve as an example and/or starting point.
 
 ### Advanced use
 

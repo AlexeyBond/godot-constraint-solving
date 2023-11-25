@@ -87,7 +87,6 @@ start_on_ready = true
 render_intermediate_results = true
 
 [node name="Node3D" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 0.714082, 0.700062, 0, -0.700062, 0.714082, 0, 16.1111, 23.1593)
