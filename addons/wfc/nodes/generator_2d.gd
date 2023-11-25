@@ -93,7 +93,7 @@ func _create_precondition(problem_settings: WFC2DProblem.WFC2DProblemSettings, m
 
 	parameters.target_node = map
 	parameters.problem_settings = problem_settings
-	parameters.base_node = self
+	parameters.generator_node = self
 
 	return settings.create_precondition(parameters)
 

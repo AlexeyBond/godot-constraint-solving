@@ -14,7 +14,7 @@ func get_used_rect(_map: Node) -> Rect2i:
 func read_cell(_map: Node, _coords: Vector2i) -> int:
 	"""
 	Read cell from map and return a mapped code.
-	
+
 	Returns a negative value if cell is empty or mapping for the cell is missing.
 	"""
 	@warning_ignore("assert_always_false")
@@ -24,7 +24,7 @@ func read_cell(_map: Node, _coords: Vector2i) -> int:
 func read_tile_meta(_tile: int, _meta_name: String) -> Array:
 	"""
 	Read metadata attribute values associated with given cell type.
-	
+
 	May return array of multiple values if cell type consists of multiple objects having metadata.
 	E.g. combinations of different tiles in multi-layer tilemap.
 	"""
@@ -35,7 +35,7 @@ func read_tile_meta(_tile: int, _meta_name: String) -> Array:
 func write_cell(_map: Node, _coords: Vector2i, _code: int):
 	"""
 	Write a cell to map.
-	
+
 	code should be inside acceptable range for mapped codes.
 	"""
 	@warning_ignore("assert_always_false")
