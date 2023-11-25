@@ -46,6 +46,7 @@ var render_intermediate_results: bool = false
 @export_category("Debug mode")
 var print_rules: bool = false
 
+signal started
 signal done
 
 
@@ -118,40 +119,42 @@ func start():
 
 	if not rules.is_ready():
 		assert(positive_sample != null)
-		
+
 		var positive_sample_node: Node = get_node(positive_sample)
 		assert(positive_sample_node != null)
-		
+
 		if rules == null:
 			rules = WFCRules2D.new()
 		else:
 			rules = rules.duplicate(false) as WFCRules2D
 
 			assert(rules != null)
-		
+
 		if rules.mapper == null:
 			rules.mapper = _create_mapper(target_node)
 		if not rules.mapper.is_ready():
 			rules.mapper.learn_from(positive_sample_node)
 		rules.learn_from(positive_sample_node)
-		
+
 		if rules.complete_matrices and negative_sample != null and not negative_sample.is_empty():
 			var negative_sample_node: Node = get_node(negative_sample)
-			
+
 			if negative_sample_node != null:
 				rules.learn_negative_from(negative_sample_node)
 
 		if print_rules and OS.is_debug_build():
 			print_debug('Rules learned:\n', rules.format())
-			
+
 			print_debug('Influence range: ', rules.get_influence_range())
 
 	var problem_settings: WFC2DProblem.WFC2DProblemSettings = WFC2DProblem.WFC2DProblemSettings.new()
-	
+
 	problem_settings.rules = rules
 	problem_settings.rect = rect
 
 	var precondition: WFC2DPrecondition = _create_precondition(problem_settings, target_node)
+
+	started.emit()
 
 	# TODO: Call this in separate thread if long-running generators will be used to generate preconditions
 	precondition.prepare()
@@ -159,7 +162,7 @@ func start():
 	var problem: WFC2DProblem = _create_problem(problem_settings, target_node, precondition)
 
 	_runner = _create_runner()
-	
+
 	_runner.start(problem)
 
 	_runner.all_solved.connect(func(): done.emit())
@@ -173,7 +176,7 @@ func _on_solved(problem: WFC2DProblem, state: WFCSolverState):
 func _on_partial_solution(problem: WFC2DProblem, state: WFCSolverState):
 	if not render_intermediate_results:
 		return
-	
+
 	_on_solved(problem, state)
 
 func _ready():

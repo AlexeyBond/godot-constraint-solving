@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://dt2nffs32s7o1"]
+[gd_scene load_steps=4 format=3 uid="uid://dt2nffs32s7o1"]
 
 [sub_resource type="GDScript" id="GDScript_3tvrq"]
 script/source = "extends CanvasLayer
@@ -11,16 +11,32 @@ func _ready():
 	%ProgressBar.max_value = 1.0
 	%ProgressBar.step = 0.001
 
+	generator.started.connect(on_start)
+	generator.done.connect(on_done)
+
 func _process(delta):
 	%ProgressBar.value = generator.get_progress()
+
+var start_time: int = 0
+
+func on_start():
+	%StatusLabel.text = \"Started\"
+	start_time = Time.get_ticks_msec()
+
+func on_done():
+	var delta = Time.get_ticks_msec() - start_time
+
+	%StatusLabel.text = \"Done in %.2f second(s)\" % (0.001 * delta)
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6msag"]
 bg_color = Color(0.6, 0.6, 0.6, 0.807843)
 
-[node name="progressIndicator" type="CanvasLayer" node_paths=PackedStringArray("generator")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xru5r"]
+bg_color = Color(0.6, 0.6, 0.6, 0.858824)
+
+[node name="progressIndicator" type="CanvasLayer"]
 script = SubResource("GDScript_3tvrq")
-generator = NodePath("")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 custom_minimum_size = Vector2(0, 100)
@@ -28,8 +44,17 @@ anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
 
-[node name="ProgressBar" type="ProgressBar" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 theme_override_styles/fill = SubResource("StyleBoxFlat_6msag")
+
+[node name="StatusLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_xru5r")
+text = "Not started"
