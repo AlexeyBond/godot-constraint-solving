@@ -71,6 +71,7 @@ texture = ExtResource("1_gsvcg")
 4:3/0 = 0
 4:3/0/custom_data_1 = true
 5:3/0 = 0
+5:3/0/probability = 0.02
 5:3/0/custom_data_0 = true
 6:3/0 = 0
 6:3/0/custom_data_0 = true

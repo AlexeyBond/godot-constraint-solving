@@ -17,6 +17,11 @@ var axes: Array[Vector2i] = [
 @export
 var axis_matrices: Array[WFCBitMatrix] = []
 
+@export
+var probabilities: PackedFloat32Array = []
+
+@export
+var probabilities_enabled: bool = true
 
 func _learn_from(map: Node, positive: bool):
 	var learning_rect: Rect2i = mapper.get_used_rect(map)
@@ -25,10 +30,10 @@ func _learn_from(map: Node, positive: bool):
 		for y in range(learning_rect.position.y, learning_rect.end.y):
 			var cell_coords: Vector2i = Vector2i(x, y)
 			var cell: int = mapper.read_cell(map, cell_coords)
-			
+
 			if cell < 0:
 				continue
-			
+
 			for a in range(axes.size()):
 				var a_dir: Vector2i = axes[a]
 				var other_cell: int = mapper.read_cell(
@@ -37,8 +42,16 @@ func _learn_from(map: Node, positive: bool):
 				)
 				if other_cell < 0:
 					continue
-				
+
 				axis_matrices[a].set_bit(cell, other_cell, positive)
+
+func _learn_probabilities():
+	var size := mapper.size()
+	probabilities.resize(size)
+	for i in range(size):
+		var probability := mapper.read_tile_probability(i)
+		assert(probability > 0.0)
+		probabilities[i] = probability
 
 func learn_from(map: Node):
 	assert(mapper != null)
@@ -46,6 +59,9 @@ func learn_from(map: Node):
 	assert(mapper.size() > 1)
 	assert(axes.size() > 0)
 	assert(axis_matrices.is_empty() or axis_matrices.size() == axes.size())
+
+	if probabilities.is_empty() and probabilities_enabled:
+		_learn_probabilities()
 
 	if axis_matrices.size() == 0:
 		var num_cell_types: int = mapper.size()
@@ -68,13 +84,15 @@ func learn_negative_from(map: Node):
 	assert(mapper.size() > 1)
 	assert(axes.size() > 0)
 	assert(axis_matrices.size() == axes.size())
-	
+
 	_learn_from(map, false)
 
 
 func is_ready() -> bool:
-	return mapper != null and mapper.is_ready() and axis_matrices.size() == axes.size()
-
+	return mapper != null and \
+		mapper.is_ready() and \
+		axis_matrices.size() == axes.size() and \
+		(probabilities.size() == mapper.size() or not probabilities_enabled)
 
 func format() -> String:
 	var res: String = ""
@@ -109,7 +127,7 @@ func get_influence_range() -> Vector2i:
 	assert(axis_matrices.size() == axes.size())
 
 	var res: Vector2i = Vector2i(0, 0)
-	
+
 	for a in range(len(axes)):
 		var matrix: WFCBitMatrix = axis_matrices[a]
 		var axis: Vector2i = axes[a]

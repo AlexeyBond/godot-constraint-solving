@@ -35,17 +35,17 @@ func _2d_to_map(coords: Vector2i) -> Vector3i:
 
 	res[x_axis] = coords.x
 	res[y_axis] = coords.y
-	
+
 	return res + base_point
 
 func _ensure_grid_map(node: Node) -> GridMap:
 	assert(node is GridMap)
-	
+
 	return node as GridMap
 
 func learn_from(map_: Node):
 	var map: GridMap = _ensure_grid_map(map_)
-	
+
 	if mesh_library == null:
 		mesh_library = map.mesh_library
 
@@ -54,24 +54,24 @@ func learn_from(map_: Node):
 	for used_coord in map.get_used_cells():
 		var mesh_id: int = map.get_cell_item(used_coord)
 		var orientation: int = map.get_cell_item_orientation(used_coord)
-		
+
 		var attrs: Vector2i = Vector2i(mesh_id, orientation)
-		
+
 		if attrs in attrs_to_id:
 			continue
-		
+
 		attrs_to_id[attrs] = len(attrs_to_id)
 
 func get_used_rect(map_: Node) -> Rect2i:
 	var map: GridMap = _ensure_grid_map(map_)
 	var res: Rect2i
-	
+
 	for used_coord in map.get_used_cells():
 		var mapped_coord: Vector3i = _map_to_2d(used_coord)
-		
+
 		if mapped_coord.z != 0:
 			continue
-		
+
 		var c: Vector2i = Vector2i(mapped_coord.x, mapped_coord.y)
 
 		if res.has_area():
@@ -79,26 +79,26 @@ func get_used_rect(map_: Node) -> Rect2i:
 		else:
 			res.position = c
 			res.size = Vector2i(1, 1)
-	
+
 	return res
 
 func read_cell(map_: Node, coords: Vector2i) -> int:
 	var map: GridMap = _ensure_grid_map(map_)
 	var c: Vector3i = _2d_to_map(coords)
-	
+
 	var attrs: Vector2i = Vector2i(
 		map.get_cell_item(c),
 		map.get_cell_item_orientation(c),
 	)
-	
+
 	return attrs_to_id.get(attrs, -1)
 
 func _ensure_reverse_mapping():
 	if _id_to_attrs.size() == attrs_to_id.size():
 		return
-	
+
 	_id_to_attrs.resize(attrs_to_id.size())
-	
+
 	for attrs in attrs_to_id.keys():
 		_id_to_attrs[attrs_to_id[attrs]] = attrs
 
@@ -110,7 +110,7 @@ func read_tile_meta(tile: int, meta_name: String) -> Array:
 
 	_ensure_reverse_mapping()
 	assert(tile < _id_to_attrs.size())
-	
+
 	var attrs := _id_to_attrs[tile]
 	var value = mesh_library.get_item_mesh(attrs.x).get_meta(meta_name, _NO_META_SENTINEL)
 
@@ -126,13 +126,13 @@ func write_cell(map_: Node, coords: Vector2i, code: int):
 	assert(mesh_library != null)
 
 	var map: GridMap = _ensure_grid_map(map_)
-	
+
 	assert(map.mesh_library == mesh_library)
-	
+
 	_ensure_reverse_mapping()
-	
+
 	var map_coords: Vector3i = _2d_to_map(coords)
-	
+
 	if code >= 0:
 		var attrs: Vector2i = _id_to_attrs[code]
 		map.set_cell_item(map_coords, attrs.x, attrs.y)

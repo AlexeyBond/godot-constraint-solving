@@ -84,15 +84,15 @@ func populate_initial_state(state: WFCSolverState):
 func compute_cell_domain(state: WFCSolverState, cell_id: int) -> WFCBitSet:
 	var res: WFCBitSet = state.cell_domains[cell_id].copy()
 	var pos: Vector2i = id_to_coord(cell_id)
-	
+
 	for i in range(axes.size()):
 		var other_pos: Vector2i = pos + axes[i]
-		
+
 		if not rect.has_point(other_pos + rect.position):
 			continue
-		
+
 		var other_id: int = coord_to_id(other_pos)
-		
+
 		if state.cell_solution_or_entropy[other_id] == WFCSolverState.CELL_SOLUTION_FAILED:
 			continue
 
@@ -104,7 +104,7 @@ func compute_cell_domain(state: WFCSolverState, cell_id: int) -> WFCBitSet:
 
 func mark_related_cells(changed_cell_id: int, mark_cell: Callable):
 	var pos: Vector2i = id_to_coord(changed_cell_id)
-	
+
 	for i in range(axes.size()):
 		var other_pos: Vector2i = pos + axes[i]
 		if rect.has_point(other_pos + rect.position):
@@ -113,14 +113,14 @@ func mark_related_cells(changed_cell_id: int, mark_cell: Callable):
 func render_state_to_map(state: WFCSolverState):
 	assert(rect.encloses(renderable_rect))
 	var mapper: WFCMapper2D = rules.mapper
-	
+
 	var render_rect_offset: Vector2i = renderable_rect.position - rect.position
 
 	for x in range(renderable_rect.size.x):
 		for y in range(renderable_rect.size.y):
 			var local_coord: Vector2i = Vector2i(x, y) + render_rect_offset
 			var cell: int = state.cell_solution_or_entropy[coord_to_id(local_coord)]
-			
+
 			if cell == WFCSolverState.CELL_SOLUTION_FAILED:
 				cell = -1
 
@@ -134,11 +134,11 @@ func render_state_to_map(state: WFCSolverState):
 func get_dependencies_range() -> Vector2i:
 	var rx: int = 0
 	var ry: int = 0
-	
+
 	for a in axes:
 		rx = max(rx, abs(a.x))
 		ry = max(ry, abs(a.y))
-	
+
 	return Vector2i(rx, ry)
 
 func _split_range(first: int, size: int, partitions: int, min_partition_size: int) -> PackedInt64Array:
@@ -163,9 +163,9 @@ func _split_range(first: int, size: int, partitions: int, min_partition_size: in
 func split(concurrency_limit: int) -> Array[SubProblem]:
 	if concurrency_limit < 2:
 		return super.split(concurrency_limit)
-	
+
 	var rects: Array[Rect2i] = []
-	
+
 	var dependency_range: Vector2i = get_dependencies_range()
 	var overlap_min: Vector2i = dependency_range / 2
 	var overlap_max: Vector2i = overlap_min + dependency_range % 2
@@ -175,7 +175,7 @@ func split(concurrency_limit: int) -> Array[SubProblem]:
 
 	var may_split_x: bool = influence_range.x < rect.size.x
 	var may_split_y: bool = influence_range.y < rect.size.y
-	
+
 	var split_x_overhead: int = influence_range.x * rect.size.y
 	var split_y_overhead: int = influence_range.y * rect.size.x
 
@@ -227,7 +227,7 @@ func split(concurrency_limit: int) -> Array[SubProblem]:
 		var sub_renderable_rect: Rect2i = rects[i] \
 			.grow_individual(overlap_min.x, overlap_min.y, overlap_max.x, overlap_max.y) \
 			.intersection(rect)
-		
+
 		var sub_rect: Rect2i = sub_renderable_rect
 
 		if (i & 1) == 0:
@@ -244,7 +244,7 @@ func split(concurrency_limit: int) -> Array[SubProblem]:
 
 		var sub_problem: WFC2DProblem = WFC2DProblem.new(sub_settings, map, precondition)
 		sub_problem.renderable_rect = sub_renderable_rect
-		
+
 		var dependencies: PackedInt64Array = []
 
 		if (i & 1) == 1:
@@ -272,10 +272,30 @@ func split(concurrency_limit: int) -> Array[SubProblem]:
 
 	return res
 
+func pick_divergence_option(options: Array[int]) -> int:
+	if not rules.probabilities_enabled:
+		return super.pick_divergence_option(options)
 
+	assert(options.size() > 0)
 
+	if options.size() == 1:
+		return options.pop_back()
 
+	var probabilities_sum := 0.0
 
+	for option in options:
+		probabilities_sum += rules.probabilities[option]
+
+	var value := randf_range(0.0, probabilities_sum)
+	probabilities_sum = 0
+	var chosen_option := 0
+	for i in range(options.size()):
+		probabilities_sum += rules.probabilities[options[i]]
+		if probabilities_sum > value:
+			chosen_option = i
+			break
+
+	return options.pop_at(chosen_option)
 
 
 

@@ -1,5 +1,8 @@
 extends WFCMapper2D
-
+## Deprecated singl-layer mapper for TileMap.
+## Use WFCLayeredTileMapMapper2D instead.
+##
+## @deprecated
 class_name WFCTileMapMapper2D
 
 @export
@@ -15,7 +18,7 @@ var id_to_attrs: Array[Vector4i]
 
 func _ensure_tile_map(node: Node) -> TileMap:
 	assert(node is TileMap)
-	
+
 	return node as TileMap
 
 func _read_cell_attrs(map: TileMap, coords: Vector2i) -> Vector4i:
@@ -57,7 +60,7 @@ func read_cell(map_: Node, coords: Vector2i) -> int:
 	var map: TileMap = _ensure_tile_map(map_)
 
 	var attrs: Vector4i = _read_cell_attrs(map, coords)
-	
+
 	#print('read ', coords, ' -> ', attrs, ' -> ', attrs_to_id.get(attrs, -1))
 
 	return attrs_to_id.get(attrs, -1)

@@ -32,6 +32,27 @@ func read_tile_meta(_tile: int, _meta_name: String) -> Array:
 	assert(false)
 	return []
 
+@export
+var probability_meta_key: String = "wfc_probability"
+
+func read_tile_probability(tile: int) -> float:
+	"""
+	Read probability value assigned to given tile type.
+
+	By default uses values from metadata attribute using name from probability_meta_key property.
+	Sub-classes may override this behavior.
+	"""
+	if tile < 0:
+		return 0.0
+	assert(tile < size())
+
+	var probability := 1.0
+
+	for p in read_tile_meta(tile, probability_meta_key):
+		probability *= p
+
+	return probability
+
 func write_cell(_map: Node, _coords: Vector2i, _code: int):
 	"""
 	Write a cell to map.

@@ -12,7 +12,7 @@ func _make_initial_state(num_cells: int, initial_domain: WFCBitSet) -> WFCSolver
 
 	state.cell_domains.resize(num_cells)
 	state.cell_domains.fill(initial_domain)
-	
+
 	state.cell_solution_or_entropy.resize(num_cells)
 	state.cell_solution_or_entropy.fill(-(initial_domain.count_set_bits() - 1))
 
@@ -47,7 +47,7 @@ func _propagate_constraints() -> bool:
 	"""
 	while true:
 		var changed: PackedInt64Array = current_state.extract_changed_cells()
-		
+
 		if changed.is_empty():
 			return false
 
@@ -86,7 +86,7 @@ func solve_step() -> bool:
 
 	if current_state.is_all_solved():
 		return true
-	
+
 	var backtrack: bool = _propagate_constraints()
 
 	if backtrack:
@@ -102,7 +102,7 @@ func solve_step() -> bool:
 
 			return false
 
-		current_state = current_state.backtrack()
+		current_state = current_state.backtrack(problem)
 
 		if current_state == null:
 			print_debug(
@@ -129,9 +129,9 @@ func solve_step() -> bool:
 	current_state.prepare_divergence()
 
 	if backtracking_enabled:
-		current_state = current_state.diverge()
+		current_state = current_state.diverge(problem)
 	else:
-		current_state.diverge_in_place()
+		current_state.diverge_in_place(problem)
 
 	return false
 
@@ -140,9 +140,3 @@ func solve() -> WFCSolverState:
 		pass
 
 	return current_state
-
-
-
-
-
-

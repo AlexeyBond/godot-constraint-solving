@@ -45,7 +45,7 @@ func _store_solution(cell_id: int, solution: int):
 
 	cell_solution_or_entropy[cell_id] = solution
 	unsolved_cells -= 1
-	
+
 	divergence_candidates.erase(cell_id)
 
 func set_solution(cell_id: int, solution: int):
@@ -76,7 +76,7 @@ func set_domain(cell_id: int, domain: WFCBitSet, entropy: int = -1) -> bool:
 	else:
 		if entropy < 0:
 			entropy = domain.count_set_bits() - 1
-		
+
 		assert(entropy > 0)
 		cell_solution_or_entropy[cell_id] = -entropy
 		divergence_candidates[cell_id] = true
@@ -90,16 +90,16 @@ func extract_changed_cells() -> PackedInt64Array:
 	changed_cells.clear()
 	return res
 
-func backtrack() -> WFCSolverState:
+func backtrack(problem: WFCProblem) -> WFCSolverState:
 	if previous == null:
 		return null
 
-	var state: WFCSolverState = previous.diverge()
+	var state: WFCSolverState = previous.diverge(problem)
 
 	if state != null:
 		return state
 
-	return previous.backtrack()
+	return previous.backtrack(problem)
 
 func make_next() -> WFCSolverState:
 	var new: WFCSolverState = WFCSolverState.new()
@@ -118,7 +118,7 @@ func pick_divergence_cell() -> int:
 
 	var options: Array[int] = []
 	var target_entropy: int = MAX_INT
-	
+
 	var candidates = divergence_candidates.keys()
 
 	if candidates.is_empty():
@@ -129,16 +129,16 @@ func pick_divergence_cell() -> int:
 
 		if entropy <= 0:
 			continue
-		
+
 		if entropy == target_entropy:
 			options.append(i)
 		elif entropy < target_entropy:
 			options.clear()
 			options.append(i)
 			target_entropy = entropy
-	
+
 	assert(options.size() > 0)
-	
+
 	return options.pick_random()
 
 func prepare_divergence():
@@ -149,9 +149,7 @@ func prepare_divergence():
 	for option in cell_domains[divergence_cell].iterator():
 		divergence_options.append(option)
 
-	divergence_options.shuffle()
-
-func diverge() -> WFCSolverState:
+func diverge(problem: WFCProblem) -> WFCSolverState:
 	assert(divergence_cell >= 0)
 
 	if divergence_options.is_empty():
@@ -159,25 +157,19 @@ func diverge() -> WFCSolverState:
 
 	var next_state: WFCSolverState = make_next()
 
-	next_state.set_solution(divergence_cell, divergence_options.pop_back())
+	var solution := problem.pick_divergence_option(divergence_options)
+
+	next_state.set_solution(divergence_cell, solution)
 
 	return next_state
 
-func diverge_in_place():
+func diverge_in_place(problem: WFCProblem):
 	assert(divergence_cell >= 0)
 	assert(divergence_options.size() > 0)
-	
-	set_solution(divergence_cell, divergence_options[0])
-	
+
+	var solution := problem.pick_divergence_option(divergence_options)
+
+	set_solution(divergence_cell, solution)
+
 	divergence_options.clear()
 	divergence_cell = -1
-
-
-
-
-
-
-
-
-
-
