@@ -1,0 +1,78 @@
+[gd_scene load_steps=9 format=3 uid="uid://hje2bdj7a5l4"]
+
+[ext_resource type="Script" path="res://addons/wfc/nodes/generator_2d.gd" id="1_wgtgl"]
+[ext_resource type="Script" path="res://addons/wfc/runners/runner_multithreaded_settings.gd" id="2_dcepd"]
+[ext_resource type="Script" path="res://addons/wfc/problems/2d/rules_2d.gd" id="3_h6f3l"]
+[ext_resource type="TileSet" uid="uid://dgefkshuslimj" path="res://addons/wfc/examples/assets/kenney-tiny-dungeon/tile-set.tres" id="3_p2feb"]
+
+[sub_resource type="GDScript" id="GDScript_sq3cg"]
+script/source = "extends Node2D
+
+func _ready():
+	$generator_without_probabilities.start()
+	$generator_with_probabilities.start()
+	$sample.hide()
+	$target.show()
+"
+
+[sub_resource type="Resource" id="Resource_uafrt"]
+script = ExtResource("2_dcepd")
+max_threads = -1
+
+[sub_resource type="Resource" id="Resource_1bxw1"]
+script = ExtResource("3_h6f3l")
+complete_matrices = true
+axes = Array[Vector2i]([Vector2i(0, 1), Vector2i(1, 0)])
+axis_matrices = Array[Resource("res://addons/wfc/utils/bitmatrix.gd")]([])
+probabilities = []
+probabilities_enabled = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a0nja"]
+bg_color = Color(0.6, 0.6, 0.6, 0.843137)
+
+[node name="wfc_tilemap" type="Node2D"]
+script = SubResource("GDScript_sq3cg")
+
+[node name="generator_with_probabilities" type="Node" parent="."]
+script = ExtResource("1_wgtgl")
+target = NodePath("../target")
+rect = Rect2i(1, 1, 58, 66)
+positive_sample = NodePath("../sample")
+multithreaded_runner_settings = SubResource("Resource_uafrt")
+render_intermediate_results = true
+
+[node name="generator_without_probabilities" type="Node" parent="."]
+script = ExtResource("1_wgtgl")
+target = NodePath("../target")
+rect = Rect2i(60, 1, 58, 66)
+rules = SubResource("Resource_1bxw1")
+positive_sample = NodePath("../sample")
+multithreaded_runner_settings = SubResource("Resource_uafrt")
+render_intermediate_results = true
+
+[node name="sample" type="TileMap" parent="."]
+tile_set = ExtResource("3_p2feb")
+format = 2
+layer_0/tile_data = PackedInt32Array(0, 0, 4, 65536, 0, 4, 1, 0, 4, 65537, 327680, 3, 131073, 327680, 3, 65538, 327680, 3, 196610, 393216, 3, 131074, 393216, 3, 131075, 393216, 3, 196611, 65536, 4, 262147, 65536, 4, 196612, 65536, 4)
+
+[node name="target" type="TileMap" parent="."]
+tile_set = ExtResource("3_p2feb")
+format = 2
+
+[node name="Label" type="Label" parent="."]
+offset_left = 38.0
+offset_top = 23.0
+offset_right = 366.0
+offset_bottom = 68.0
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_a0nja")
+text = "Probabilities enabled"
+
+[node name="Label2" type="Label" parent="."]
+offset_left = 975.0
+offset_top = 23.0
+offset_right = 1310.0
+offset_bottom = 68.0
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_a0nja")
+text = "Probabilities disabled"
