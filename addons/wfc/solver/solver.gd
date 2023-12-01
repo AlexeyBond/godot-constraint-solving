@@ -77,6 +77,41 @@ func _propagate_constraints() -> bool:
 	assert(false) # unreachable
 	return false
 
+func _try_backtrack() -> bool:
+	if settings.backtracking_limit > 0 and backtracking_count > settings.backtracking_limit:
+		print_debug(
+			'Backtracking limit exceeded after ',
+			backtracking_count,
+			' attempt(s), restarting from best state without backtracking',
+		)
+
+		current_state = best_state
+		backtracking_enabled = false
+
+		return false
+
+	current_state = current_state.backtrack(problem)
+
+	if current_state == null:
+		print_debug(
+			'Backtracking failed completely after ',
+			backtracking_count,
+			' attempt(s)',
+		)
+
+		if not settings.require_backtracking:
+			print_debug('Restarting from best state without backtracking')
+
+			current_state = best_state
+			backtracking_enabled = false
+		else:
+			print_debug('Backtracking is required but failed - terminating with failure')
+			return true
+
+	backtracking_count += 1
+
+	return false
+
 func solve_step() -> bool:
 	"""
 	Returns:
@@ -90,36 +125,7 @@ func solve_step() -> bool:
 	var backtrack: bool = _propagate_constraints()
 
 	if backtrack:
-		if settings.backtracking_limit > 0 and backtracking_count > settings.backtracking_limit:
-			print_debug(
-				'Backtracking limit exceeded after ',
-				backtracking_count,
-				' attempt(s), restarting from best state without backtracking',
-			)
-
-			current_state = best_state
-			backtracking_enabled = false
-
-			return false
-
-		current_state = current_state.backtrack(problem)
-
-		if current_state == null:
-			print_debug(
-				'Backtracking failed completely after ',
-				backtracking_count,
-				' attempt(s)',
-			)
-
-			if not settings.require_backtracking:
-				print_debug('Restarting from best state without backtracking')
-
-				current_state = best_state
-				backtracking_enabled = false
-
-		backtracking_count += 1
-
-		return false
+		return _try_backtrack()
 
 	if current_state.is_all_solved():
 		return true
@@ -129,7 +135,12 @@ func solve_step() -> bool:
 	current_state.prepare_divergence()
 
 	if backtracking_enabled:
-		current_state = current_state.diverge(problem)
+		var next_state := current_state.diverge(problem)
+
+		if next_state == null:
+			return _try_backtrack()
+		else:
+			current_state = next_state
 	else:
 		current_state.diverge_in_place(problem)
 
