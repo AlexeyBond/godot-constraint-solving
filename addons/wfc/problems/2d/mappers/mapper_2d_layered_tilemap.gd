@@ -84,11 +84,8 @@ func read_tile_meta(tile: int, meta_name: String) -> Array:
 		return []
 
 	var result := []
-	var all_attrs: Array[Vector4i] = id_to_attrs[tile]
 
-	for i in range(len(layers)):
-		var attrs: Vector4i = all_attrs[i]
-
+	for attrs: Vector4i in id_to_attrs[tile]:
 		if attrs.x < 0 or attrs.y < 0 or attrs.z < 0 or attrs.w < 0:
 			continue
 
@@ -106,9 +103,7 @@ func _read_builtin_probabilities(tile: int) -> float:
 	_ensure_reverse_mapping()
 	var probability := 1.0
 
-	var all_attrs: Array[Vector4i] = id_to_attrs[tile]
-	for i in range(len(layers)):
-		var attrs: Vector4i = all_attrs[i]
+	for attrs: Vector4i in id_to_attrs[tile]:
 		if attrs.x < 0 or attrs.y < 0 or attrs.z < 0 or attrs.w < 0:
 			continue
 

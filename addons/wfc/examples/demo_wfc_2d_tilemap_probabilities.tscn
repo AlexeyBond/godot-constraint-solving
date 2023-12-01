@@ -44,7 +44,7 @@ render_intermediate_results = true
 [node name="generator_without_probabilities" type="Node" parent="."]
 script = ExtResource("1_wgtgl")
 target = NodePath("../target")
-rect = Rect2i(60, 1, 58, 66)
+rect = Rect2i(61, 1, 58, 66)
 rules = SubResource("Resource_1bxw1")
 positive_sample = NodePath("../sample")
 multithreaded_runner_settings = SubResource("Resource_uafrt")
@@ -69,9 +69,9 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_a0nja")
 text = "Probabilities enabled"
 
 [node name="Label2" type="Label" parent="."]
-offset_left = 975.0
+offset_left = 1001.0
 offset_top = 23.0
-offset_right = 1310.0
+offset_right = 1336.0
 offset_bottom = 68.0
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxFlat_a0nja")
