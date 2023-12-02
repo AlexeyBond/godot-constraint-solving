@@ -1,16 +1,27 @@
 extends Resource
-
+## Stores a set of integers between [code]0[/code] (inclusive) and [member size] (exclusive).
+##
+## The set is stored as few integers consisting of at least [member size] bits.
+## Such representation makes some operations (like set union, intersection, symmetric difference)
+## BLAZINGLY FAST as they are performed using one bitwise operation per each 64 bits.
+## [br]
+## Note: Some operations are named and described in terms of sets and some in terms of bits and
+## bitwise operations.
 class_name WFCBitSet
 
+## Bits 0..63
 @export
 var data0: int
 
+## Bits 64..127
 @export
 var data1: int
 
+## Bits 128...
 @export
 var dataX: PackedInt64Array = PackedInt64Array()
 
+## Max. integer that can be stored in this set.
 @export
 var size: int = 0
 
@@ -53,14 +64,14 @@ func set_all():
 	@warning_ignore("integer_division")
 	var fullElems: int = size / BITS_PER_INT
 	var lastElemBits: int = size % BITS_PER_INT
-	
+
 	if fullElems == 0:
 		data0 = _n_bits_set(lastElemBits)
 		return
 	else:
 		data0 = ALL_SET
 		fullElems -= 1
-	
+
 	if fullElems == 0:
 		data1 = _n_bits_set(lastElemBits)
 		return
@@ -73,7 +84,7 @@ func set_all():
 
 	dataX.set(fullElems, _n_bits_set(lastElemBits))
 
-
+## Make a copy of this set.
 func copy() -> WFCBitSet:
 	var res : WFCBitSet = WFCBitSet.new(0)
 
@@ -84,17 +95,19 @@ func copy() -> WFCBitSet:
 		res.dataX = dataX.duplicate()
 
 	res.size = size
-	
+
 	return res
 
-
+## Compare this set with another one, returns [code]true[/code] if it is equal to this one.
+## [br]
+## Returns [code]false[/code] if sets contain same numbers but have different [member size].
 func equals(other: WFCBitSet) -> bool:
 	if other.size != size:
 		return false
-	
+
 	if other.data0 != data0:
 		return false
-	
+
 	if other.data1 != data1:
 		return false
 
@@ -118,7 +131,7 @@ func union_in_place(other: WFCBitSet):
 func union(other: WFCBitSet) -> WFCBitSet:
 	if other.size > size:
 		return other.union(self)
-	
+
 	var res: WFCBitSet = copy()
 	res.union_in_place(other)
 	return res
@@ -126,7 +139,7 @@ func union(other: WFCBitSet) -> WFCBitSet:
 
 func intersect_in_place(other: WFCBitSet):
 	assert(other.size >= size)
-	
+
 	data0 &= other.data0
 	data1 &= other.data1
 
@@ -145,10 +158,10 @@ func intersect(other: WFCBitSet) -> WFCBitSet:
 
 func xor_in_place(other: WFCBitSet):
 	assert(other.size == size)
-	
+
 	data0 ^= other.data0
 	data1 ^= other.data1
-	
+
 	if size > STATIC_BITS:
 		for i in range(dataX.size()):
 			dataX.set(i, dataX[i] ^ other.dataX[i])
@@ -161,7 +174,7 @@ func invert() -> WFCBitSet:
 func get_bit(bit_num: int) -> bool:
 	if bit_num > size:
 		return false
-	
+
 	if bit_num < STATIC_BITS:
 		if bit_num < BITS_PER_INT:
 			return data0 & (1 << bit_num)
@@ -180,7 +193,7 @@ func get_bit(bit_num: int) -> bool:
 func set_bit(bit_num: int, value: bool = true):
 	assert(bit_num >= 0)
 	assert(bit_num < size)
-	
+
 	if bit_num < STATIC_BITS:
 		if bit_num < BITS_PER_INT:
 			if value:
@@ -199,11 +212,11 @@ func set_bit(bit_num: int, value: bool = true):
 	@warning_ignore("integer_division")
 	var el_index: int = bit_num / BITS_PER_INT
 	var bit_index: int = bit_num % BITS_PER_INT
-	
+
 	if value:
 		dataX.set(el_index, dataX[el_index] | (1 << bit_index))
 	else:
-		dataX.set(el_index, dataX[el_index] & ~(1 << bit_index)) 
+		dataX.set(el_index, dataX[el_index] & ~(1 << bit_index))
 
 
 func get_first_set_bit_index(bits: int) -> int:
@@ -218,10 +231,10 @@ func get_first_set_bit_index(bits: int) -> int:
 
 	while true:
 		var mask: int = 1 << res
-		
+
 		if (bits & mask) != 0:
 			return res
-		
+
 		if mask < bits:
 			res += step
 		else:
@@ -245,12 +258,12 @@ func get_only_set_bit() -> int:
 		if not is_pot(data0):
 			return ONLY_BIT_MORE_BITS_SET
 		elem_index = 0
-	
+
 	if data1 != 0:
 		if elem_index >= 0 or not is_pot(data1):
 			return ONLY_BIT_MORE_BITS_SET
 		elem_index = 1
-	
+
 	if size > STATIC_BITS:
 		for i in range(dataX.size()):
 			var el: int = dataX[i]
@@ -327,13 +340,13 @@ class BitSetIterator:
 				bit_index = 0
 				continue
 			var b: int = 1 << bit_index
-			
+
 			if cur_elem & b:
 				cur_elem &= ~b
 				return true
-			
+
 			bit_index += 1
-		
+
 		return false # unreachable
 
 	func _iter_get(_arg):
@@ -344,7 +357,7 @@ func iterator() -> BitSetIterator:
 
 func to_array() -> PackedInt64Array:
 	var res: PackedInt64Array = PackedInt64Array()
-	
+
 	for b in iterator():
 		res.append(b)
 
@@ -352,15 +365,15 @@ func to_array() -> PackedInt64Array:
 
 func _count_bits(value: int, initial: int, pass_if_more_than: int) -> int:
 	var res: int = initial
-	
+
 	while value != 0:
 		value ^= (1 << get_first_set_bit_index(value))
-		
+
 		res += 1
-		
+
 		if res > pass_if_more_than:
 			return res
-	
+
 	return res
 
 func count_set_bits(pass_if_more_than: int = MAX_INT) -> int:
@@ -384,9 +397,9 @@ func format_bits() -> String:
 			res += '1, '
 		else:
 			res += '0, '
-	
+
 	res += ')'
-	
+
 	return res
 
 

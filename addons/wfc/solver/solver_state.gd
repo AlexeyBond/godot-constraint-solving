@@ -6,11 +6,14 @@ const MAX_INT: int = 9223372036854775807
 
 const CELL_SOLUTION_FAILED: int = MAX_INT
 
+## Previous state to backtrack to.
 var previous: WFCSolverState = null
+
+## Current domains of all cells.
 var cell_domains: Array[WFCBitSet]
 
 """
-i'th element of cell_solution_or_entropy contains eighter:
+i'th element of cell_solution_or_entropy contains either:
 	- a negated "entropy" value, -(number_of_options - 1) if there are multiple options
 		for the i'th cell. Value is always negative in this case.
 		Note: it's not a real entropy value: log(number_of_options) would be closer to
@@ -20,6 +23,8 @@ i'th element of cell_solution_or_entropy contains eighter:
 		(possible only if backtracking is disabled)
 """
 var cell_solution_or_entropy: PackedInt64Array
+
+## Number of cells that still have domains of more than one value.
 var unsolved_cells: int
 
 var changed_cells: PackedInt64Array
@@ -29,13 +34,22 @@ var divergence_options: Array[int]
 
 var divergence_candidates: Dictionary = {}
 
+## Check if given cell has solution.
+## [br]
+## Returns [code]true[/code] also when solution for given cell is failed.
 func is_cell_solved(cell_id: int) -> bool:
 	return cell_solution_or_entropy[cell_id] >= 0
 
+## Returns solution of given cell.
+## [br]
+## It is undefined behavior if there is no solution for given cell.
+## [br]
+## Returns [constant CELL_SOLUTION_FAILED] if solution for given cell is failed.
 func get_cell_solution(cell_id: int) -> int:
 	assert(is_cell_solved(cell_id))
 	return cell_solution_or_entropy[cell_id]
 
+## Returns [code]true[/code] iff all cells are solved or failed.
 func is_all_solved() -> bool:
 	return unsolved_cells == 0
 
@@ -48,11 +62,16 @@ func _store_solution(cell_id: int, solution: int):
 
 	divergence_candidates.erase(cell_id)
 
+## Set solution for given cell.
 func set_solution(cell_id: int, solution: int):
 	var bs: WFCBitSet = WFCBitSet.new(cell_domains[0].size)
 	bs.set_bit(solution, true)
 	set_domain(cell_id, bs, 0)
 
+## Set domain of given cell.
+## [br]
+## When [param entropy] is set to positive value, it may be used instead of computing entropy
+## from [param domain].
 func set_domain(cell_id: int, domain: WFCBitSet, entropy: int = -1) -> bool:
 	var should_backtrack: bool = false
 

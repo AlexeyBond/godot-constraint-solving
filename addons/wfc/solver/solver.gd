@@ -1,10 +1,44 @@
 class_name WFCSolver
-
+## Solver that solves finite discrete
+## [url=https://en.wikipedia.org/wiki/Constraint_satisfaction_problem]constraint satisfaction problems[/url].
+## [br]
+## Despite [code]WFC[/code] prefix in the name, this solver is capable of solving wider range of
+## problems than just wave function collapse.
+## In fact, wave function collapse is a special case of that wider class of constraint satisfaction
+## problems.
+## Specifically, such problems are described by following properties:
+## [ul]
+## finite number of variables
+## each variable may have one value from finite set of values
+## [/ul]
+## The solver assumes that there is a finite set of values and each variable may have any of those
+## values. However a problem implementation may limit domains of some variables by implementing
+## [method WFCProblem.populate_initial_state].
+## [br]
+## Since this addon is biased towards WFC, variables are usually named "cells" and values are
+## sometimes called "tiles".
 extends RefCounted
 
-var backtracking_enabled: bool
+## Settings of this solver.
+## [br]
+## Settings determine if solver uses backtracking or just performs a quick and dirty solution
+## and when solver is allowed to fallback from backtracking to quick and dirty solution method.
 var settings: WFCSolverSettings
 
+## The problem to be solved by this solver
+var problem: WFCProblem
+
+## [code]true[/code] iff backtracking is currently enabled.
+## [br]
+## Initially equivallent to [member WFCSolverSettings.allow_backtracking] of [member settings].
+## May change from [code]true[/code] to [code]false[/code] if
+## [member WFCSolverSettings.require_backtracking] of [member settings] is [code]false[/code].
+var backtracking_enabled: bool
+
+## Number of times this solver did backtrack.
+## [br]
+## Is used to limit backtracking attempts when [WFCSolverSettings.backtracking_limit] of
+## [member settings] is set to a positive value.
 var backtracking_count: int = 0
 
 func _make_initial_state(num_cells: int, initial_domain: WFCBitSet) -> WFCSolverState:
@@ -20,10 +54,17 @@ func _make_initial_state(num_cells: int, initial_domain: WFCBitSet) -> WFCSolver
 
 	return state
 
+## Current state of the solver.
+## [br]
+## Will be [code]null[/code] if solution has failed.
 var current_state: WFCSolverState
-var best_state: WFCSolverState
 
-var problem: WFCProblem
+## Best state ever acheived by this solver.
+## [br]
+## Best state is a state with largest number of solved cells.
+## [br]
+## Matches [member current_state] when backtracking is not enabled.
+var best_state: WFCSolverState
 
 
 func _init(problem_: WFCProblem, settings_: WFCSolverSettings = WFCSolverSettings.new()):
@@ -112,6 +153,9 @@ func _try_backtrack() -> bool:
 
 	return false
 
+## Perform one iteration of problem solution.
+## [br]
+## Returns [code]true[/code] iff solution is completed.
 func solve_step() -> bool:
 	"""
 	Returns:
@@ -146,6 +190,12 @@ func solve_step() -> bool:
 
 	return false
 
+## Solve [member problem].
+## [br]
+## Returns the final state containing full solution ([member current_state]).
+## Will return [code]null[/code] if solution has failed and partial solution is not acceptable
+## according to the settings (i.e. [member WFCSolverSettings.require_backtracking] in
+## [member settings] is set to true).
 func solve() -> WFCSolverState:
 	while not solve_step():
 		pass
