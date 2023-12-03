@@ -1,9 +1,15 @@
 extends WFCSolverRunner
-
+## A [WFCSolverRunner] that tries to split the problem into multiple sub-problem and runs them on
+## different threads when possible.
+##
+## When a problem cannot be split it just runs a single solver on a separate [Thread].
 class_name WFCMultithreadedSolverRunner
 
+# Runs solvers in main thread instead of [Thread]s.
+# Useful for problem split debugging.
 const _STUB_NO_MULTITHREADING = false
 
+## Settings for this runner.
 var runner_settings: WFCMultithreadedRunnerSettings = WFCMultithreadedRunnerSettings.new()
 
 class _Task extends RefCounted:
@@ -22,7 +28,7 @@ class _Task extends RefCounted:
 
 	func is_running() -> bool:
 		return thread != null and not is_completed
-	
+
 	func check_just_completed() -> bool:
 		if is_completed:
 			return false
@@ -38,20 +44,20 @@ class _Task extends RefCounted:
 		for dep_index in dependencies:
 			if not tasks[dep_index].is_completed:
 				return true
-		
+
 		return false
 
 	func ensure_stopped():
 		if thread != null:
 			thread.wait_to_finish()
-	
+
 	func get_total_cells() -> int:
 		return problem.get_cell_count()
-	
+
 	func get_unsolved_cells() -> int:
 		if solver == null:
 			return get_total_cells()
-			
+
 		var state: WFCSolverState = solver.current_state
 
 		if state == null:
@@ -82,12 +88,13 @@ func _start_tasks(max_start: int) -> int:
 				task.thread.start(_thread_main.bind(task.solver))
 
 			started += 1
-			
+
 			if started >= max_start:
 				break
 
 	return started
 
+## See [method WFCSolverRunner.start].
 func start(problem: WFCProblem):
 	assert(not is_started())
 
@@ -95,11 +102,12 @@ func start(problem: WFCProblem):
 		tasks.append(
 			_Task.new(sub_problem.problem, sub_problem.dependencies)
 		)
-	
+
 	var started: int = _start_tasks(runner_settings.get_max_threads())
 
 	assert(started > 0)
 
+## See [method WFCSolverRunner.update].
 func update():
 	var unstarted: int = 0
 	var running: int = 0
@@ -127,35 +135,39 @@ func update():
 
 		assert(running > 0 or started > 0)
 
+## See [method WFCSolverRunner.is_running].
 func is_running() -> bool:
 	if interrupted:
 		return false
-	
+
 	var running_tasks: int = 0
-	
+
 	for task in tasks:
 		if task.is_running():
 			running_tasks += 1
 
 	return running_tasks > 0
 
+## See [method WFCSolverRunner.is_started].
 func is_started() -> bool:
 	return not tasks.is_empty()
 
+## See [method WFCSolverRunner.interrupt].
 func interrupt():
 	interrupted = true
 
 	for task in tasks:
 		task.ensure_stopped()
 
+## See [method WFCSolverRunner.get_progress].
 func get_progress() -> float:
 	var total: int = 0
 	var unsolved: int = 0
-	
+
 	for task in tasks:
 		total += task.get_total_cells()
 		unsolved += task.get_unsolved_cells()
-	
+
 	return 1.0 - (float(unsolved) / float(total))
 
 

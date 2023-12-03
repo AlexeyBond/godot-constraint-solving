@@ -20,6 +20,10 @@ Features:
 	- `TileMap`
 	- `GridMap` (a flat map in one of XY/YZ/XZ planes can be generated)
 	- Support of other node types can be added.
+- Supports tile **probabilities**.
+  Probabilities of specific tiles can be adjusted.
+  In case of `TileMap` a builtin probability property or a custom data layer can be used.
+  In case of `GridMap`, probability can be stored as metadate attribute of a mesh.
 - **Not just WFC**.
   Addon contains a generic implementation of a constraint-solving algorithm on top of which a WFC algorithm is built.
   This generic algorithm implementation can be reused for tasks different from WFC.
@@ -28,8 +32,6 @@ What's not (yet) implemented:
 - 3d map generation.
   Generation of 3d maps (for `GridMap`s or multi-layered `TileMap`s) is not yet implemented.
 - Wrapping.
-- Tile probabilities.
-  It's currently not possible to control probabilities of certain tile types being "observed".
 - Lazy/dynamic generation.
   For some games it may make sense to generate parts of level dynamically when they are (about to) become visible to player.
 - Rules editor.
@@ -83,7 +85,7 @@ It may make sense to create and keep a minimal scene with generator, sample map 
 
 If some of tile combinations produced by generator don't look good - try adding a negative samples map and place those combinations there.
 
-### Preconditions
+#### Preconditions
 
 By default the generator will read exsting tiles from a map node it generates content for and will place other tiles to make them fit with existing ones.
 This behavior makes it possible to combine WFC with other procedural generation algorithms (or manually pre-made level pieces): the previous algorithm may place some tiles and let WFC fill the remaining space.

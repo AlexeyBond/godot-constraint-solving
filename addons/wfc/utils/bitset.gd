@@ -60,6 +60,7 @@ func _n_bits_set(n: int) -> int:
 
 	return res
 
+## Set all used bits to [code]1[/code].
 func set_all():
 	@warning_ignore("integer_division")
 	var fullElems: int = size / BITS_PER_INT
@@ -117,7 +118,7 @@ func equals(other: WFCBitSet) -> bool:
 
 	return true
 
-
+## Add all members of [param other] set to this set.
 func union_in_place(other: WFCBitSet):
 	assert(other.size <= size)
 
@@ -128,6 +129,8 @@ func union_in_place(other: WFCBitSet):
 		for i in range(other.dataX.size()):
 			dataX.set(i, dataX[i] | other.dataX[i])
 
+## Create a new [WFCBitSet] that contains all members contained in at least one of this and
+## [param other] sets.
 func union(other: WFCBitSet) -> WFCBitSet:
 	if other.size > size:
 		return other.union(self)
@@ -136,7 +139,7 @@ func union(other: WFCBitSet) -> WFCBitSet:
 	res.union_in_place(other)
 	return res
 
-
+## Remove all members not contained in [param other] set from this set.
 func intersect_in_place(other: WFCBitSet):
 	assert(other.size >= size)
 
@@ -147,7 +150,8 @@ func intersect_in_place(other: WFCBitSet):
 		for i in range(dataX.size()):
 			dataX.set(i, dataX[i] & other.dataX[i])
 
-
+## Create a new [WFCBitSet] that contains only members contained in both this and [param other]
+## sets.
 func intersect(other: WFCBitSet) -> WFCBitSet:
 	if other.size < size:
 		return other.intersect(self)
@@ -156,6 +160,8 @@ func intersect(other: WFCBitSet) -> WFCBitSet:
 	res.intersect_in_place(other)
 	return res
 
+## Assigns this set to a [url=https://en.wikipedia.org/wiki/Symmetric_difference]symmetric
+## difference[/url] of this set and [param other] set.
 func xor_in_place(other: WFCBitSet):
 	assert(other.size == size)
 
@@ -166,11 +172,16 @@ func xor_in_place(other: WFCBitSet):
 		for i in range(dataX.size()):
 			dataX.set(i, dataX[i] ^ other.dataX[i])
 
+## Returns a new set that contains all elements between [code]0[/code] and [member size] that are
+## not contained in this set.
 func invert() -> WFCBitSet:
 	var res: WFCBitSet = WFCBitSet.new(size, true)
 	res.xor_in_place(self)
 	return res
 
+## Reads a bit from this set.
+## [br]
+## In terms of sets, this funciton checks if given element is contained in this set.
 func get_bit(bit_num: int) -> bool:
 	if bit_num > size:
 		return false
@@ -189,7 +200,11 @@ func get_bit(bit_num: int) -> bool:
 
 	return dataX[el_num] & (1 << el_bit_num)
 
-
+## Writes a bit to this set.
+## [br]
+## In terms of sets, this function either idempotently removes (when [param value] is
+## [code]false[/code]) or idempotently adds (when [param value] is [code]true[/code]) an element to
+## this set.
 func set_bit(bit_num: int, value: bool = true):
 	assert(bit_num >= 0)
 	assert(bit_num < size)
@@ -247,10 +262,16 @@ func get_first_set_bit_index(bits: int) -> int:
 func is_pot(x: int) -> bool:
 	return (x & (x - 1)) == 0
 
-
+## A value returned by [method get_only_set_bit] when the set contains more than one member.
 const ONLY_BIT_MORE_BITS_SET = -2
+
+## A value returned by [method get_only_set_bit] when the set contains no members.
 const ONLY_BIT_NO_BITS_SET = -1
 
+## If this set contains only one member, return it.
+## [br]
+## [constant ONLY_BIT_NO_BITS_SET] is returned when the set is empty.
+## [constant ONLY_BIT_MORE_BITS_SET] is returned when this set contains more than one member.
 func get_only_set_bit() -> int:
 	var elem_index: int = -1
 
@@ -278,6 +299,7 @@ func get_only_set_bit() -> int:
 
 	return get_first_set_bit_index(get_elem(elem_index)) + elem_index * BITS_PER_INT
 
+## Checks if this set is empty.
 func is_empty() -> bool:
 	if data0 != 0 or data1 != 0:
 		return false
@@ -289,6 +311,7 @@ func is_empty() -> bool:
 
 	return true
 
+## Checks if this set has any common members with [param other] set.
 func intersects_with(other: WFCBitSet) -> bool:
 	if ((data0 & other.data0) != 0) || ((data1 & other.data1) != 0):
 		return true
@@ -299,6 +322,7 @@ func intersects_with(other: WFCBitSet) -> bool:
 
 	return false
 
+## Returns [param n]'th integer used to store bits.
 func get_elem(n: int) -> int:
 	match n:
 		0:
@@ -308,7 +332,7 @@ func get_elem(n: int) -> int:
 		_:
 			return dataX[n - STATIC_ELEMS]
 
-
+## Iterator over members of a [WFCBitSet].
 class BitSetIterator:
 	var bs: WFCBitSet
 	var bit_index: int
@@ -352,9 +376,15 @@ class BitSetIterator:
 	func _iter_get(_arg):
 		return bit_index + arr_index * BITS_PER_INT
 
+## Creates an iterator over members of this set.
+## [br]
+## It may be more efficient when the set should be iterated only once.
+## If the set will be iterated multiple times, creating temporary array using [method to_array] may
+## be a better option.
 func iterator() -> BitSetIterator:
 	return BitSetIterator.new(self)
 
+## Converts this set to array of it's members.
 func to_array() -> PackedInt64Array:
 	var res: PackedInt64Array = PackedInt64Array()
 
@@ -376,6 +406,7 @@ func _count_bits(value: int, initial: int, pass_if_more_than: int) -> int:
 
 	return res
 
+## Returns number of members contained in this set.
 func count_set_bits(pass_if_more_than: int = MAX_INT) -> int:
 	var res: int = _count_bits(data0, 0, pass_if_more_than)
 
@@ -388,7 +419,12 @@ func count_set_bits(pass_if_more_than: int = MAX_INT) -> int:
 
 	return res
 
-
+## Format this set as a bit-vector.
+## [br]
+## Output looks like
+## [codeblock]
+## "(1, 0, 1, 1, 0)"
+## [/codeblock]
 func format_bits() -> String:
 	var res: String = '('
 
