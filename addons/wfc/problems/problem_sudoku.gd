@@ -1,9 +1,18 @@
 class_name WFCSudokuProblem
-
+## A [WFCProblem] that shows an example of use of [WFCSolver] for purposes different from WFC.
+##
+## Note: this doesn't actually implement all sudoku rules.
+## This problem ensures that there is no repeated numbers in each row and in each column.
+## But it does not take subgrids into account.
 extends WFCProblem
 
+## Width of the grid.
 var width: int
+
+## Height of the grid.
 var height: int
+
+## Number of numbers that can be used in solution.
 var numbers: int
 
 func _init(w: int = 9, h: int = 9, numbers_: int = 9):
@@ -65,17 +74,3 @@ func mark_related_cells(changed_cell_id: int, mark_cell: Callable):
 	for i in range(height):
 		if i != coords.y:
 			mark_cell.call(coords_to_id(coords.x, i))
-
-
-
-
-
-
-
-
-
-
-
-
-
-

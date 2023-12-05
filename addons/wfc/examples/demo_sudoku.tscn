@@ -16,32 +16,32 @@ func restart():
 	var width: int = int((get_node('%WidthSlider') as Slider).value)
 	var height: int = int((get_node('%HeightSlider') as Slider).value)
 	var cells_container: GridContainer = get_node('%CellsContainer') as GridContainer
-	
+
 	for c in cells_container.get_children():
 		c.queue_free()
-	
+
 	for i in range(width * height):
 		var label: Label = Label.new()
 		label.text = '?'
 		label.custom_minimum_size = Vector2(20, 0)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		cells_container.add_child(label)
-	
+
 	cells_container.columns = width
-	
+
 	problem = WFCSudokuProblem.new(
 		width, height,
 		max(width, height)
 	)
 	solver = WFCSolver.new(problem)
-	
+
 	last_known_values.clear()
-	
+
 	(get_node('%SizeLabel') as Label).text = '%dx%d, %d numbers' % \\
 		[problem.width, problem.height, problem.numbers]
 
 	$Timer.paused = true
-	
+
 	call_deferred(\"render_solver_state\")
 
 var last_known_values: PackedInt64Array
@@ -49,7 +49,7 @@ var last_known_values: PackedInt64Array
 func render_solver_state():
 	var state: WFCSolverState = solver.current_state
 	var cells_container: GridContainer = get_node('%CellsContainer') as GridContainer
-	
+
 	for i in range(problem.width * problem.height):
 		var label: Label = (cells_container.get_child(i) as Label)
 
@@ -64,7 +64,7 @@ func render_solver_state():
 				label.text = '?'
 			else:
 				label.text = '1234567890ABCDEFGHIJKLMNOPQRSTUVVXYZ'[solution]
-			
+
 			if solution < 0:
 				label.modulate = Color.WEB_GRAY
 			elif last_known_values.size() == 0:
@@ -90,7 +90,7 @@ func render_solver_state():
 
 func _on_step_button_pressed():
 	solver.solve_step()
-	
+
 	render_solver_state()
 
 

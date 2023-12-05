@@ -25,8 +25,8 @@ Features:
   In case of `TileMap` a builtin probability property or a custom data layer can be used.
   In case of `GridMap`, probability can be stored as metadate attribute of a mesh.
 - **Not just WFC**.
-  Addon contains a generic implementation of a constraint-solving algorithm on top of which a WFC algorithm is built.
-  This generic algorithm implementation can be reused for tasks different from WFC.
+  Addon contains a generic implementation of a solver capable of solving subclass of [constraint satisfaction problems](https://en.wikipedia.org/wiki/Constraint_satisfaction_problem) on top of which a WFC implementation is built.
+  This generic solver can be reused for tasks different from WFC.
 
 What's not (yet) implemented:
 - 3d map generation.

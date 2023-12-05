@@ -2,6 +2,10 @@ class_name WFCSolver
 ## Solver that solves finite discrete
 ## [url=https://en.wikipedia.org/wiki/Constraint_satisfaction_problem]constraint satisfaction problems[/url].
 ## [br]
+## This solver uses backtracking along with
+## [url=https://en.wikipedia.org/wiki/AC-3_algorithm]AC-3[/url]-like constraint propagetion
+## algorithm.
+## [br]
 ## Despite [code]WFC[/code] prefix in the name, this solver is capable of solving wider range of
 ## problems than just wave function collapse.
 ## In fact, wave function collapse is a special case of that wider class of constraint satisfaction

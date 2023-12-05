@@ -1,25 +1,61 @@
 extends Resource
-
+## A 2D wave function collapse rules.
 class_name WFCRules2D
 
+## A mapper used to access the map.
 @export
 var mapper: WFCMapper2D
 
+## If enabled, the rules will try to infer some additional allowed transitions when learning from
+## sample.
+## [br]
+## This is done by calling [method WFCBitMatrix.complete] on each matrix in [member axis_matrices].
 @export
 var complete_matrices: bool = true
 
+## Offsets from a cell to other cells that cell depends on.
+## [br]
+## By default it's [code](0,1)[/code] and [code](1,0)[/code], so each cell depends on it's
+## neighbours along X and Y axes.
+## However, one may want a cell to depend, for example, on it's diagonal neighbours.
+## In such case one should add [code](1,1)[/code] and [code](1,-1)[/code] to this list.
+## [br]
+## Another (and, perhaps, more meaningful) use-case is a hexagonal grid.
+## In case of hexagonal grid we want a cell to depend on neighbours in three directions, so third
+## vector should be added.
+## The exact vector depends on chosen coordinate system - for example, in case of [TileMap]s it is
+## determined by [member TileSet.tile_layout].
+## Note that this WFC implementation won't work with some layouts.
+## [br]
+## [b]Note:[/b] Any additional element in this array will have a significant impact on performance
+## of the solver as it proportionally increases number of constraints.
+## [br]
+## [b]Note:[/b] This array should not include vectors opposite to other vectors contained here.
+## E.g. if [code](1,0)[/code] is here then [code](-1,0)[/code] should not.
+## In fact opposite vectors are incluged implicitly because all constraints are symmetric.
 @export
 var axes: Array[Vector2i] = [
 	Vector2i(0, 1),
 	Vector2i(1, 0)
 ]
 
+## Matrices of allowed tile combinations along each axis.
+## [br]
+## [color=red]Do not modify manually[/color] unless you know precisely what you are doing.
 @export
 var axis_matrices: Array[WFCBitMatrix] = []
 
+## Probabilities of all tile types.
+## [br]
+## [color=red]Do not modify manually[/color] unless you know precisely what you are doing.
+## [br]
+## Probabilties are filled automatically when rules are learned from sample and
+## [member probabilities_enabled] is enabled.
 @export
 var probabilities: PackedFloat32Array = []
 
+## If enabled, the solver will take tile probabilities into account.
+## When not - probabilities of all tiles are considered equal.
 @export
 var probabilities_enabled: bool = true
 
@@ -53,6 +89,11 @@ func _learn_probabilities():
 		assert(probability > 0.0)
 		probabilities[i] = probability
 
+## Learn rules from given sample map.
+## [br]
+## Also learns tile probabilities from [member mapper] (if [member probabilities_enabled] enabled
+## and probabilities were not loaded before) and infers additional rules (if
+## [member complete_matrices] is enabled).
 func learn_from(map: Node):
 	assert(mapper != null)
 	assert(mapper.supports_map(map))
@@ -60,8 +101,11 @@ func learn_from(map: Node):
 	assert(axes.size() > 0)
 	assert(axis_matrices.is_empty() or axis_matrices.size() == axes.size())
 
-	if probabilities.is_empty() and probabilities_enabled:
-		_learn_probabilities()
+	if probabilities_enabled:
+		if probabilities.is_empty():
+			_learn_probabilities()
+		else:
+			assert(probabilities.size() == mapper.size())
 
 	if axis_matrices.size() == 0:
 		var num_cell_types: int = mapper.size()
@@ -77,7 +121,9 @@ func learn_from(map: Node):
 		for mat in axis_matrices:
 			mat.complete()
 
-
+## Learns disallowed tile combinations from a sample map.
+## [br]
+## Useful mostly when [member complete_matrices] is enabled - to exclude some of inferred rules.
 func learn_negative_from(map: Node):
 	assert(mapper != null)
 	assert(mapper.supports_map(map))
@@ -87,13 +133,17 @@ func learn_negative_from(map: Node):
 
 	_learn_from(map, false)
 
-
+## Returns [code]true[/code] if these rules are ready to be used.
+## [br]
+## In order to be ready the rules should have [member mapper], [member axis_matrices] and
+## [member probabilities] (if enabled) set up.
 func is_ready() -> bool:
 	return mapper != null and \
 		mapper.is_ready() and \
 		axis_matrices.size() == axes.size() and \
 		(probabilities.size() == mapper.size() or not probabilities_enabled)
 
+## Prints rules to string.
 func format() -> String:
 	var res: String = ""
 
@@ -106,23 +156,27 @@ func format() -> String:
 
 const MAX_INT_32 = 2147483647
 
+## Returns distances along X and Y axes at which a certain cell stops influencing domains of other
+## cells along those axes.
+## [br]
+## Returned value will be equal to maximum allowed integer value if constraints of some cell types
+## may propogate infinitely.
+## E.g. if there are cell types [code]A[/code] and [code]B[/code] and the following combinations are
+## only allowed along horizontal X axis:
+## [codeblock]
+## AA AB BB
+## [/codeblock]
+## cell with type [code]B[/code] wouldn't allow any cell types other than [code]B[/code] to the
+## left, so all cells to the left must be of type [code]B[/code] and x component of vector returned
+## by [method get_influence_range] will be [code]2147483647[/code].
+## But if we also allow combination of [code]BA[/code], then any cell can be placed to the left of
+## cell of type [code]B[/code], and x component of vector returned by [method get_influence_range]
+## will become [code]1[/code].
+## [br]
+## This function is used to approximate real "influence range" of a cell - an area around a cell
+## that can be influenced by (and symmetrically influence) it.
+## However, it's just an approximation and it won't work wor some rule sets.
 func get_influence_range() -> Vector2i:
-	"""
-	Returns distances along X and Y axes at which a certain cell stops
-	influencing domains of other cells along those axes.
-
-	Returned value will be equal to maximum allowed integer value if constraints
-	of some cell types may propogate infinitely.
-	E.g. if there are cell types 0 and 1 and the following combinations are
-	only allowed along horizontal X axis:
-		00 01 11
-	cell with type 1 wouldn't allow any cell types other than 1 to the left,
-	so all cells to the left must be of type 1 and x component of vector
-	returned by get_influence_range() will be 2147483647.
-	But if we also allow combination of 10, then any cell can be place to the
-	left of cell of type 1, and x component of vector returned by
-	get_influence_range() will be 1.
-	"""
 	assert(axes.size() > 0)
 	assert(axis_matrices.size() == axes.size())
 

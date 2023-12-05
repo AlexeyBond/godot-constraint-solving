@@ -1,5 +1,5 @@
 extends WFCProblem
-
+## A [WFCProblem] for 2D wave function collapse.
 class_name WFC2DProblem
 
 class WFC2DProblemSettings extends Resource:
@@ -9,21 +9,53 @@ class WFC2DProblemSettings extends Resource:
 	@export
 	var rect: Rect2i
 
+## The rules.
 var rules: WFCRules2D
+
+## The map this problem works with.
 var map: Node
+
+## Rect of a [member map] this problem should fill.
 var rect: Rect2i
+
+## A [WFC2DPrecondition] that will determine initial domains of cells.
 var precondition: WFC2DPrecondition
 
+## Rect of [member map] this problem shoud write back to [member map].
+## [br]
+## This rect must be contained by [member rect].
+## Some cells will be generated but not written back to [member map] when it doesn't match
+## [member rect].
 var renderable_rect: Rect2i
+
+## Rects from [member map] that the problem should read existing solutions from.
+## [br]
+## This is used to pass data from previous sub-problems when a [WFCMultithreadedSolverRunner] is
+## used: previous sub-problems write solutions to their [member renderable_rect]s and the later
+## sub-problems should read parts of those solutions that overlap their [member rect]s to make their
+## solutions consistent.
 var init_read_rects: Array[Rect2i] = []
 
+## Offsets between cells and their dependencies.
+## [br]
+## Unlike [member WFCRules2D.axes] this field also includes reverse dependencies.
 var axes: Array[Vector2i] = []
+
+## Rule matrices.
+## [br]
+## Unlike [member WFCRules2D.axis_matrices] this field also includes matrices for reverse
+## dependencies.
+## Matrices for reverse dependencies are compured as transposition of direct dependencies matrices.
+## E.g. if axis is "left" and opposite axis is "right" the direct matrix for "left" axis contains
+## 1 at column [code]i[/code] of row [code]j[/code] if tile [code]i[/code] is allowed to the left of
+## tile [code]j[/code].
+## Then reverse matrix for "right" axis should contain 1 at column [code]j[/code] of row
+## [code]i[/code] to allow tile [code]j[/code] to the right of tile [code]i[/code].
 var axis_matrices: Array[WFCBitMatrix] = []
 
 func _init(settings: WFC2DProblemSettings, map_: Node, precondition_: WFC2DPrecondition):
-	assert(settings.rules.mapper != null)
+	assert(settings.rules.is_ready())
 	assert(settings.rules.mapper.supports_map(map_))
-	assert(settings.rules.mapper.size() > 0)
 	assert(settings.rect.has_area())
 
 	map = map_
@@ -39,20 +71,26 @@ func _init(settings: WFC2DProblemSettings, map_: Node, precondition_: WFC2DPreco
 		axes.append(-rules.axes[i])
 		axis_matrices.append(rules.axis_matrices[i].transpose())
 
+## Converts a position of a cell relative to [member Rect2i.position] of [member rect] to index of a
+## variable corresponding to that cell.
 func coord_to_id(coord: Vector2i) -> int:
 	return rect.size.x * coord.y + coord.x
 
+## Opposite of [member coord_to_id].
 func id_to_coord(id: int) -> Vector2i:
 	var szx: int = rect.size.x
 	@warning_ignore("integer_division")
 	return Vector2i(id % szx, id / szx)
 
+## See [member WFCProblem.get_cell_count].
 func get_cell_count() -> int:
 	return rect.get_area()
 
+## See [member WFCProblem.get_default_domain].
 func get_default_domain() -> WFCBitSet:
 	return WFCBitSet.new(rules.mapper.size(), true)
 
+## See [member WFCProblem.populate_initial_state].
 func populate_initial_state(state: WFCSolverState):
 	var mapper: WFCMapper2D = rules.mapper
 
@@ -81,6 +119,7 @@ func populate_initial_state(state: WFCSolverState):
 						solution
 					)
 
+## See [member WFCProblem.compute_cell_domain].
 func compute_cell_domain(state: WFCSolverState, cell_id: int) -> WFCBitSet:
 	var res: WFCBitSet = state.cell_domains[cell_id].copy()
 	var pos: Vector2i = id_to_coord(cell_id)
@@ -101,7 +140,7 @@ func compute_cell_domain(state: WFCSolverState, cell_id: int) -> WFCBitSet:
 
 	return res
 
-
+## See [member WFCProblem.mark_related_cells].
 func mark_related_cells(changed_cell_id: int, mark_cell: Callable):
 	var pos: Vector2i = id_to_coord(changed_cell_id)
 
@@ -110,6 +149,9 @@ func mark_related_cells(changed_cell_id: int, mark_cell: Callable):
 		if rect.has_point(other_pos + rect.position):
 			mark_cell.call(coord_to_id(other_pos))
 
+## Renders [member renderable_rect] of current solution to the [member map].
+## [br]
+## Unsolved (as well as failed) cells are rendered as empty.
 func render_state_to_map(state: WFCSolverState):
 	assert(rect.encloses(renderable_rect))
 	var mapper: WFCMapper2D = rules.mapper
@@ -130,7 +172,7 @@ func render_state_to_map(state: WFCSolverState):
 				cell
 			)
 
-
+## Maximal distances along X and Y axes between a cell and it's immediate dependencies.
 func get_dependencies_range() -> Vector2i:
 	var rx: int = 0
 	var ry: int = 0
@@ -160,6 +202,13 @@ func _split_range(first: int, size: int, partitions: int, min_partition_size: in
 
 	return res
 
+## See [member WFCProblem.split].
+## [br]
+## Tries to split the problem along either X or Y axis into at least 3 sub-problems.
+## Even sub-problems start first with [member rect]s extended along the split axis.
+## Odd sub-problems depend on their even neighbours.
+## Their rects overlap with [member renderable_rect]s of their dependencies and their
+## [member init_read_rects] contain those overlapping regions.
 func split(concurrency_limit: int) -> Array[SubProblem]:
 	if concurrency_limit < 2:
 		return super.split(concurrency_limit)
@@ -272,6 +321,10 @@ func split(concurrency_limit: int) -> Array[SubProblem]:
 
 	return res
 
+## See [member WFCProblem.pick_divergence_option].
+## [br]
+## Accounts for [member WFCRules2D.probabilities] of [member rules] if
+## [member WFCRules2D.probabilities_enabled] is set in [member rules].
 func pick_divergence_option(options: Array[int]) -> int:
 	if not rules.probabilities_enabled:
 		return super.pick_divergence_option(options)
@@ -296,6 +349,3 @@ func pick_divergence_option(options: Array[int]) -> int:
 			break
 
 	return options.pop_at(chosen_option)
-
-
-

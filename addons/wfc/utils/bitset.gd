@@ -437,10 +437,3 @@ func format_bits() -> String:
 	res += ')'
 
 	return res
-
-
-
-
-
-
-
