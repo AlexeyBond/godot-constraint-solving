@@ -22,5 +22,5 @@ func read_domain(coords: Vector2i) -> WFCBitSet:
 	domain.set_bit(read, true)
 
 	_domain_cache[read] = domain
-	
+
 	return domain

@@ -1,22 +1,35 @@
 extends WFCMapper2D
-
+## A [WFCMapper2D] for [GridMap]s.
+##
+## Works with a slice of a [GridMap] as a 2D map.
+## The slice should be parallel to one of base planes (XY, YZ, XZ).
+## The plane is chosen by [member x_axis], [member y_axis] and [member unused_axis].
+## Offset from center is set by [member base_point].
 class_name WFCGridMapMapper2D
 
+## Coordinates of the cell that will be assumed to be at coordinates [code](0,0)[/code].
 @export
 var base_point: Vector3i = Vector3i(0, 0, 0)
 
+## A [MeshLibrary] used by this mapper.
 @export
 var mesh_library: MeshLibrary
 
+## An axis that will be used as X axis for all cell access operations.
 @export_enum("X", "Y", "Z")
 var x_axis: int = Vector3i.AXIS_X
 
+## An axis that will be used as Y axis for all cell access operations.
 @export_enum("X", "Y", "Z")
 var y_axis: int = Vector3i.AXIS_Z
 
+## The third axis, orthogonal to [member x_axis] and [member y_axis].
 @export_enum("X", "Y", "Z")
 var unused_axis: int = Vector3i.AXIS_Y
 
+## Dictionary from tile attributes list to numeric tile id.
+## [br]
+## [color=red]Do not modify manually[/color].
 @export
 var attrs_to_id: Dictionary = {}
 
@@ -43,6 +56,7 @@ func _ensure_grid_map(node: Node) -> GridMap:
 
 	return node as GridMap
 
+## See [method WFCMapper2D.learn_from].
 func learn_from(map_: Node):
 	var map: GridMap = _ensure_grid_map(map_)
 
@@ -62,6 +76,7 @@ func learn_from(map_: Node):
 
 		attrs_to_id[attrs] = len(attrs_to_id)
 
+## See [method WFCMapper2D.get_used_rect].
 func get_used_rect(map_: Node) -> Rect2i:
 	var map: GridMap = _ensure_grid_map(map_)
 	var res: Rect2i
@@ -82,6 +97,7 @@ func get_used_rect(map_: Node) -> Rect2i:
 
 	return res
 
+## See [method WFCMapper2D.read_cell].
 func read_cell(map_: Node, coords: Vector2i) -> int:
 	var map: GridMap = _ensure_grid_map(map_)
 	var c: Vector3i = _2d_to_map(coords)
@@ -104,6 +120,7 @@ func _ensure_reverse_mapping():
 
 const _NO_META_SENTINEL = '_NO_META_SENTINEL@@@'
 
+## See [method WFCMapper2D.read_tile_meta].
 func read_tile_meta(tile: int, meta_name: String) -> Array:
 	if tile < 0:
 		return []
@@ -121,6 +138,7 @@ func read_tile_meta(tile: int, meta_name: String) -> Array:
 	else:
 		return [value]
 
+## See [method WFCMapper2D.write_cell].
 func write_cell(map_: Node, coords: Vector2i, code: int):
 	assert(code < size())
 	assert(mesh_library != null)
@@ -139,20 +157,15 @@ func write_cell(map_: Node, coords: Vector2i, code: int):
 	else:
 		map.set_cell_item(map_coords, -1)
 
+## See [method WFCMapper2D.size].
 func size() -> int:
 	return attrs_to_id.size()
 
+## See [method WFCMapper2D.supports_map].
 func supports_map(map: Node) -> bool:
 	return map is GridMap
 
+## See [method WFCMapper2D.clear].
 func clear():
 	_id_to_attrs.clear()
 	attrs_to_id.clear()
-
-
-
-
-
-
-
-

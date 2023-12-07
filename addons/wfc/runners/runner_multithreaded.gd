@@ -1,6 +1,6 @@
 extends WFCSolverRunner
-## A [WFCSolverRunner] that tries to split the problem into multiple sub-problem and runs them on
-## different threads when possible.
+## A [code]WFCSolverRunner[/code] that tries to split the problem into multiple sub-problem and runs
+## them on different threads when possible.
 ##
 ## When a problem cannot be split it just runs a single solver on a separate [Thread].
 class_name WFCMultithreadedSolverRunner

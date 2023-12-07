@@ -1,6 +1,6 @@
 extends WFCMapper2D
-## Deprecated singl-layer mapper for TileMap.
-## Use WFCLayeredTileMapMapper2D instead.
+## Deprecated single-layer mapper for TileMap.
+## Use [WFCLayeredTileMapMapper2D] instead.
 ##
 ## @deprecated
 class_name WFCTileMapMapper2D

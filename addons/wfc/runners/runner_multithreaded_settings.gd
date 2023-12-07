@@ -1,5 +1,7 @@
 extends Resource
-## Settings for [WFCMultithreadedSolverRunner].
+## Settings for [code]WFCMultithreadedSolverRunner[/code].
+##
+## See [WFCMultithreadedSolverRunner].
 class_name WFCMultithreadedRunnerSettings
 
 ## Maximum number of threads used when number of threads is calculated based on number of available

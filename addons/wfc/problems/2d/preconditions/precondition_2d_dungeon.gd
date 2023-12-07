@@ -1,4 +1,8 @@
 extends WFC2DPrecondition
+## Generates a dungeon.
+##
+## Uses an algorithm based on one from
+## [url=https://indienova.com/u/root/blogread/1766]this article[/url].
 class_name WFC2DPreconditionDungeon
 
 var walls_domain: WFCBitSet

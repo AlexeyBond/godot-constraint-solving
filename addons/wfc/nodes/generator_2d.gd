@@ -1,54 +1,98 @@
 class_name WFC2DGenerator
-
+## Generates content of a map (TileMap or GridMap) using WFC algorithm.
 extends Node
-## Generates content of a map (TileMap or GridMap) using WFC algorithm
 
+## A map that will be filled using WFC algorithm.
 @export_node_path("TileMap", "GridMap")
 var target: NodePath
 
+## Rect of a map that will be filled.
+## [br]
+## Interpretation of this rect may depend on [WFCMapper2D] used.
+## E.g. [WFCGridMapMapper2D] may use different planes with different offsets.
 @export
 var rect: Rect2i
 
+## Rules that will be used.
+## [br]
+## If not specified, default rules will be created.
 @export
 @export_category("Rules")
 var rules: WFCRules2D = WFCRules2D.new()
 
+## A sample map to learn rules from.
 @export_node_path("TileMap", "GridMap")
 var positive_sample: NodePath
 
+## A negative samples map.
 @export_node_path("TileMap", "GridMap")
 var negative_sample: NodePath
 
+## Settings for a [WFCSolver].
 @export
 var solver_settings: WFCSolverSettings = WFCSolverSettings.new()
 
+## What preconditions ([WFC2DPrecondition]) will be used.
+## [br]
+## If not set, a [WFC2DPreconditionReadExistingSettings] will be created and thus WFC will read
+## existing tiles from [member target] map.
+## If that's not necessary - set a [WFC2DPrecondition2DNullSettings] here.
 @export
 var precondition: WFC2DPrecondition2DNullSettings
 
+## Settings for multithreaded solver runner.
+## [br]
+## Relevant iff [member use_multithreading] is [code]true[/code].
 @export
 @export_category("Runner")
 var multithreaded_runner_settings: WFCMultithreadedRunnerSettings = WFCMultithreadedRunnerSettings.new()
 
+## Settings for main thread solver runner.
+## [br]
+## Relevant iff [member use_multithreading] is [code]false[/code].
 @export
 var main_thread_runner_settings: WFCMainThreadRunnerSettings = WFCMainThreadRunnerSettings.new()
 
+## If enabled, solver(s) will run on separate thread(s).
+## Otherwise, there will be only one solver running on main thread, bit by bit every frame.
+## [br]
+## It's preferrable to use separate thread(s) in almost all cases.
+## However, in some cases WFC may fail and/or produce invalid results when running in multiple
+## threads.
+## In such cases, it may make sense to still use multithreading but set
+## [member WFCMultithreadedRunnerSettings.max_threads] in [member multithreaded_runner_settings] to
+## [code]1[/code].
 @export
 var use_multithreading: bool = true
 
+## If enabled, the generator will start WFC as soon as it is ready (i.e. literally in
+## [method Node._ready]).
 @export
 @export_category("Behavior")
 var start_on_ready: bool = false
 
+## If enabled, current generation state will be rendered to [member target] map every frame while
+## generation is in progress.
+## [br]
+## This is mostly useful for demos.
+## In real game the map most likely won't be visible before it is generated completely, so updating
+## it every frame is a waste of resources.
+## [br]
+## Even if this flag is disabled, generator [b]will[/b] render some intermediate results when
+## running in multithreaded mode.
 @export
 var render_intermediate_results: bool = false
 
+## If enabled, some debug information about rules will be printed to console.
 @export
 @export_category("Debug mode")
 var print_rules: bool = false
 
+## Emited when the generator starts generating map.
 signal started
-signal done
 
+## Emitted when generation is completed.
+signal done
 
 var _runner: WFCSolverRunner = null
 
@@ -70,7 +114,9 @@ func _create_runner() -> WFCSolverRunner:
 		res.solver_settings = solver_settings
 		return res
 
-
+## Creates a mapper for given [param map] node.
+## [br]
+## Called when mapper is not provided in [member rules].
 func _create_mapper(map: Node) -> WFCMapper2D:
 	match map.get_class():
 		"TileMap":
@@ -109,6 +155,11 @@ func _exit_tree():
 		_runner.interrupt()
 		_runner = null
 
+## Starts generation.
+## [br]
+## Should be called at most once.
+## [br]
+## Should not be called manually when [member start_on_ready] is [code]true[/code].
 func start():
 	assert(_runner == null)
 	assert(target != null)
@@ -187,6 +238,12 @@ func _process(_delta):
 	if _runner != null and _runner.is_running():
 		_runner.update()
 
+## Returns generation progress.
+## [br]
+## Returned value is in range between [code]0.0[/code] and [code]1.0[/code] (both inclusive).
+## Just like in [method WFCSolverRunner.get_progress].
+## [br]
+## Returns [code]0.0[/code] if generation was not yet started.
 func get_progress() -> float:
 	if _runner == null:
 		return 0

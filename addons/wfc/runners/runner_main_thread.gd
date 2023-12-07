@@ -1,5 +1,5 @@
 class_name WFCMainThreadSolverRunner
-## A [WFCSolverRunner] that runs a single solver in main thread.
+## A [code]WFCSolverRunner[/code] that runs a single solver in main thread.
 ##
 ## In most cases, it's preferrable to use [WFCMultithreadedSolverRunner] with
 ## [member WFCMultithreadedRunnerSettings.max_threads] of [code]1[/code] instead.
