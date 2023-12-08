@@ -190,6 +190,8 @@ func _split_range(first: int, size: int, partitions: int, min_partition_size: in
 	var approx_partition_size: int = size / partitions
 
 	if approx_partition_size < min_partition_size:
+		if partitions <= 2:
+			return [first, first + size]
 		return _split_range(first, size, partitions - 1, min_partition_size)
 
 	var res: PackedInt64Array = []
