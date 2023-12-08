@@ -1,0 +1,22 @@
+MAP PROPERTIES:
+    Orientation................Hexagonal (Staggered)
+    Tile Width.................256
+    Tile Height................222
+    Tile Side Length (Hex).....128
+    Stagger Axis...............X (not Y)
+    Tile layer Format..........CSV
+
+CHANGELOG:
+    23 jul. 2023 - Beta 6 - Added 12 curved corridors, derived from the Y
+                            corridors.
+    10 Jun. 2020 - Beta 5 - Added "Y" corridors
+    09 Jun. 2020 - Beta 4 - Total revamp
+    21 Jun. 2016 - Beta 3 - added example map
+    02 Aug. 2015 - Beta 2 - added more narrow corridors (3-way)
+    01 Aug. 2015 - Beta 1 - 1st release
+
+AUTHOR
+    Daniel Dias Rodrigues, a.k.a. "Nerun"
+    https://www.gurpzine.com.br
+    Released under License Creative Commons BY 4.0
+

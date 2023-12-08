@@ -1,0 +1,52 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://835n3cpedbjf"]
+
+[ext_resource type="Texture2D" uid="uid://chflmixx241ld" path="res://addons/wfc/examples/assets/Underearth/set.png" id="1_awtrr"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_w0sa7"]
+texture = ExtResource("1_awtrr")
+texture_region_size = Vector2i(256, 222)
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+7:2/0 = 0
+8:2/0 = 0
+9:2/0 = 0
+10:2/0 = 0
+11:2/0 = 0
+12:2/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+9:0/0 = 0
+10:0/0 = 0
+11:0/0 = 0
+12:0/0 = 0
+13:0/0 = 0
+14:0/0 = 0
+15:0/0 = 0
+16:0/0 = 0
+17:0/0 = 0
+18:0/0 = 0
+19:0/0 = 0
+20:0/0 = 0
+21:0/0 = 0
+
+[resource]
+tile_shape = 3
+tile_layout = 4
+tile_offset_axis = 1
+tile_size = Vector2i(256, 222)
+sources/0 = SubResource("TileSetAtlasSource_w0sa7")
