@@ -1,4 +1,4 @@
-# WFC (Wave Function Collapse) and generic constraint-solving implementation for Godot 4
+# WFC (Wave Function Collapse) and generic constraint satisfaction problem solver implementation for Godot 4
 
 ![Screenshot of generated tile map](screenshots/2d-tilemap-0.png)
 
