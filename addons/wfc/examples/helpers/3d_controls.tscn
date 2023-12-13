@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://dheyfh3bip6t7"]
+
+[sub_resource type="GDScript" id="GDScript_byh26"]
+script/source = "extends Node3D
+
+@export
+var sensitivity: float = 0.01
+
+var _pitch: float = 0.0
+
+func _ready():
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+func _unhandled_input(event):
+	if event is InputEventMouseMotion:
+		rotate(Vector3.UP, event.relative.x * sensitivity)
+
+		_pitch = clamp(_pitch + event.relative.y * sensitivity, -0.25 * PI, 0.15 * PI)
+		$camera_container.rotation.x = _pitch
+	elif event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			$camera_container.scale *= 0.9
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			$camera_container.scale *= 1.1
+"
+
+[sub_resource type="Environment" id="Environment_71f77"]
+
+[node name="Controls" type="Node3D"]
+script = SubResource("GDScript_byh26")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.0221687, 0.410729, -0.911488, 1.68154e-09, 0.911712, 0.41083, 0.999755, 0.00910755, -0.0202115, 0, 7.73831, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_71f77")
+
+[node name="camera_container" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="camera_container"]
+transform = Transform3D(1, 0, 0, 0, 0.714082, 0.700062, 0, -0.700062, 0.714082, 0, 16.1111, 23.1593)

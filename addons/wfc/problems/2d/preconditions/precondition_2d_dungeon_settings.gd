@@ -2,6 +2,7 @@ extends WFC2DPrecondition2DNullSettings
 ## Settings for a precondition that generates a dungeon-like structure.
 class_name WFC2DPreconditionDungeonSettings
 
+@export_group("Dungeon generator settings")
 ## Minimal size of walls between a non-wall area and border of WFC-generated area.
 @export
 var wall_border_size: Vector2i = Vector2i(1, 2)
@@ -61,6 +62,7 @@ var passable_area_ratio: float = 0.1
 @export
 var iterations_limit: int = 1000
 
+@export_group("Tile classes")
 ## Name of meta attribute/custom data layer that marks passable tiles.
 @export
 var road_class: String = "wfc_dungeon_road"
@@ -69,12 +71,28 @@ var road_class: String = "wfc_dungeon_road"
 @export
 var wall_class: String = "wfc_dungeon_wall"
 
+## If set, the precondition will extract tile classes (passable/wall) from a map node instead of
+## tile meta attributes.
+## [br]
+## First row of the map should contain all passable tiles.
+## Second row should contain all wall tiles.
+## Second row may be empty.
+## In such case, all tiles except for ones from first row will be considered as walls.
+@export_node_path
+var classes_map: NodePath
+
 func create_precondition(parameters: WFC2DPrecondition2DNullSettings.CreationParameters) -> WFC2DPrecondition:
 	var res: WFC2DPreconditionDungeon = WFC2DPreconditionDungeon.new()
 
 	res.rect = parameters.problem_settings.rect
 
-	res.learn_classes(parameters.problem_settings.rules.mapper, road_class, wall_class)
+	var mapper := parameters.problem_settings.rules.mapper
+
+	if classes_map != null and not classes_map.is_empty():
+		var map_node := parameters.generator_node.get_node(classes_map)
+		res.learn_classes_from_map(mapper, map_node)
+	else:
+		res.learn_classes(mapper, road_class, wall_class)
 
 	assert(wall_border_size >= Vector2i.ZERO)
 	res.wall_border_size = wall_border_size

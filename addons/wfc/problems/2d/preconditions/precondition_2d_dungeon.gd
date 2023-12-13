@@ -53,6 +53,39 @@ func _meta_to_bool(meta: Array) -> bool:
 
 	return false
 
+func learn_classes_from_map(
+	mapper: WFCMapper2D,
+	map: Node,
+):
+	assert(mapper.supports_map(map))
+
+	var used_rect := mapper.get_used_rect(map)
+
+	assert(used_rect.has_area())
+	# Either 1 row (passable tiles) or 2 rows (passable tiles and wall tiles)
+	assert(used_rect.size.y == 1 or used_rect.size.y == 2)
+
+	passable_domain = WFCBitSet.new(mapper.size())
+
+	for x_off in range(used_rect.size.x):
+		var p := used_rect.position + Vector2i(x_off,0)
+		var tile := mapper.read_cell(map, p)
+		if tile >= 0:
+			passable_domain.set_bit(tile)
+
+	if used_rect.size.y == 1:
+		walls_domain = passable_domain.invert()
+	else:
+		walls_domain = WFCBitSet.new(mapper.size())
+
+		for x_off in range(used_rect.size.x):
+			var p := used_rect.position + Vector2i(x_off,1)
+			var tile := mapper.read_cell(map, p)
+			if tile >= 0:
+				walls_domain.set_bit(tile)
+
+		assert(not walls_domain.is_empty())
+
 func learn_classes(
 	mapper: WFCMapper2D,
 	road_class: String = "wfc_dungeon_road",

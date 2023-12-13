@@ -15,6 +15,10 @@ var base_point: Vector3i = Vector3i(0, 0, 0)
 @export
 var mesh_library: MeshLibrary
 
+## Meta-attributes for meshes in [member mesh_library].
+@export
+var mesh_meta: Array[WFCMeshlibMeshMeta]
+
 ## An axis that will be used as X axis for all cell access operations.
 @export_enum("X", "Y", "Z")
 var x_axis: int = Vector3i.AXIS_X
@@ -118,9 +122,10 @@ func _ensure_reverse_mapping():
 	for attrs in attrs_to_id.keys():
 		_id_to_attrs[attrs_to_id[attrs]] = attrs
 
-const _NO_META_SENTINEL = '_NO_META_SENTINEL@@@'
-
 ## See [method WFCMapper2D.read_tile_meta].
+## [br]
+## Currently (Godot 4.2) there is no way to specify metadata for meshes in meshlib.
+## So, this method uses [member mesh_meta].
 func read_tile_meta(tile: int, meta_name: String) -> Array:
 	if tile < 0:
 		return []
@@ -129,14 +134,15 @@ func read_tile_meta(tile: int, meta_name: String) -> Array:
 	assert(tile < _id_to_attrs.size())
 
 	var attrs := _id_to_attrs[tile]
-	var value = mesh_library.get_item_mesh(attrs.x).get_meta(meta_name, _NO_META_SENTINEL)
 
-	if _NO_META_SENTINEL == value:
-		# get_meta would generate error on missing meta if default value is null,
-		# so we use a sentinel value to indicate if there is no meta.
-		return []
-	else:
-		return [value]
+	var mesh_name := mesh_library.get_item_name(attrs.x)
+	var result := []
+
+	for meta in mesh_meta:
+		if meta.mesh_name == mesh_name and meta.meta_name == meta_name:
+			result.append_array(meta.meta_values)
+
+	return result
 
 ## See [method WFCMapper2D.write_cell].
 func write_cell(map_: Node, coords: Vector2i, code: int):
