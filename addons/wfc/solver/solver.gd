@@ -90,6 +90,8 @@ func _propagate_constraints() -> bool:
 	Returns:
 		true iff solution has failed and backtracking should be performed
 	"""
+	assert(current_state != null)
+
 	while true:
 		var changed: PackedInt64Array = current_state.extract_changed_cells()
 
@@ -161,10 +163,6 @@ func _try_backtrack() -> bool:
 ## [br]
 ## Returns [code]true[/code] iff solution is completed.
 func solve_step() -> bool:
-	"""
-	Returns:
-		true iff process has termitated (either successfully or with failure)
-	"""
 	assert(current_state != null)
 
 	if current_state.is_all_solved():

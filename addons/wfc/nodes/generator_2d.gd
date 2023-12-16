@@ -249,3 +249,19 @@ func get_progress() -> float:
 		return 0
 
 	return _runner.get_progress()
+
+## Returns [code]true[/code] iff any solver is currently running.
+func is_running() -> bool:
+	if _runner == null:
+		return false
+
+	return _runner.is_running()
+
+## Resets this generator to it's initial state.
+## [br]
+## Stops any running solver(s), if any.
+func reset():
+	if _runner != null:
+		if _runner.is_running():
+			_runner.interrupt()
+		_runner = null

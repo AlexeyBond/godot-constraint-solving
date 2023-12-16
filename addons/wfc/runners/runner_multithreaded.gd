@@ -12,16 +12,36 @@ const _STUB_NO_MULTITHREADING = false
 ## Settings for this runner.
 var runner_settings: WFCMultithreadedRunnerSettings = WFCMultithreadedRunnerSettings.new()
 
+class _TaskStatusContainer extends RefCounted:
+	var unsolved_cells: int
+
+	var state_snapshot_required: bool
+	var state_snapshot_mutex: Mutex
+	var state_snapshot: WFCSolverState
+
+	func _init(total_cells: int):
+		unsolved_cells = total_cells
+		state_snapshot_mutex = Mutex.new()
+
+	func take_and_request_snapshot() -> WFCSolverState:
+		state_snapshot_mutex.lock()
+		var snapshot := state_snapshot
+		state_snapshot_mutex.unlock()
+		state_snapshot_required = true
+		return snapshot
+
 class _Task extends RefCounted:
 	var problem: WFCProblem
 	var dependencies: PackedInt64Array
 	var solver: WFCSolver = null
 	var thread: Thread = null
 	var is_completed: bool = false
+	var status_container: _TaskStatusContainer
 
 	func _init(problem_: WFCProblem, dependencies_: PackedInt64Array):
 		problem = problem_
 		dependencies = dependencies_
+		status_container = _TaskStatusContainer.new(problem.get_cell_count())
 
 	func is_started() -> bool:
 		return thread != null
@@ -55,22 +75,24 @@ class _Task extends RefCounted:
 		return problem.get_cell_count()
 
 	func get_unsolved_cells() -> int:
-		if solver == null:
-			return get_total_cells()
-
-		var state: WFCSolverState = solver.current_state
-
-		if state == null:
-			return 0
-
-		return state.unsolved_cells
+		return status_container.unsolved_cells
 
 var tasks: Array[_Task] = []
 var interrupted: bool = false
 
-func _thread_main(solver: WFCSolver):
+func _thread_main(solver: WFCSolver, status_container: _TaskStatusContainer):
 	while (not interrupted) and (not solver.solve_step()):
-		pass
+		status_container.unsolved_cells = solver.current_state.unsolved_cells
+
+		if status_container.state_snapshot_required:
+			status_container.state_snapshot_required = false
+
+			var state_snapshot: WFCSolverState = solver.current_state.make_snapshot()
+
+			var mx := status_container.state_snapshot_mutex
+			mx.lock()
+			status_container.state_snapshot = state_snapshot
+			mx.unlock()
 
 func _noop():
 	pass
@@ -85,7 +107,7 @@ func _start_tasks(max_start: int) -> int:
 				task.thread.start(_noop)
 				task.solver.solve()
 			else:
-				task.thread.start(_thread_main.bind(task.solver))
+				task.thread.start(_thread_main.bind(task.solver, task.status_container))
 
 			started += 1
 
@@ -113,6 +135,8 @@ func update():
 	var running: int = 0
 	var completed: int = 0
 
+	var emit_partial_solution := partial_solution.get_connections().size() > 0
+
 	for task in tasks:
 		if task.is_completed:
 			completed += 1
@@ -123,7 +147,10 @@ func update():
 			sub_problem_solved.emit(task.problem, task.solver.current_state)
 			completed += 1
 		else:
-			partial_solution.emit(task.problem, task.solver.current_state)
+			if emit_partial_solution:
+				var snapshot := task.status_container.take_and_request_snapshot()
+				if snapshot != null:
+					partial_solution.emit(task.problem, snapshot)
 			running += 1
 
 	if unstarted == 0 and running == 0:

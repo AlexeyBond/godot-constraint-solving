@@ -11,11 +11,21 @@
 [sub_resource type="GDScript" id="GDScript_f3n0e"]
 script/source = "extends Node3D
 
+@export
+var stress_test: bool = false
+
 func _ready():
 	$sample.hide()
 	$class_map.hide()
 	$target.show()
 	$generator.start()
+
+
+func _on_generator_done():
+	if stress_test:
+		$target.clear()
+		$generator.reset()
+		$generator.start()
 "
 
 [sub_resource type="Resource" id="Resource_3csuy"]
@@ -95,3 +105,5 @@ render_intermediate_results = true
 
 [node name="progressIndicator" parent="." node_paths=PackedStringArray("generator") instance=ExtResource("8_rvqav")]
 generator = NodePath("../generator")
+
+[connection signal="done" from="generator" to="." method="_on_generator_done"]

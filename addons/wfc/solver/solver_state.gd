@@ -132,6 +132,19 @@ func make_next() -> WFCSolverState:
 
 	return new
 
+## Makes a copy of this state.
+## [br]
+## The copy is unlinked from this state's previous state.
+## The copy is safe to access from thread different from one the solver runs on.
+func make_snapshot() -> WFCSolverState:
+	var new: WFCSolverState = WFCSolverState.new()
+
+	new.cell_domains = cell_domains.duplicate()
+	new.cell_solution_or_entropy = cell_solution_or_entropy.duplicate()
+	new.unsolved_cells = unsolved_cells
+
+	return new
+
 func pick_divergence_cell() -> int:
 	assert(unsolved_cells > 0)
 
