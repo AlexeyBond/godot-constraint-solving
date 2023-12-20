@@ -47,6 +47,7 @@ passable_area_ratio = 0.1
 iterations_limit = 1000
 road_class = "wfc_dungeon_road"
 wall_class = "wfc_dungeon_wall"
+classes_map = NodePath("")
 
 [sub_resource type="Resource" id="Resource_uafrt"]
 script = ExtResource("5_gpg6u")

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwhibeu8fp25u"]
+
+[sub_resource type="Gradient" id="Gradient_078io"]
+offsets = PackedFloat32Array(0, 0.092437, 0.726891, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="TileScene1" type="Node2D"]
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+amount = 32
+emission_shape = 3
+emission_rect_extents = Vector2(8, 8)
+gravity = Vector2(0, -50)
+color_ramp = SubResource("Gradient_078io")
