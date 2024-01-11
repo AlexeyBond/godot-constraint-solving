@@ -26,6 +26,7 @@ axes = Array[Vector2i]([Vector2i(0, 1), Vector2i(1, 0)])
 axis_matrices = Array[Resource("res://addons/wfc/utils/bitmatrix.gd")]([])
 probabilities = []
 probabilities_enabled = false
+edge_condition_meta_name = "wfc_edge"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a0nja"]
 bg_color = Color(0.6, 0.6, 0.6, 0.843137)

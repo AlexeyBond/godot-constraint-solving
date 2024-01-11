@@ -37,6 +37,16 @@ func read_tile_meta(_tile: int, _meta_name: String) -> Array:
 	assert(false)
 	return []
 
+## Reads meta of given tile (see [method read_tile_meta]) and converts it to a single boolean value.
+## [br]
+## Returns [code]true[/code] iff there is at least one truthy meta value.
+func read_tile_meta_boolean(tile: int, meta_name: String) -> bool:
+	for v in read_tile_meta(tile, meta_name):
+		if v:
+			return true
+
+	return false
+
 ## Name of a metadata attribute/custom data layer (as interpreted by [method read_tile_meta]) used
 ## to read tile probabilities.
 @export

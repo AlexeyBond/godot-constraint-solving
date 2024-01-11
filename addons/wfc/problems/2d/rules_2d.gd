@@ -54,10 +54,21 @@ var axis_matrices: Array[WFCBitMatrix] = []
 @export
 var probabilities: PackedFloat32Array = []
 
+## Assumed domain of cells outside the area being generated.
+## [br]
+## [color=red]Do not modify manually[/color] unless you know precisely what you are doing.
+@export
+var edge_domain: WFCBitSet = null
+
 ## If enabled, the solver will take tile probabilities into account.
 ## When not - probabilities of all tiles are considered equal.
 @export
 var probabilities_enabled: bool = true
+
+## Name of tile metadata property that marks tiles that are assumed to be placed outside of
+## generated area.
+@export
+var edge_condition_meta_name: String = "wfc_edge"
 
 func _learn_from(map: Node, positive: bool):
 	var learning_rect: Rect2i = mapper.get_used_rect(map)
@@ -88,6 +99,16 @@ func _learn_probabilities():
 		var probability := mapper.read_tile_probability(i)
 		assert(probability > 0.0)
 		probabilities[i] = probability
+
+func _learn_edge_conditions():
+	var size := mapper.size()
+	var ed := WFCBitSet.new(size)
+	for i in range(size):
+		if mapper.read_tile_meta_boolean(i, edge_condition_meta_name):
+			ed.set_bit(i)
+
+	if not ed.is_empty():
+		edge_domain = ed
 
 ## Learn rules from given sample map.
 ## [br]
@@ -120,6 +141,8 @@ func learn_from(map: Node):
 	if complete_matrices:
 		for mat in axis_matrices:
 			mat.complete()
+
+	_learn_edge_conditions()
 
 ## Learns disallowed tile combinations from a sample map.
 ## [br]

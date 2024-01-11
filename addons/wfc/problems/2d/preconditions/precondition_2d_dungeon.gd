@@ -46,13 +46,6 @@ func id_to_coord(i: int) -> Vector2i:
 func read_at(c: Vector2i) -> int:
 	return state[coord_to_id(c)]
 
-func _meta_to_bool(meta: Array) -> bool:
-	for x in meta:
-		if x:
-			return true
-
-	return false
-
 func learn_classes_from_map(
 	mapper: WFCMapper2D,
 	map: Node,
@@ -95,9 +88,9 @@ func learn_classes(
 	walls_domain = WFCBitSet.new(mapper.size())
 
 	for i in range(mapper.size()):
-		if _meta_to_bool(mapper.read_tile_meta(i, road_class)):
+		if mapper.read_tile_meta_boolean(i, road_class):
 			passable_domain.set_bit(i)
-		if _meta_to_bool(mapper.read_tile_meta(i, wall_class)):
+		if mapper.read_tile_meta_boolean(i, wall_class):
 			walls_domain.set_bit(i)
 
 	assert(not passable_domain.is_empty())
@@ -253,8 +246,6 @@ func read_domain(coords: Vector2i) -> WFCBitSet:
 	assert(state.size() == rect.get_area())
 
 	if not rect.has_point(coords):
-		@warning_ignore("assert_always_false")
-		assert(false)
 		return null
 
 	match state[coord_to_id(coords)]:
@@ -264,6 +255,3 @@ func read_domain(coords: Vector2i) -> WFCBitSet:
 			return passable_domain
 		_:
 			return null
-
-
-
