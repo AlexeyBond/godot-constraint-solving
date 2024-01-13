@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://5lfhjokuwwss"]
+[gd_scene load_steps=13 format=3 uid="uid://5lfhjokuwwss"]
 
 [ext_resource type="Script" path="res://addons/wfc/nodes/generator_2d.gd" id="1_coqxp"]
 [ext_resource type="Script" path="res://addons/wfc/problems/2d/mappers/mapper_2d_layered_tilemap.gd" id="2_qtvm1"]
 [ext_resource type="Script" path="res://addons/wfc/runners/runner_multithreaded_settings.gd" id="2_uvgvv"]
 [ext_resource type="TileSet" uid="uid://dgefkshuslimj" path="res://addons/wfc/examples/assets/kenney-tiny-dungeon/tile-set.tres" id="3_6hook"]
 [ext_resource type="Script" path="res://addons/wfc/problems/2d/rules_2d.gd" id="3_t7txd"]
+[ext_resource type="Script" path="res://addons/wfc/solver/solver_settings.gd" id="4_qvx47"]
 [ext_resource type="PackedScene" uid="uid://dt2nffs32s7o1" path="res://addons/wfc/examples/helpers/progress_indicator.tscn" id="6_d5dbh"]
 
 [sub_resource type="GDScript" id="GDScript_sq3cg"]
@@ -32,6 +33,14 @@ axes = Array[Vector2i]([Vector2i(0, 1), Vector2i(1, 0)])
 axis_matrices = Array[Resource("res://addons/wfc/utils/bitmatrix.gd")]([])
 probabilities = []
 probabilities_enabled = true
+edge_condition_meta_name = "wfc_edge"
+
+[sub_resource type="Resource" id="Resource_wpu5f"]
+script = ExtResource("4_qvx47")
+allow_backtracking = true
+require_backtracking = false
+backtracking_limit = -1
+force_ac3 = false
 
 [sub_resource type="Resource" id="Resource_uafrt"]
 script = ExtResource("2_uvgvv")
@@ -47,6 +56,7 @@ rect = Rect2i(0, 0, 121, 68)
 rules = SubResource("Resource_fk53x")
 positive_sample = NodePath("../sample")
 negative_sample = NodePath("../negative_sample")
+solver_settings = SubResource("Resource_wpu5f")
 multithreaded_runner_settings = SubResource("Resource_uafrt")
 render_intermediate_results = true
 

@@ -24,3 +24,6 @@ var require_backtracking: bool = false
 ## in worst case brute-forcing all possible cell configurations.
 @export
 var backtracking_limit: int = -1
+
+@export
+var force_ac3: bool = false

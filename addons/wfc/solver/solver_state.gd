@@ -34,6 +34,12 @@ var divergence_options: Array[int]
 
 var divergence_candidates: Dictionary = {}
 
+var ac4_counters: PackedInt32Array = []
+
+## counter_index = Vector3i(cell_id, constraint_id, tile_id).dot(ac4_counter_index_coefficients)
+var ac4_counter_index_coefficients: Vector3i
+var ac4_acknowledged_domains: Array[WFCBitSet]
+
 ## Check if given cell has solution.
 ## [br]
 ## Returns [code]true[/code] also when solution for given cell is failed.
@@ -128,6 +134,16 @@ func make_next() -> WFCSolverState:
 	new.unsolved_cells = unsolved_cells
 	new.divergence_candidates = divergence_candidates.duplicate()
 
+	# AC4 state is transferred to next state, without copying.
+	# And will be recovered in case of backtracking.
+	# Otherwise, basic WFC demo could take dozens of gigabytes of RAM to store all state change
+	# history.
+	new.ac4_counters = ac4_counters
+	ac4_counters = []
+	new.ac4_counter_index_coefficients = ac4_counter_index_coefficients
+	new.ac4_acknowledged_domains = ac4_acknowledged_domains
+	ac4_acknowledged_domains = []
+
 	new.previous = self
 
 	return new
@@ -205,3 +221,55 @@ func diverge_in_place(problem: WFCProblem):
 
 	divergence_options.clear()
 	divergence_cell = -1
+
+func get_ac4_counter_offset(cell_id: int, constraint_id: int, tile_id: int) -> int:
+	var t := ac4_counter_index_coefficients * Vector3i(cell_id, constraint_id, tile_id)
+	return t.x + t.y + t.z # :facepalm: no .dot() for integer vectors
+
+func decrement_ac4_counter(cell_id: int, constraint_id: int, tile_id: int) -> bool:
+	var index := get_ac4_counter_offset(cell_id, constraint_id, tile_id)
+	var value := ac4_counters[index]
+	#assert(value > 0)
+	value -= 1
+	ac4_counters[index] = value
+
+	return value == 0
+
+func ensure_ac4_state(problem: WFCProblem, binary_constraints: Array[WFCProblem.AC4BinaryConstraint]):
+	if ac4_counters.size() > 0:
+		return
+
+	var total_cells := problem.get_cell_count()
+	var default_domain := problem.get_default_domain()
+	var domain_size := default_domain.size
+	var total_constraints := binary_constraints.size()
+
+	ac4_acknowledged_domains = []
+	ac4_acknowledged_domains.resize(total_cells)
+	ac4_acknowledged_domains.fill(default_domain)
+
+	ac4_counters = []
+	var counters_size := total_cells * total_constraints * domain_size
+	ac4_counters.resize(counters_size)
+	ac4_counter_index_coefficients = Vector3i(
+		total_constraints * domain_size,
+		domain_size,
+		1
+	)
+
+	for constraint_id in range(binary_constraints.size()):
+		var constraint := binary_constraints[constraint_id]
+		var initial_constraint_counters: PackedInt64Array = []
+		initial_constraint_counters.resize(domain_size)
+		for tile in default_domain.iterator():
+			for allowed_tile in constraint.get_allowed(tile):
+				initial_constraint_counters[allowed_tile] += 1
+		for cell_id in range(total_cells):
+			for tile_id in range(default_domain.size):
+				ac4_counters[get_ac4_counter_offset(cell_id, constraint_id, tile_id)] =\
+					initial_constraint_counters[tile_id]
+
+	changed_cells.clear()
+	for cell_id in range(cell_domains.size()):
+		if not default_domain.equals(cell_domains[cell_id]):
+			changed_cells.append(cell_id)

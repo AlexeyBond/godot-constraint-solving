@@ -45,6 +45,9 @@ var backtracking_enabled: bool
 ## [member settings] is set to a positive value.
 var backtracking_count: int = 0
 
+var ac4_enabled: bool
+var ac4_constraints: Array[WFCProblem.AC4BinaryConstraint]
+
 func _make_initial_state(num_cells: int, initial_domain: WFCBitSet) -> WFCSolverState:
 	var state := WFCSolverState.new()
 
@@ -74,18 +77,22 @@ var best_state: WFCSolverState
 func _init(problem_: WFCProblem, settings_: WFCSolverSettings = WFCSolverSettings.new()):
 	settings = settings_
 	backtracking_enabled = settings.allow_backtracking
-
 	problem = problem_
+	ac4_enabled = (not settings.force_ac3) and problem.supports_ac4()
+
 	current_state = _make_initial_state(
 		problem.get_cell_count(),
 		problem.get_default_domain()
 	)
 	best_state = current_state
 
+	if ac4_enabled:
+		ac4_constraints = problem.get_ac4_binary_constraints()
+
 	problem.populate_initial_state(current_state)
 
 
-func _propagate_constraints() -> bool:
+func _propagate_constraints_ac3() -> bool:
 	"""
 	Returns:
 		true iff solution has failed and backtracking should be performed
@@ -123,6 +130,65 @@ func _propagate_constraints() -> bool:
 	@warning_ignore("assert_always_false")
 	assert(false) # unreachable
 	return false
+
+func _propagete_constraints_ac4() -> bool:
+	var state := current_state
+	assert(state != null)
+
+	state.ensure_ac4_state(problem, ac4_constraints)
+
+	while true:
+		var changed_cells := state.extract_changed_cells()
+		if changed_cells.is_empty():
+			return false
+
+		for cell_id in changed_cells:
+			var new_domain := state.cell_domains[cell_id]
+			var prev_acknowledged_domain := state.ac4_acknowledged_domains[cell_id]
+
+			# New domain must be a subset of previous domain
+			assert(prev_acknowledged_domain.is_superset_of(new_domain))
+
+			if new_domain.equals(prev_acknowledged_domain):
+				continue
+
+			state.ac4_acknowledged_domains[cell_id] = new_domain
+
+			var delta := new_domain.xor(prev_acknowledged_domain).to_array()
+
+			for constraint_id in range(ac4_constraints.size()):
+				var constraint := ac4_constraints[constraint_id]
+				var dependent_cell := constraint.get_dependent(cell_id)
+				if dependent_cell < 0:
+					continue
+
+				var dependent_domain := state.cell_domains[dependent_cell]
+				var dependent_domain_changed := false
+
+				for this_removed in delta:
+					for dependent_removed in constraint.get_allowed(this_removed):
+						if state.decrement_ac4_counter(dependent_cell, constraint_id, dependent_removed):
+							if dependent_domain.get_bit(dependent_removed):
+								if not dependent_domain_changed:
+									dependent_domain = dependent_domain.copy()
+									dependent_domain_changed = true
+								dependent_domain.set_bit(dependent_removed, false)
+
+				if dependent_domain_changed:
+					if dependent_domain.is_empty():
+						if backtracking_enabled:
+							return true
+						assert(false) # TODO: Handle contradiction in non-backtracking mode
+
+					state.set_domain(dependent_cell, dependent_domain)
+
+	return false
+
+func _propagate_constraints() -> bool:
+	if ac4_enabled:
+		return _propagete_constraints_ac4()
+	else:
+		return _propagate_constraints_ac3()
 
 func _try_backtrack() -> bool:
 	if settings.backtracking_limit > 0 and backtracking_count > settings.backtracking_limit:

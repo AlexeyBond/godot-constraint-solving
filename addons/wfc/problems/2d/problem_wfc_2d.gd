@@ -9,6 +9,43 @@ class WFC2DProblemSettings extends Resource:
 	@export
 	var rect: Rect2i
 
+class AC4BinaryConstraint2D extends WFCProblem.AC4BinaryConstraint:
+	var axis: Vector2i
+	var problem_size: Rect2i
+	var allowed_tiles: Array[PackedInt64Array]
+
+	func _init(axis: Vector2i, size: Vector2i, axis_matrix: WFCBitMatrix):
+		assert(axis != Vector2i.ZERO)
+		assert(size.x > 0 and size.y > 0)
+
+		self.axis = axis
+		self.problem_size = Rect2i(Vector2i.ZERO, size)
+		self.allowed_tiles = []
+		for row in axis_matrix.rows:
+			self.allowed_tiles.append(row.to_array())
+
+	func _get_cell_id(pos: Vector2i) -> int:
+		if problem_size.has_point(pos):
+			return pos.x + pos.y * problem_size.size.x
+		else:
+			return -1
+
+	func _get_cell_pos(cell_id: int) -> Vector2i:
+		var szx: int = problem_size.size.x
+		@warning_ignore("integer_division")
+		return Vector2i(cell_id % szx, cell_id / szx)
+
+	func get_dependent(cell_id: int) -> int:
+		return _get_cell_id(_get_cell_pos(cell_id) - axis)
+
+	func get_dependency(cell_id: int) -> int:
+		return _get_cell_id(_get_cell_pos(cell_id) + axis)
+
+	func get_allowed(dependency_variant: int) -> PackedInt64Array:
+		assert(dependency_variant >= 0)
+		assert(dependency_variant < self.allowed_tiles.size())
+		return self.allowed_tiles[dependency_variant]
+
 ## The rules.
 var rules: WFCRules2D
 
@@ -377,3 +414,14 @@ func pick_divergence_option(options: Array[int]) -> int:
 			break
 
 	return options.pop_at(chosen_option)
+
+func supports_ac4() -> bool:
+	return true
+
+func get_ac4_binary_constraints() -> Array[WFCProblem.AC4BinaryConstraint]:
+	var constraints: Array[WFCProblem.AC4BinaryConstraint] = []
+
+	for i in range(axes.size()):
+		constraints.append(AC4BinaryConstraint2D.new(axes[i], rect.size, axis_matrices[i]))
+
+	return constraints

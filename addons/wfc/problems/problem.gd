@@ -2,6 +2,22 @@ class_name WFCProblem
 ## Base class for classes representing problems solvable by [WFCSolver].
 extends RefCounted
 
+class AC4BinaryConstraint extends RefCounted:
+	func get_dependent(cell_id: int) -> int:
+		@warning_ignore("assert_always_false")
+		assert(false)
+		return -1
+
+	func get_dependency(cell_id: int) -> int:
+		@warning_ignore("assert_always_false")
+		assert(false)
+		return -1
+
+	func get_allowed(dependency_variant: int) -> PackedInt64Array:
+		@warning_ignore("assert_always_false")
+		assert(false)
+		return []
+
 ## Returns number of cells (variables) this problem contains.
 func get_cell_count() -> int:
 	@warning_ignore("assert_always_false")
@@ -69,3 +85,11 @@ func split(_concurrency_limit: int) -> Array[SubProblem]:
 func pick_divergence_option(options: Array[int]) -> int:
 	assert(options.size() > 0)
 	return options.pop_at(randi_range(0, options.size() - 1))
+
+func supports_ac4() -> bool:
+	return false
+
+func get_ac4_binary_constraints() -> Array[AC4BinaryConstraint]:
+	@warning_ignore("assert_always_false")
+	assert(false)
+	return []

@@ -172,12 +172,36 @@ func xor_in_place(other: WFCBitSet):
 		for i in range(dataX.size()):
 			dataX.set(i, dataX[i] ^ other.dataX[i])
 
+func xor(other: WFCBitSet) -> WFCBitSet:
+	assert(other.size == size)
+
+	var res := copy()
+	res.xor_in_place(other)
+
+	return res
+
 ## Returns a new set that contains all elements between [code]0[/code] and [member size] that are
 ## not contained in this set.
 func invert() -> WFCBitSet:
 	var res: WFCBitSet = WFCBitSet.new(size, true)
 	res.xor_in_place(self)
 	return res
+
+## Checks if this set is a superset of given other set (i.e. contains all elements of that set).
+## [br]
+## Equal sets are supersets of each other.
+func is_superset_of(subset: WFCBitSet) -> bool:
+	assert(size == subset.size)
+
+	if data0 & subset.data0 != subset.data0:
+		return false
+	if data1 & subset.data1 != subset.data1:
+		return false
+	for i in range(dataX.size()):
+		if dataX[i] & subset.dataX[i] != subset.dataX[i]:
+			return false
+
+	return true
 
 ## Reads a bit from this set.
 ## [br]
