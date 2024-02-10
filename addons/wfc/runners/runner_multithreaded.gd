@@ -94,6 +94,9 @@ func _thread_main(solver: WFCSolver, status_container: _TaskStatusContainer):
 			status_container.state_snapshot = state_snapshot
 			mx.unlock()
 
+	solver.current_state.unlink_from_previous()
+	solver.best_state.unlink_from_previous()
+
 func _noop():
 	pass
 

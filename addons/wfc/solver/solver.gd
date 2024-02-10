@@ -190,6 +190,13 @@ func _propagate_constraints() -> bool:
 	else:
 		return _propagate_constraints_ac3()
 
+func _continue_without_backtracking():
+	current_state = best_state
+	backtracking_enabled = false
+	# Backtracking is disabled, so we can free memory occupied by previous states as they will
+	# not be used.
+	current_state.unlink_from_previous()
+
 func _try_backtrack() -> bool:
 	if settings.backtracking_limit > 0 and backtracking_count > settings.backtracking_limit:
 		print_debug(
@@ -198,8 +205,7 @@ func _try_backtrack() -> bool:
 			' attempt(s), restarting from best state without backtracking',
 		)
 
-		current_state = best_state
-		backtracking_enabled = false
+		_continue_without_backtracking()
 
 		return false
 
@@ -215,8 +221,7 @@ func _try_backtrack() -> bool:
 		if not settings.require_backtracking:
 			print_debug('Restarting from best state without backtracking')
 
-			current_state = best_state
-			backtracking_enabled = false
+			_continue_without_backtracking()
 		else:
 			print_debug('Backtracking is required but failed - terminating with failure')
 			return true

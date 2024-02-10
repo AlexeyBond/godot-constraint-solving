@@ -161,6 +161,13 @@ func make_snapshot() -> WFCSolverState:
 
 	return new
 
+## Disconnect this state from previous one (if any).
+## [br]
+## This should be done when solution is completed in order to free memory occupied by previous
+## states.
+func unlink_from_previous():
+	previous = null
+
 func pick_divergence_cell() -> int:
 	assert(unsolved_cells > 0)
 
@@ -272,4 +279,7 @@ func ensure_ac4_state(problem: WFCProblem, binary_constraints: Array[WFCProblem.
 	changed_cells.clear()
 	for cell_id in range(cell_domains.size()):
 		if not default_domain.equals(cell_domains[cell_id]):
-			changed_cells.append(cell_id)
+			for constraint in binary_constraints:
+				if not is_cell_solved(constraint.get_dependent(cell_id)):
+					changed_cells.append(cell_id)
+					break
