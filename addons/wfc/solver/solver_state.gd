@@ -27,6 +27,12 @@ var cell_solution_or_entropy: PackedInt64Array
 ## Number of cells that still have domains of more than one value.
 var unsolved_cells: int
 
+## Number of "observations" made to reach this state.
+## [br]
+## This nubmer may be different from [code]len(cell_domains) - unsolved_cells[/code] since one
+## observation may cause immediate collapse of other cells.
+var observations_count: int
+
 var changed_cells: PackedInt64Array
 
 var divergence_cell: int = -1
@@ -144,6 +150,8 @@ func make_next() -> WFCSolverState:
 	new.ac4_acknowledged_domains = ac4_acknowledged_domains
 	ac4_acknowledged_domains = []
 
+	new.observations_count = observations_count
+
 	new.previous = self
 
 	return new
@@ -215,6 +223,7 @@ func diverge(problem: WFCProblem) -> WFCSolverState:
 	var solution := problem.pick_divergence_option(divergence_options)
 
 	next_state.set_solution(divergence_cell, solution)
+	next_state.observations_count += 1
 
 	return next_state
 
@@ -228,6 +237,7 @@ func diverge_in_place(problem: WFCProblem):
 
 	divergence_options.clear()
 	divergence_cell = -1
+	observations_count += 1
 
 func get_ac4_counter_offset(cell_id: int, constraint_id: int, tile_id: int) -> int:
 	var t := ac4_counter_index_coefficients * Vector3i(cell_id, constraint_id, tile_id)

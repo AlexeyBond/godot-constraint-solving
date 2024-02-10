@@ -58,6 +58,7 @@ func _make_initial_state(num_cells: int, initial_domain: WFCBitSet) -> WFCSolver
 	state.cell_solution_or_entropy.fill(-(initial_domain.count_set_bits() - 1))
 
 	state.unsolved_cells = num_cells
+	state.observations_count = 0
 
 	return state
 
@@ -77,6 +78,10 @@ var best_state: WFCSolverState
 func _init(problem_: WFCProblem, settings_: WFCSolverSettings = WFCSolverSettings.new()):
 	settings = settings_
 	backtracking_enabled = settings.allow_backtracking
+
+	if settings.is_sparse_history_enabled():
+		assert(settings.sparse_history_interval > 1)
+
 	problem = problem_
 	ac4_enabled = (not settings.force_ac3) and problem.supports_ac4()
 
@@ -230,6 +235,21 @@ func _try_backtrack() -> bool:
 
 	return false
 
+func _should_keep_previous_state(state: WFCSolverState) -> bool:
+	if not backtracking_enabled:
+		return false
+
+	if not settings.is_sparse_history_enabled():
+		return true
+
+	if state.observations_count < settings.sparse_history_start:
+		return true
+
+	if (state.observations_count - settings.sparse_history_start) % settings.sparse_history_interval == 0:
+		return true
+
+	return false
+
 ## Perform one iteration of problem solution.
 ## [br]
 ## Returns [code]true[/code] iff solution is completed.
@@ -251,7 +271,7 @@ func solve_step() -> bool:
 
 	current_state.prepare_divergence()
 
-	if backtracking_enabled:
+	if _should_keep_previous_state(current_state):
 		var next_state := current_state.diverge(problem)
 
 		if next_state == null:
