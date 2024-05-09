@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://do26y4bs02o2g"]
+[gd_scene load_steps=13 format=3 uid="uid://do26y4bs02o2g"]
 
 [ext_resource type="TileSet" uid="uid://dgefkshuslimj" path="res://addons/wfc/examples/assets/kenney-tiny-dungeon/tile-set.tres" id="1_kld1t"]
 [ext_resource type="Script" path="res://addons/wfc/nodes/generator_2d.gd" id="2_lei82"]
 [ext_resource type="Script" path="res://addons/wfc/problems/2d/mappers/mapper_2d_layered_tilemap.gd" id="3_x6bkc"]
 [ext_resource type="Script" path="res://addons/wfc/problems/2d/mappers/mapper_2d_multitile.gd" id="4_81wi2"]
 [ext_resource type="Script" path="res://addons/wfc/problems/2d/rules_2d.gd" id="5_5pb0u"]
+[ext_resource type="Script" path="res://addons/wfc/solver/solver_settings.gd" id="6_7k31g"]
 [ext_resource type="PackedScene" uid="uid://dt2nffs32s7o1" path="res://addons/wfc/examples/helpers/progress_indicator.tscn" id="6_673hp"]
 
 [sub_resource type="GDScript" id="GDScript_sr34g"]
@@ -42,6 +43,15 @@ probabilities = []
 probabilities_enabled = true
 edge_condition_meta_name = "wfc_edge"
 
+[sub_resource type="Resource" id="Resource_30nyt"]
+script = ExtResource("6_7k31g")
+allow_backtracking = true
+require_backtracking = false
+backtracking_limit = -1
+sparse_history_start = 10
+sparse_history_interval = 10
+force_ac3 = true
+
 [node name="DemoWfc2dTilemapMultitile" type="Node2D"]
 script = SubResource("GDScript_sr34g")
 
@@ -60,6 +70,7 @@ target = NodePath("../target")
 rect = Rect2i(0, 0, 40, 23)
 rules = SubResource("Resource_pa1tk")
 positive_sample = NodePath("../sample")
+solver_settings = SubResource("Resource_30nyt")
 render_intermediate_results = true
 
 [node name="progressIndicator" parent="." node_paths=PackedStringArray("generator") instance=ExtResource("6_673hp")]

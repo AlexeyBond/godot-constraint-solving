@@ -1,7 +1,7 @@
 extends Resource
 ## Contains serializable settings for creation of a WFC2DPrecondition.
 ##
-## This base class creates an empty precondition that does not limit acontent of any cells.
+## This base class creates an empty precondition that does not limit a content of any cells.
 ## For custom precondition classes a corresponding [WFC2DPrecondition2DNullSettings] subclasses should
 ## exist.
 ## [br]

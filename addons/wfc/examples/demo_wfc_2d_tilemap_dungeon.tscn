@@ -32,6 +32,9 @@ script = ExtResource("3_b1qxc")
 allow_backtracking = true
 require_backtracking = false
 backtracking_limit = -1
+sparse_history_start = 10
+sparse_history_interval = 10
+force_ac3 = true
 
 [sub_resource type="Resource" id="Resource_26rrk"]
 script = ExtResource("4_5gw1s")

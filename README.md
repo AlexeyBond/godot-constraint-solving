@@ -34,6 +34,7 @@ What's not (yet) implemented:
 - Wrapping.
 - Lazy/dynamic generation.
   For some games it may make sense to generate parts of level dynamically when they are (about to) become visible to player.
+- Global constraints.
 - Rules editor.
   Currently it's possible to "learn" WFC rules in running game only, not in editor.
   Rules can be edited by modifying sample maps, using standard editor tools.
