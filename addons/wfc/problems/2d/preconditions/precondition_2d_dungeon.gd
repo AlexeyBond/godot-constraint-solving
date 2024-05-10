@@ -77,7 +77,7 @@ func learn_classes_from_map(
 			if tile >= 0:
 				walls_domain.set_bit(tile)
 
-		assert(not walls_domain.is_empty())
+	assert(not walls_domain.is_empty())
 
 func learn_classes(
 	mapper: WFCMapper2D,
@@ -97,6 +97,7 @@ func learn_classes(
 
 	if walls_domain.is_empty():
 		walls_domain = passable_domain.invert()
+		assert(not walls_domain.is_empty())
 
 func _replace_rect(r: Rect2i, from: int, to: int) -> int:
 	var replaced_area: int = 0
