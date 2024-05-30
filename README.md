@@ -30,11 +30,13 @@ Features:
 
 What's not (yet) implemented:
 - 3d map generation.
-  Generation of 3d maps (for `GridMap`s or multi-layered `TileMap`s) is not yet implemented.
+  Generation of 3d maps (like `GridMap`s) is not yet implemented (but a 2D slice of a `GridMap` can be generated).
 - Wrapping.
 - Lazy/dynamic generation.
   For some games it may make sense to generate parts of level dynamically when they are (about to) become visible to player.
-- Global constraints.
+- Global constraints, including path constraints.
+  It's not possible to generate a map that, for example, has all road tiles connected.
+  However, it is [possible](#preconditions) to run a different algorithm before WFC to get some of effects that may be achieved using global constraints.
 - Rules editor.
   Currently it's possible to "learn" WFC rules in running game only, not in editor.
   Rules can be edited by modifying sample maps, using standard editor tools.
