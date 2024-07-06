@@ -179,7 +179,7 @@ func populate_initial_state(state: WFCSolverState):
 
 				if domain != null:
 					var bt: bool = state.set_domain(coord_to_id(pos), domain)
-					assert(not bt)
+					assert(not bt, "Precondition yielded an empty domain at (%f, %f)" % [x, y])
 
 ## See [member WFCProblem.compute_cell_domain].
 func compute_cell_domain(state: WFCSolverState, cell_id: int) -> WFCBitSet:

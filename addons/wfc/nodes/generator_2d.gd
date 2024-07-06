@@ -3,7 +3,7 @@ class_name WFC2DGenerator
 extends Node
 
 ## A map that will be filled using WFC algorithm.
-@export_node_path("TileMap", "GridMap")
+@export_node_path("TileMap", "GridMap", "TileMapLayer")
 var target: NodePath
 
 ## Rect of a map that will be filled.
@@ -21,11 +21,11 @@ var rect: Rect2i
 var rules: WFCRules2D = WFCRules2D.new()
 
 ## A sample map to learn rules from.
-@export_node_path("TileMap", "GridMap")
+@export_node_path("TileMap", "GridMap", "TileMapLayer")
 var positive_sample: NodePath
 
 ## A negative samples map.
-@export_node_path("TileMap", "GridMap")
+@export_node_path("TileMap", "GridMap", "TileMapLayer")
 var negative_sample: NodePath
 
 ## Settings for a [WFCSolver].
@@ -123,6 +123,8 @@ func _create_mapper(map: Node) -> WFCMapper2D:
 			return WFCLayeredTileMapMapper2D.new()
 		"GridMap":
 			return WFCGridMapMapper2D.new()
+		"TileMapLayer":
+			return WFCTilemapLayerMapper2D.new()
 		var cname:
 			push_error("Unsupported map type for WFC2DGenerator: " + cname)
 			@warning_ignore("assert_always_false")

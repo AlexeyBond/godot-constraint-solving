@@ -42,7 +42,7 @@ var axes: Array[Vector2i] = [
 ## Matrices of allowed tile combinations along each axis.
 ## [br]
 ## [color=red]Do not modify manually[/color] unless you know precisely what you are doing.
-@export
+@export_storage
 var axis_matrices: Array[WFCBitMatrix] = []
 
 ## Probabilities of all tile types.
@@ -51,13 +51,13 @@ var axis_matrices: Array[WFCBitMatrix] = []
 ## [br]
 ## Probabilties are filled automatically when rules are learned from sample and
 ## [member probabilities_enabled] is enabled.
-@export
+@export_storage
 var probabilities: PackedFloat32Array = []
 
 ## Assumed domain of cells outside the area being generated.
 ## [br]
 ## [color=red]Do not modify manually[/color] unless you know precisely what you are doing.
-@export
+@export_storage
 var edge_domain: WFCBitSet = null
 
 ## If enabled, the solver will take tile probabilities into account.

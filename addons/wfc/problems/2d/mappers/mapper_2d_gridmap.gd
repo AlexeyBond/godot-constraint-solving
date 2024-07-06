@@ -34,7 +34,7 @@ var unused_axis: int = Vector3i.AXIS_Y
 ## Dictionary from tile attributes list to numeric tile id.
 ## [br]
 ## [color=red]Do not modify manually[/color].
-@export
+@export_storage
 var attrs_to_id: Dictionary = {}
 
 var _id_to_attrs: Array[Vector2i] = []

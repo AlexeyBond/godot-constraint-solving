@@ -5,7 +5,7 @@ class_name WFCLayeredTileMapMapper2D
 ## Dictionary from tile attributes list to numeric tile id.
 ## [br]
 ## [color=red]Do not modify manually[/color].
-@export
+@export_storage
 var attrs_to_id: Dictionary = {}
 
 ## [TileSet] this mapper uses.

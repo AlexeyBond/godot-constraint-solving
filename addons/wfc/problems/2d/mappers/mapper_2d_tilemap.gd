@@ -5,7 +5,7 @@ extends WFCMapper2D
 ## @deprecated
 class_name WFCTileMapMapper2D
 
-@export
+@export_storage
 var attrs_to_id: Dictionary = {}
 
 @export
@@ -96,6 +96,3 @@ func size() -> int:
 
 func supports_map(map: Node) -> bool:
 	return map is TileMap
-
-
-

@@ -1,9 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://dvfxwumivfg4a"]
+[gd_scene load_steps=14 format=3 uid="uid://dvfxwumivfg4a"]
 
 [ext_resource type="MeshLibrary" uid="uid://310b3aggjq0d" path="res://addons/wfc/examples/assets/kenny-nature-kit/meshlib.meshlib" id="1_in0m7"]
 [ext_resource type="Script" path="res://addons/wfc/nodes/generator_2d.gd" id="2_3emk2"]
+[ext_resource type="Script" path="res://addons/wfc/problems/2d/mappers/mapper_2d_gridmap_mesh_meta.gd" id="3_2rdeh"]
 [ext_resource type="Script" path="res://addons/wfc/problems/2d/rules_2d.gd" id="3_o4j22"]
 [ext_resource type="Script" path="res://addons/wfc/solver/solver_settings.gd" id="4_hielr"]
+[ext_resource type="Script" path="res://addons/wfc/problems/2d/mappers/mapper_2d_gridmap.gd" id="4_ph7b2"]
 [ext_resource type="PackedScene" uid="uid://dt2nffs32s7o1" path="res://addons/wfc/examples/helpers/progress_indicator.tscn" id="5_o86r7"]
 [ext_resource type="PackedScene" uid="uid://dheyfh3bip6t7" path="res://addons/wfc/examples/helpers/3d_controls.tscn" id="6_pbeno"]
 
@@ -16,8 +18,25 @@ func _ready():
 	$generator.start()
 "
 
+[sub_resource type="Resource" id="Resource_bfti5"]
+script = ExtResource("3_2rdeh")
+mesh_name = "Mesh Name Here"
+meta_name = "wfc_probability"
+meta_values = [4.2]
+
+[sub_resource type="Resource" id="Resource_hafdj"]
+script = ExtResource("4_ph7b2")
+base_point = Vector3i(0, 0, 0)
+mesh_meta = Array[ExtResource("3_2rdeh")]([SubResource("Resource_bfti5")])
+x_axis = 0
+y_axis = 2
+unused_axis = 1
+attrs_to_id = {}
+probability_meta_key = "wfc_probability"
+
 [sub_resource type="Resource" id="Resource_3csuy"]
 script = ExtResource("3_o4j22")
+mapper = SubResource("Resource_hafdj")
 complete_matrices = true
 axes = Array[Vector2i]([Vector2i(0, 1), Vector2i(1, 0)])
 axis_matrices = Array[Resource("res://addons/wfc/utils/bitmatrix.gd")]([])
@@ -30,6 +49,9 @@ script = ExtResource("4_hielr")
 allow_backtracking = true
 require_backtracking = false
 backtracking_limit = -1
+sparse_history_start = 10
+sparse_history_interval = 10
+force_ac3 = true
 
 [node name="test_gm" type="Node3D"]
 script = SubResource("GDScript_f3n0e")

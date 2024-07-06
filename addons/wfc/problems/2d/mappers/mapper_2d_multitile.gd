@@ -33,7 +33,7 @@ var allow_partial: bool = false
 ## Actual type is [code]Dictionary[PackedInt32Array, int][/code].
 ## [br]
 ## [color=red]Do not modify manually[/color].
-@export
+@export_storage
 var tiles_to_id: Dictionary = {}
 
 ## Array of sub-tile arrays for each tile type.

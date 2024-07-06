@@ -35,12 +35,16 @@ axes = Array[Vector2i]([Vector2i(0, 1), Vector2i(1, 0)])
 axis_matrices = Array[Resource("res://addons/wfc/utils/bitmatrix.gd")]([])
 probabilities = []
 probabilities_enabled = true
+edge_condition_meta_name = "wfc_edge"
 
 [sub_resource type="Resource" id="Resource_mtj5f"]
 script = ExtResource("6_uls1f")
 allow_backtracking = true
 require_backtracking = false
 backtracking_limit = -1
+sparse_history_start = 10
+sparse_history_interval = 10
+force_ac3 = true
 
 [sub_resource type="Resource" id="Resource_7i8ha"]
 script = ExtResource("7_gllx8")
