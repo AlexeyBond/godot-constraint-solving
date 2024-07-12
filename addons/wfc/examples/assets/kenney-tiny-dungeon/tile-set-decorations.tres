@@ -1,0 +1,33 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://drvu3d0pwtf50"]
+
+[ext_resource type="Texture2D" uid="uid://dafirfo2502o" path="res://addons/wfc/examples/assets/kenney-tiny-dungeon/tilemap_packed.png" id="1_eqa2d"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_t4hvi"]
+texture = ExtResource("1_eqa2d")
+4:5/0 = 0
+5:5/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+8:4/0 = 0
+8:5/0 = 0
+7:5/0 = 0
+6:5/0 = 0
+7:6/0 = 0
+8:6/0 = 0
+9:6/0 = 0
+9:5/0 = 0
+10:5/0 = 0
+11:5/0 = 0
+11:7/0 = 0
+9:7/0 = 0
+10:6/0 = 0
+2:6/0 = 0
+0:6/0 = 0
+1:6/0 = 0
+5:7/0 = 0
+6:7/0 = 0
+7:7/0 = 0
+8:7/0 = 0
+
+[resource]
+sources/0 = SubResource("TileSetAtlasSource_t4hvi")

@@ -1,5 +1,7 @@
 extends WFCMapper2D
 ## A [WFCMapper2D] for [TileMap]s
+##
+## @deprecated
 class_name WFCLayeredTileMapMapper2D
 
 ## Dictionary from tile attributes list to numeric tile id.
