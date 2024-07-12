@@ -3,7 +3,7 @@ class_name WFC2DGenerator
 extends Node
 
 ## A map that will be filled using WFC algorithm.
-@export_node_path("TileMap", "GridMap", "TileMapLayer", "WFC2DLayeredTileMap")
+@export_node_path("TileMap", "GridMap", "TileMapLayer", "WFC2DLayeredMap")
 var target: NodePath
 
 ## Rect of a map that will be filled.
@@ -20,12 +20,18 @@ var rect: Rect2i
 @export_category("Rules")
 var rules: WFCRules2D = WFCRules2D.new()
 
+## A mapper factory to use to create mappers.
+##
+## Leave default value to use default factory that will create mappers for all known map node types.
+@export
+var mapper_factory: WFC2DMapperFactory = WFC2DMapperFactory.new()
+
 ## A sample map to learn rules from.
-@export_node_path("TileMap", "GridMap", "TileMapLayer", "WFC2DLayeredTileMap")
+@export_node_path("TileMap", "GridMap", "TileMapLayer", "WFC2DLayeredMap")
 var positive_sample: NodePath
 
 ## A negative samples map.
-@export_node_path("TileMap", "GridMap", "TileMapLayer", "WFC2DLayeredTileMap")
+@export_node_path("TileMap", "GridMap", "TileMapLayer", "WFC2DLayeredMap")
 var negative_sample: NodePath
 
 ## Settings for a [WFCSolver].
@@ -118,26 +124,19 @@ func _create_runner() -> WFCSolverRunner:
 ## [br]
 ## Called when mapper is not provided in [member rules].
 func _create_mapper(map: Node) -> WFCMapper2D:
-	match map.get_class():
-		"TileMap":
-			return WFCLayeredTileMapMapper2D.new()
-		"GridMap":
-			return WFCGridMapMapper2D.new()
-		"TileMapLayer":
-			return WFCTilemapLayerMapper2D.new()
-		"Node2D":
-			if map is WFC2DLayeredTileMap:
-				return WFCLayeredMapMapper2D.new()
-			else:
-				push_error("Unsupported Node2D map type for WFC2DGenerator.")
-				@warning_ignore("assert_always_false")
-				assert(false)
-				return null
-		var cname:
-			push_error("Unsupported map type for WFC2DGenerator: " + cname)
-			@warning_ignore("assert_always_false")
-			assert(false)
-			return null
+	var mapper := mapper_factory.create_mapper_for(map)
+
+	if mapper == null:
+		var script: Script = map.get_script()
+		push_error("Unsupported map node type: %s (%s)" % [
+			map.get_class(),
+			 "No script" if script == null else (
+				script.get_global_name() if not script.get_global_name().is_empty() else script.resource_path
+			)])
+		@warning_ignore("assert_always_false")
+		assert(false)
+
+	return mapper
 
 func _create_precondition(problem_settings: WFC2DProblem.WFC2DProblemSettings, map: Node) -> WFC2DPrecondition:
 	var settings: WFC2DPrecondition2DNullSettings = self.precondition

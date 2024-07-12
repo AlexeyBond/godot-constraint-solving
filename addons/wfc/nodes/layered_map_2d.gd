@@ -1,36 +1,52 @@
 @tool
-extends Node2D
+extends Node
+## Multi-layered map for [WFCGenerator2D].
+##
+## When used with [WFCLayeredMapMapper2D], allows the generator to access multiple map nodes as a
+## single map.
+##
+## The initial intended use-case is a map consisting of multiple [TileMapLayer]s, however, it may be
+## used with layers of any supported map type.
+class_name WFC2DLayeredMap
 
-class_name WFC2DLayeredTileMap
+## A mapper factory used to create mappers for each layer.
+##
+## It matters only in case of initial sample map - [WFCLayeredMapMapper2D] will create nested
+## mappers using factory provided by the first sample map.
+## In other maps it is used to show configuration warnings only.
+@export
+var mapper_factory: WFC2DMapperFactory = WFC2DMapperFactory.new()
 
 func _get_configuration_warnings() -> PackedStringArray:
+	var mf := mapper_factory if mapper_factory != null else WFC2DMapperFactory.new()
+
 	var warnings := PackedStringArray()
 	var layers := 0
-	
+
 	for c in get_children():
-		if c is TileMapLayer:
+		if mapper_factory.supports_node(c):
 			layers += 1
 		else:
-			warnings.append("Child %s is not a TileMapLayer" % c.name)
-	
+			warnings.append("Child %s is not of a supported type" % c.name)
+
 	if layers == 0:
-		warnings.append("No TileMapLayer children")
+		warnings.append("No children of supported types")
 	elif layers == 1:
-		warnings.append("Only one TileMapLayer child found. Add more layers or use TileMapLayer directly instead.")
-	
+		warnings.append("Only one child of supported type found. Add more layers or use the child directly instead.")
+
 	return warnings
 
 var _layers: Array[Node] = []
 
 func _find_layers() -> Array[Node]:
 	var layers: Array[Node] = []
-	
+
 	for c in get_children():
-		if c is TileMapLayer:
+		if mapper_factory.supports_node(c):
 			layers.append(c)
-	
+
 	assert(!layers.is_empty())
-	
+
 	return layers
 
 func get_layers() -> Array[Node]:
@@ -40,5 +56,4 @@ func get_layers() -> Array[Node]:
 	return _layers
 
 func create_layer_mapper(layer: Node) -> WFCMapper2D:
-	assert(layer is TileMapLayer)
-	return WFCTilemapLayerMapper2D.new()
+	return mapper_factory.create_mapper_for(layer)

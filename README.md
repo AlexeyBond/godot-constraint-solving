@@ -17,12 +17,12 @@ Features:
   In cases when the algorithm produces some invalid or not-nice-looking cell combinations, it's possible to also provide examples of cell combinations that should not appear in the final result.
   Or stop the generator from searching for additional cell combinations and provide all possible combinations in the initial example.
 - Supports **different node types**:
-	- `TileMap` (including some **hexagonal** tilemaps, see [example](addons/wfc/examples/demo_wfc_2d_hex_tilemap.tscn))
+	- `TileMapLayer` and `TileMap` (including some **hexagonal** tilemaps, see [example](addons/wfc/examples/demo_wfc_2d_hex_tilemap.tscn))
 	- `GridMap` (a flat map in one of XY/YZ/XZ planes can be generated)
 	- Support of other node types can be added.
 - Supports tile **probabilities**.
   Probabilities of specific tiles can be adjusted.
-  In case of `TileMap` a builtin probability property or a custom data layer can be used.
+  In case of `TileMap(Layer)`, a builtin probability property or a custom data layer can be used.
   In case of `GridMap`, probability can be stored as metadate attribute of a mesh.
 - **Not just WFC**.
   Addon contains a generic implementation of a solver capable of solving subclass of [constraint satisfaction problems](https://en.wikipedia.org/wiki/Constraint_satisfaction_problem) on top of which a WFC implementation is built.
@@ -63,8 +63,8 @@ The easiest way to use this addon to generate a map is by using a `WFC2DGenerato
 To do so follow the following steps:
 
 1. Create (or use existing one) a tile set (if you're going to generate a 2d tile map) or mesh library (in case of a grid map).
-2. Make a map (a TileMap or GridMap) with examples of how your tiles should be used.
-3. Create a TileMap or GridMap generated map will be written to.
+2. Make a map (a `TileMapLayer` or `GridMap`) with examples of how your tiles should be used.
+3. Create a `TileMapLayer` or `GridMap` generated map will be written to.
    The new map should use the same tile set/mesh library as one created on step 2.
    You may place some tiles on that map (either manually or procedurally), generator will take them into account and fill other cells accordingly.
    But try to not create an unsolvable puzzle when doing so.
@@ -96,7 +96,7 @@ However, this way it is only possible to specify the exact tile that should be p
 The preconditions API allows to limit possible cell contents in a more flexible way - by defining a set of tiles allowed in given cell.
 
 The addon includes a [precondition](addons/wfc/problems/2d/preconditions/precondition_2d_dungeon.gd) ([example](addons/wfc/examples/demo_wfc_2d_tilemap_dungeon.tscn)) that generates a random set of connected road cells surrounded by wall cells a.k.a. a "dungeon".
-The user can configure which tiles are "roads" and which are "walls" using custom data layers (in case of `TileMap`s) or metadata (in case of `GridMap`s) of the tiles.
+The user can configure which tiles are "roads" and which are "walls" using custom data layers (in case of `TileMapLayer`s and `TileMap`s) or metadata (in case of `GridMap`s) of the tiles.
 It isn't likely to fit specific needs of any actual game but it may serve as an example and/or starting point.
 
 ### Advanced use

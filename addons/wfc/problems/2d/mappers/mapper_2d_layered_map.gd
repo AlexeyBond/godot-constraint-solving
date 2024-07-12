@@ -1,13 +1,21 @@
 extends WFCMapper2D
-
+## A mapper for [WFC2DLayeredMap]
 class_name WFCLayeredMapMapper2D
 
+## Expected names of layer nodes.
+##
+## Leave blank if you want the mapper to learn them from sample.
 @export
 var layer_names: Array[String]
 
+## Mappers for each layer.
+##
+## Leave blank if you want the mapper to learn layers from sample.
 @export
 var layer_mappers: Array[WFCMapper2D]
 
+## Use metadata instead of [method WFCMapper2D.read_tile_probability] calls to get tile
+## probabilities from layers.
 @export
 var use_probability_meta: bool = false
 
@@ -16,9 +24,9 @@ var attrs_to_id: Dictionary #[PackedInt32Array, int]
 
 var id_to_attrs: Array[PackedInt32Array] = []
 
-func _ensure_layered_map(map: Node) -> WFC2DLayeredTileMap:
-	assert(map is WFC2DLayeredTileMap)
-	return map as WFC2DLayeredTileMap
+func _ensure_layered_map(map: Node) -> WFC2DLayeredMap:
+	assert(map is WFC2DLayeredMap)
+	return map as WFC2DLayeredMap
 
 func _get_layer_name(layer_node: Node) -> String:
 	return layer_node.name
@@ -179,7 +187,7 @@ func size() -> int:
 	return attrs_to_id.size()
 
 func supports_map(map: Node) -> bool:
-	return map is WFC2DLayeredTileMap
+	return map is WFC2DLayeredMap
 
 func clear():
 	layer_names.clear()
