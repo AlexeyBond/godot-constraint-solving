@@ -57,3 +57,18 @@ func get_layers() -> Array[Node]:
 
 func create_layer_mapper(layer: Node) -> WFCMapper2D:
 	return mapper_factory.create_mapper_for(layer)
+
+# show()/hide() are useful to hide sample maps (at least in demos).
+# But they are not available on Node's, only on Node2D and Node3D.
+# We don't want WFC2DLayeredMap to be Node2D or Node3D, instead it should work with both,
+# so, here are implementations that forward calls to children:
+
+func show():
+	for layer in get_layers():
+		if layer.has_method('show'):
+			layer.show()
+
+func hide():
+	for layer in get_layers():
+		if layer.has_method('hide'):
+			layer.hide()

@@ -22,7 +22,7 @@ func create_mapper_for(node: Node) -> WFCMapper2D:
 			return WFCGridMapMapper2D.new()
 		"TileMapLayer":
 			return WFCTilemapLayerMapper2D.new()
-		"Node2D":
+		"Node":
 			if node is WFC2DLayeredMap:
 				return WFCLayeredMapMapper2D.new()
 			else:
