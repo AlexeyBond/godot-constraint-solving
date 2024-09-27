@@ -16,6 +16,7 @@ Features:
   The algorithm also tries to infer some valid cell combinations beyond those provided in the example.
   In cases when the algorithm produces some invalid or not-nice-looking cell combinations, it's possible to also provide examples of cell combinations that should not appear in the final result.
   Or stop the generator from searching for additional cell combinations and provide all possible combinations in the initial example.
+  Rules can also in some cases be learned from terrain settings of tilesets used in `TileMapLayer` maps.
 - Supports **different node types**:
 	- `TileMapLayer` and `TileMap` (including some **hexagonal** tilemaps, see [example](addons/wfc/examples/demo_wfc_2d_hex_tilemap.tscn))
 	- `GridMap` (a flat map in one of XY/YZ/XZ planes can be generated)
@@ -118,7 +119,7 @@ So please refer to source code to find a way to do what you need and feel free t
 
 This addon is licenced under MIT licence.
 
-Examples/demos use assets (["tiny dungeon" tileset](addons/wfc/examples/assets/kenney-tiny-dungeon), ["nature kit" models pack](addons/wfc/examples/assets/kenny-nature-kit)) from [Kenney](https://kenney.nl/).
+Examples/demos use assets (["tiny dungeon" tileset](addons/wfc/examples/assets/kenney-tiny-dungeon), ["Pixel Shmup" tileset](https://www.kenney.nl/assets/pixel-shmup), ["nature kit" models pack](addons/wfc/examples/assets/kenny-nature-kit)) from [Kenney](https://kenney.nl/).
 Hexagonal tilemap example [uses](addons/wfc/examples/assets/Underearth) ["Underearth Hex Dungeon" tile set](https://opengameart.org/content/underearth-hex-dungeon). 
 
 This addon uses [GUT](https://github.com/bitwes/Gut) for unit testing (not included in downloadable archive).

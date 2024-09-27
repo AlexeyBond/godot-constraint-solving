@@ -95,3 +95,29 @@ func clear():
 ## Return true if this mapper is ready to read/write a map.
 func is_ready() -> bool:
 	return size() > 0
+
+## Values returned by [method get_initial_rule].
+enum InitialRule {
+	UNKNOWN = 0,
+	ALLOWWED = 1,
+	FORBIDDEN = 2,
+}
+
+## Get initial WFC rule for a pair of tiles.
+## [br]
+## Checks if [param _tile1] and [param _tile2] can be adjacent according to the rules discoverable
+## by the mapper itself.
+## Returns [member WFCMapper2D.InitialRule.ALLOWED] if they can,
+## [member WFCMapper2D.InitialRule.FORBIDDEN] if they cannot and
+## [member WFCMapper2D.InitialRule.UNKNOWN] if it's neither explicitly allowed or forbidden.
+func get_initial_rule(_tile1: int, _tile2: int, _direction: Vector2i) -> InitialRule:
+	return InitialRule.UNKNOWN
+
+## Returns [code]true[/code] if there are some WFC rules discoverable by this mapper.
+## I.e. if [method WFCMapper2D.get_initial_rule] doesn't always return
+## [member WFCMapper2D.InitialRule.UNKNOWN].
+## [br]
+## It may still return [code]true[/code] if [method WFCMapper2D.get_initial_rule] always returns
+## [member WFCMapper2D.InitialRule.UNKNOWN].
+func has_initial_rules() -> bool:
+	return false

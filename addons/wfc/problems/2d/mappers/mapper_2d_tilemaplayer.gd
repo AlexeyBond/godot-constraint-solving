@@ -135,3 +135,146 @@ func read_tile_probability(tile: int) -> float:
 		return _read_builtin_probabilities(tile)
 
 	return super.read_tile_probability(tile)
+
+func _check_terrain_adjacency_to_empty(
+	td: TileData,
+	edge: TileSet.CellNeighbor,
+	corner1: TileSet.CellNeighbor,
+	corner2: TileSet.CellNeighbor,
+) -> InitialRule:
+	if td == null:
+		return InitialRule.UNKNOWN
+
+	if td.is_valid_terrain_peering_bit(edge) and td.get_terrain_peering_bit(edge) >= 0:
+		return InitialRule.FORBIDDEN
+
+	if td.is_valid_terrain_peering_bit(corner1) and td.get_terrain_peering_bit(corner1) >= 0:
+		return InitialRule.FORBIDDEN
+
+	if td.is_valid_terrain_peering_bit(corner2) and td.get_terrain_peering_bit(corner2) >= 0:
+		return InitialRule.FORBIDDEN
+
+	return InitialRule.UNKNOWN
+
+## Get a [TileData] for given tile id.
+##
+## Returns [code]null[/code] if tile is an empty tile ([code]-1[/code]) or the corresponding source
+## is not an atlas source.
+func _get_tile_data_for(tile: int) -> TileData:
+	_ensure_reverse_mapping()
+
+	if tile < 0:
+		return null
+
+	var attrs := id_to_attrs[tile]
+	var source := tile_set.get_source(attrs.x) as TileSetAtlasSource
+
+	if source == null:
+		return null
+
+	return source.get_tile_data(Vector2i(attrs.y, attrs.z), attrs.w)
+
+func _check_terrain_adjacency(
+	tile1: int,
+	edge1: TileSet.CellNeighbor,
+	corner11: TileSet.CellNeighbor,
+	corner12: TileSet.CellNeighbor,
+	tile2: int,
+	edge2: TileSet.CellNeighbor,
+	corner21: TileSet.CellNeighbor,
+	corner22: TileSet.CellNeighbor,
+) -> InitialRule:
+	var td1 := _get_tile_data_for(tile1)
+	var td2 := _get_tile_data_for(tile2)
+
+	if td1 == null:
+		return _check_terrain_adjacency_to_empty(td2, edge2, corner21, corner22)
+
+	if td2 == null:
+		return _check_terrain_adjacency_to_empty(td1, edge1, corner11, corner12)
+
+	var ts1 := td1.terrain_set
+	var ts2 := td2.terrain_set
+
+	if ts1 < 0:
+		if ts2 < 0:
+			return InitialRule.UNKNOWN
+		return _check_terrain_adjacency_to_empty(td2, edge2, corner21, corner22)
+
+	if ts2 < 0:
+		return _check_terrain_adjacency_to_empty(td1, edge1, corner11, corner12)
+
+	if ts1 != ts2:
+		# Tiles with different terrain sets can be neighbours if the corresponding edges/corners do
+		# not have terrain set.
+		return max(
+			_check_terrain_adjacency_to_empty(td2, edge2, corner21, corner22),
+			_check_terrain_adjacency_to_empty(td1, edge1, corner11, corner12)
+		)
+
+	var result := InitialRule.UNKNOWN
+
+	if td1.is_valid_terrain_peering_bit(edge1):
+		var bit := td1.get_terrain_peering_bit(edge1)
+		if bit != td2.get_terrain_peering_bit(edge2):
+			return InitialRule.FORBIDDEN
+		if bit >= 0:
+			# Allow tile combination if there is at least one matching terrain bit
+			result = InitialRule.ALLOWWED
+
+	if td1.is_valid_terrain_peering_bit(corner11):
+		var bit := td1.get_terrain_peering_bit(corner11)
+		if bit != td2.get_terrain_peering_bit(corner21):
+			return InitialRule.FORBIDDEN
+		if bit >= 0:
+			result = InitialRule.ALLOWWED
+
+	if td1.is_valid_terrain_peering_bit(corner12):
+		var bit := td1.get_terrain_peering_bit(corner12)
+		if bit != td2.get_terrain_peering_bit(corner22):
+			return InitialRule.FORBIDDEN
+		if bit >= 0:
+			result = InitialRule.ALLOWWED
+
+	return result
+
+## @inheritdoc
+func get_initial_rule(tile1: int, tile2: int, direction: Vector2i) -> InitialRule:
+	assert(is_ready())
+
+	if tile_set.tile_shape == TileSet.TileShape.TILE_SHAPE_SQUARE:
+		if direction.length_squared() != 1:
+			return InitialRule.UNKNOWN
+		if direction.x + direction.y < 0:
+			return get_initial_rule(tile2, tile1, -direction)
+		if direction == Vector2i(1, 0):
+			return _check_terrain_adjacency(
+				tile1,
+				TileSet.CELL_NEIGHBOR_RIGHT_SIDE,
+				TileSet.CELL_NEIGHBOR_TOP_RIGHT_CORNER,
+				TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER,
+				tile2,
+				TileSet.CELL_NEIGHBOR_LEFT_SIDE,
+				TileSet.CELL_NEIGHBOR_TOP_LEFT_CORNER,
+				TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER,
+			)
+		if direction == Vector2i(0, 1):
+			return _check_terrain_adjacency(
+				tile1,
+				TileSet.CELL_NEIGHBOR_BOTTOM_SIDE,
+				TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER,
+				TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER,
+				tile2,
+				TileSet.CELL_NEIGHBOR_TOP_SIDE,
+				TileSet.CELL_NEIGHBOR_TOP_LEFT_CORNER,
+				TileSet.CELL_NEIGHBOR_TOP_RIGHT_CORNER,
+			)
+	else:
+		pass # Unsupported tile shape/layout. TODO: Print a warning (but only once)?
+
+	return InitialRule.UNKNOWN
+
+func has_initial_rules() -> bool:
+	assert(is_ready())
+
+	return tile_set.get_terrain_sets_count() > 0

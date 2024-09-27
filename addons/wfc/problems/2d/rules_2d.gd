@@ -110,6 +110,16 @@ func _learn_edge_conditions():
 	if not ed.is_empty():
 		edge_domain = ed
 
+func _learn_initial_rules():
+	for i in range(axes.size()):
+		var direction := axes[i]
+		var matrix := axis_matrices[i]
+		
+		for tile1 in range(mapper.size()):
+			for tile2 in range(mapper.size()):
+				if mapper.get_initial_rule(tile1, tile2, direction) == WFCMapper2D.InitialRule.ALLOWWED:
+					matrix.set_bit(tile1, tile2)
+
 ## Learn rules from given sample map.
 ## [br]
 ## Also learns tile probabilities from [member mapper] (if [member probabilities_enabled] enabled
@@ -135,6 +145,9 @@ func learn_from(map: Node):
 
 		for i in range(axes.size()):
 			axis_matrices.append(WFCBitMatrix.new(num_cell_types, num_cell_types))
+
+		if mapper.has_initial_rules():
+			_learn_initial_rules()
 
 	_learn_from(map, true)
 

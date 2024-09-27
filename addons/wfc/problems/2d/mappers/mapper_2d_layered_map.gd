@@ -189,6 +189,40 @@ func size() -> int:
 func supports_map(map: Node) -> bool:
 	return map is WFC2DLayeredMap
 
+## @inheritdoc
+func get_initial_rule(tile1: int, tile2: int, direction: Vector2i) -> InitialRule:
+	_ensure_reverse_mapping()
+
+	var result := InitialRule.UNKNOWN
+
+	for layer in range(layer_mappers.size()):
+		var tile1_layer: int = -1
+		var tile2_layer: int = -1
+
+		if tile1 >= 0:
+			tile1_layer = id_to_attrs[tile1][layer]
+
+		if tile2 >= 0:
+			tile2_layer = id_to_attrs[tile2][layer]
+
+		result = max(result, layer_mappers[layer].get_initial_rule(tile1_layer, tile2_layer, direction))
+
+		if result == InitialRule.FORBIDDEN:
+			break
+
+	return result
+
+## @inheritdoc
+func has_initial_rules() -> bool:
+	assert(is_ready())
+
+	for mapper in layer_mappers:
+		if not mapper.has_initial_rules():
+			return false
+
+	return true
+
+
 func clear():
 	layer_names.clear()
 	layer_mappers.clear()

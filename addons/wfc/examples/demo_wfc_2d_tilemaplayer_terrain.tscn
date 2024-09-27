@@ -1,0 +1,71 @@
+[gd_scene load_steps=9 format=4 uid="uid://dff7jl20fso08"]
+
+[ext_resource type="Script" path="res://addons/wfc/nodes/layered_map_2d.gd" id="1_60xrd"]
+[ext_resource type="Script" path="res://addons/wfc/problems/2d/mappers/mapper_2d_factory.gd" id="2_ksjcu"]
+[ext_resource type="TileSet" uid="uid://bf6ft5mo8umpn" path="res://addons/wfc/examples/assets/kenney-pixel-shmup/tile-set-main.tres" id="3_87shy"]
+[ext_resource type="TileSet" uid="uid://drvu3d0pwtf50" path="res://addons/wfc/examples/assets/kenney-tiny-dungeon/tile-set-decorations.tres" id="4_t22ok"]
+[ext_resource type="Script" path="res://addons/wfc/nodes/generator_2d.gd" id="5_wpxmk"]
+[ext_resource type="PackedScene" uid="uid://dt2nffs32s7o1" path="res://addons/wfc/examples/helpers/progress_indicator.tscn" id="6_qbmmu"]
+
+[sub_resource type="GDScript" id="GDScript_pxd4v"]
+script/source = "extends Node2D
+
+
+func _ready() -> void:
+	$sample.hide()
+	$target.show()
+	$WFC2DGenerator.start()
+"
+
+[sub_resource type="Resource" id="Resource_f7540"]
+script = ExtResource("2_ksjcu")
+
+[node name="Example" type="Node2D"]
+script = SubResource("GDScript_pxd4v")
+
+[node name="sample" type="Node" parent="."]
+script = ExtResource("1_60xrd")
+mapper_factory = SubResource("Resource_f7540")
+
+[node name="main" type="TileMapLayer" parent="sample"]
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAMAAAACAAAAAAABAAMAAAAEAAAAAAACAAMAAAAGAAAAAAADAAMAAAAIAAAAAAAEAAMAAAAKAAAAAAAFAAMAAAAMAAAAAAAGAAMAAAAOAAAAAAAHAAMAAAAQAAAAAAAIAAMAAAASAAAAAAAJAAMAAAAUAAAAAAAKAAMAAAAWAAAAAAALAAMAAAAAAAIAAAAAAAQAAAACAAIAAAABAAQAAAAEAAIAAAACAAQAAAAGAAIAAAADAAQAAAAIAAIAAAAEAAQAAAAKAAIAAAAFAAQAAAAMAAIAAAAGAAQAAAAOAAIAAAAHAAQAAAAQAAIAAAAIAAQAAAASAAIAAAAJAAQAAAAUAAIAAAAKAAQAAAAWAAIAAAALAAQAAAAAAAQAAAAAAAUAAAACAAQAAAABAAUAAAAEAAQAAAACAAUAAAAGAAQAAAADAAUAAAAIAAQAAAAEAAUAAAAKAAQAAAAFAAUAAAAMAAQAAAAGAAUAAAAOAAQAAAAHAAUAAAAQAAQAAAAIAAUAAAASAAQAAAAJAAUAAAAUAAQAAAAKAAUAAAAWAAQAAAALAAUAAAAAAAYAAAAAAAYAAAACAAYAAAABAAYAAAAEAAYAAAACAAYAAAAGAAYAAAADAAYAAAAIAAYAAAAEAAYAAAAKAAYAAAAFAAYAAAAMAAYAAAAGAAYAAAAOAAYAAAAHAAYAAAAQAAYAAAAIAAYAAAASAAYAAAAJAAYAAAAUAAYAAAAKAAYAAAAWAAYAAAALAAYAAAAAAAgAAAAAAAcAAAACAAgAAAABAAcAAAAEAAgAAAACAAcAAAAGAAgAAAADAAcAAAAIAAgAAAAEAAcAAAAKAAgAAAAFAAcAAAAMAAgAAAAGAAcAAAAOAAgAAAAHAAcAAAAQAAgAAAAIAAcAAAASAAgAAAAJAAcAAAAUAAgAAAAKAAcAAAAWAAgAAAALAAcAAAAAAAoAAAAAAAgAAAACAAoAAAABAAgAAAAEAAoAAAACAAgAAAAGAAoAAAADAAgAAAAIAAoAAAAEAAgAAAAKAAoAAAAFAAgAAAAMAAoAAAAGAAgAAAAOAAoAAAAHAAgAAAAQAAoAAAAIAAgAAAASAAoAAAAJAAgAAAAUAAoAAAAKAAgAAAAWAAoAAAALAAgAAAAAAAwAAAAAAAkAAAACAAwAAAABAAkAAAAEAAwAAAACAAkAAAAGAAwAAAADAAkAAAAIAAwAAAAEAAkAAAAKAAwAAAAFAAkAAAAMAAwAAAAGAAkAAAAOAAwAAAAHAAkAAAAQAAwAAAAIAAkAAAASAAwAAAAJAAkAAAAUAAwAAAAKAAkAAAAWAAwAAAALAAkAAAAaAAAAAAACAAQAAAAaAAIAAAACAAQAAAAaAAQAAAACAAQAAAAcAAQAAAACAAQAAAAeAAQAAAACAAQAAAAeAAIAAAACAAQAAAAeAAAAAAACAAQAAAAcAAAAAAACAAQAAAAcAAIAAAACAAQAAAAcAAYAAAACAAQAAAAiAAAAAAAIAAQAAAAiAAIAAAAIAAQAAAAiAAQAAAAIAAQAAAAkAAQAAAAIAAQAAAAkAAIAAAAIAAQAAAAmAAIAAAAIAAQAAAAmAAAAAAAIAAQAAAAkAAAAAAAIAAQAAAAmAAQAAAAIAAQAAAAkAAYAAAAIAAQAAAAaAAkAAAACAAQAAAAiAAkAAAAIAAQAAAAkAAkAAAAIAAQAAAAmAAkAAAAIAAQAAAAcAAkAAAACAAQAAAAeAAkAAAACAAQAAAA=")
+tile_set = ExtResource("3_87shy")
+
+[node name="decorations" type="TileMapLayer" parent="sample"]
+tile_map_data = PackedByteArray("AAAaAAAAAAAJAAUAAAAcAAAAAAAKAAUAAAAeAAAAAAALAAUAAAAeAAQAAAALAAcAAAAaAAQAAAAJAAcAAAAaAAIAAAAJAAYAAAAcAAIAAAAHAAUAAAAeAAIAAAAIAAUAAAAcAAQAAAAHAAYAAAAcAAYAAAAIAAYAAAAiAAAAAAAJAAUAAAAkAAAAAAAKAAUAAAAmAAAAAAALAAUAAAAiAAIAAAAJAAYAAAAiAAQAAAAJAAcAAAAmAAQAAAALAAcAAAAkAAQAAAAHAAYAAAAkAAYAAAAIAAYAAAAkAAIAAAAHAAUAAAAmAAIAAAAIAAUAAAAaAAkAAAABAAYAAAAiAAkAAAAEAAUAAAAcAAkAAAAFAAcAAAAkAAkAAAAFAAUAAAA=")
+tile_set = ExtResource("4_t22ok")
+
+[node name="target" type="Node" parent="."]
+script = ExtResource("1_60xrd")
+mapper_factory = SubResource("Resource_f7540")
+
+[node name="main" type="TileMapLayer" parent="target"]
+visible = false
+tile_map_data = PackedByteArray("AAAFAAUAAAACAAQAAAAcABwAAAAIAAQAAAAGABsAAAAGAAMAAAAaAAYAAAAGAAMAAAA=")
+tile_set = ExtResource("3_87shy")
+
+[node name="decorations" type="TileMapLayer" parent="target"]
+visible = false
+tile_map_data = PackedByteArray("AAAFAAUAAAAJAAYAAAAcABwAAAAJAAYAAAA=")
+tile_set = ExtResource("4_t22ok")
+
+[node name="WFC2DGenerator" type="Node" parent="."]
+script = ExtResource("5_wpxmk")
+target = NodePath("../target")
+rect = Rect2i(0, 0, 121, 68)
+positive_sample = NodePath("../sample")
+render_intermediate_results = true
+
+[node name="progressIndicator" parent="." node_paths=PackedStringArray("generator") instance=ExtResource("6_qbmmu")]
+generator = NodePath("../WFC2DGenerator")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_left = 20.0
+offset_top = 234.0
+offset_right = 928.0
+offset_bottom = 572.0
+text = "Rules can be learned from tilemap terrain settings.
+
+In a multi-layer setup, tilesets of all layers should contain at least one terrain set.
+
+If terrain configuration covers all needed rules, it's enough to just place all tiles that should be placable by WFC in the sample map - as it's done in this example."
