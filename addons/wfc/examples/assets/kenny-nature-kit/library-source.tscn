@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://c0qjyxsalmcvd"]
+[gd_scene load_steps=78 format=3 uid="uid://c0qjyxsalmcvd"]
 
 [ext_resource type="ArrayMesh" uid="uid://dabm1p0wbykhn" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_grass.obj" id="1_825gh"]
 [ext_resource type="ArrayMesh" uid="uid://d0sg810axym2l" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_pathBend.obj" id="2_7j3fu"]
@@ -29,6 +29,58 @@
 [ext_resource type="ArrayMesh" uid="uid://dr2wk1m8nogxm" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverSplit.obj" id="27_rdaoy"]
 [ext_resource type="ArrayMesh" uid="uid://c5f0hg2xu6nn3" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverStraight.obj" id="28_qqcnp"]
 [ext_resource type="ArrayMesh" uid="uid://bqko7vpbujscl" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/ground_riverTile.obj" id="29_psfa5"]
+[ext_resource type="ArrayMesh" uid="uid://dy7i5db1qyl" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_blockSlopeWalls_rock.obj" id="30_p4ynu"]
+[ext_resource type="ArrayMesh" uid="uid://capk5o6kbmnau" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_blockSlope_rock.obj" id="31_q0fjh"]
+[ext_resource type="ArrayMesh" uid="uid://bk0aowp7ytyfa" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_block_rock.obj" id="32_l5gf2"]
+[ext_resource type="ArrayMesh" uid="uid://druy5agxptt0p" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_cave_rock.obj" id="33_foq1m"]
+[ext_resource type="ArrayMesh" uid="uid://d0f5i5i17idhl" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_cornerInnerLarge_rock.obj" id="34_6l0l2"]
+[ext_resource type="ArrayMesh" uid="uid://babgumtoxqf7x" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_cornerInnerTop_rock.obj" id="35_b1e6d"]
+[ext_resource type="ArrayMesh" uid="uid://dmcnfrgo3tt34" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_cornerInner_rock.obj" id="36_x8yf6"]
+[ext_resource type="ArrayMesh" uid="uid://c84f7m6lw6osa" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_cornerLarge_rock.obj" id="37_71lqp"]
+[ext_resource type="ArrayMesh" uid="uid://qxj8rion3c45" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_cornerTop_rock.obj" id="38_8kqi8"]
+[ext_resource type="ArrayMesh" uid="uid://bw0od45bxsihu" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_corner_rock.obj" id="39_te62g"]
+[ext_resource type="ArrayMesh" uid="uid://cxscs7iys85ak" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_diagonal_rock.obj" id="40_8qqe0"]
+[ext_resource type="ArrayMesh" uid="uid://4mc7opkccwwp" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_large_rock.obj" id="41_buhhq"]
+[ext_resource type="ArrayMesh" uid="uid://b78glgvd3gvbn" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_rock.obj" id="42_nkdkl"]
+[ext_resource type="ArrayMesh" uid="uid://w1ap4gwrx44q" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_stepsCornerInner_rock.obj" id="43_l8fre"]
+[ext_resource type="ArrayMesh" uid="uid://x4ci3bg2m8im" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_stepsCorner_rock.obj" id="44_4behe"]
+[ext_resource type="ArrayMesh" uid="uid://c1a254ilas5qo" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_steps_rock.obj" id="45_bau4k"]
+[ext_resource type="ArrayMesh" uid="uid://b8qjeoig6bdk4" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_topDiagonal_rock.obj" id="46_vvakr"]
+[ext_resource type="ArrayMesh" uid="uid://ij730mguriby" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_top_rock.obj" id="47_k0ipi"]
+[ext_resource type="ArrayMesh" uid="uid://qhtw0kfeqnsm" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_waterfallTop_rock.obj" id="48_d32hs"]
+[ext_resource type="ArrayMesh" uid="uid://bj0u4ktgnlx6q" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/cliff_waterfall_rock.obj" id="49_obk7f"]
+[ext_resource type="ArrayMesh" uid="uid://brgktus4pmkih" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_bend.obj" id="50_wsqcb"]
+[ext_resource type="ArrayMesh" uid="uid://ctjp5244ndmfm" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_bendCenter.obj" id="51_mty16"]
+[ext_resource type="ArrayMesh" uid="uid://dabk8fui1kfsl" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_corner.obj" id="52_6x6f5"]
+[ext_resource type="ArrayMesh" uid="uid://bruj0f6sldxj4" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_gate.obj" id="53_1v1tb"]
+[ext_resource type="ArrayMesh" uid="uid://bnc7s7it0hff8" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_planks.obj" id="54_snqoo"]
+[ext_resource type="ArrayMesh" uid="uid://dbwulptqdee41" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_planksDouble.obj" id="55_0jco6"]
+[ext_resource type="ArrayMesh" uid="uid://31x6ct3ge7o1" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_simple.obj" id="56_2thgk"]
+[ext_resource type="ArrayMesh" uid="uid://6mqf75eb2umj" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_simpleCenter.obj" id="57_k8ca1"]
+[ext_resource type="ArrayMesh" uid="uid://bc75q1x8aei2g" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_simpleDiagonal.obj" id="58_iyhie"]
+[ext_resource type="ArrayMesh" uid="uid://dp6tt1ecxwk76" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_simpleDiagonalCenter.obj" id="59_mrflm"]
+[ext_resource type="ArrayMesh" uid="uid://bah2wfs3k6d8t" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_simpleHigh.obj" id="60_vqyu0"]
+[ext_resource type="ArrayMesh" uid="uid://cci5vum747mng" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/fence_simpleLow.obj" id="61_p32fa"]
+[ext_resource type="ArrayMesh" uid="uid://dw2dhuydlwxx4" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/grass.obj" id="62_g88cn"]
+[ext_resource type="ArrayMesh" uid="uid://uei1hfy44sax" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/statue_obelisk.obj" id="63_lb2re"]
+[ext_resource type="ArrayMesh" uid="uid://bwskcvkterj8y" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/statue_ring.obj" id="64_0v2kt"]
+[ext_resource type="ArrayMesh" uid="uid://cq8v4xjqbdjqa" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/stump_old.obj" id="65_vtxst"]
+[ext_resource type="ArrayMesh" uid="uid://d2j4dt3l2t5dv" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/tree_cone.obj" id="66_nfuyv"]
+[ext_resource type="ArrayMesh" uid="uid://dee63g1mbs7qr" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/bridge_center_stone.obj" id="67_yit47"]
+[ext_resource type="ArrayMesh" uid="uid://hjqes46hiq51" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/bridge_center_stoneRound.obj" id="68_2jtcy"]
+[ext_resource type="ArrayMesh" uid="uid://b0ejiwdmbqvl7" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/bridge_side_stone.obj" id="69_f5o0q"]
+[ext_resource type="ArrayMesh" uid="uid://da6ekjj1eeslp" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/bridge_side_stoneRound.obj" id="70_efsdr"]
+[ext_resource type="ArrayMesh" uid="uid://cur0aajbog5s4" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/bridge_stone.obj" id="71_rnecx"]
+[ext_resource type="ArrayMesh" uid="uid://bi22feja8om7v" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/bridge_stoneNarrow.obj" id="72_r8w8b"]
+[ext_resource type="ArrayMesh" uid="uid://cva7jawcdi23k" path="res://addons/wfc/examples/assets/kenny-nature-kit/obj/bridge_stoneRoundNarrow.obj" id="73_cxfy7"]
+[ext_resource type="ArrayMesh" uid="uid://c0oqi60ddsh1c" path="res://addons/wfc/examples/assets/helpers/ground.obj" id="74_xsxvo"]
+[ext_resource type="ArrayMesh" uid="uid://dateqdpngyeq6" path="res://addons/wfc/examples/assets/helpers/air.obj" id="75_4sdfm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_phkls"]
+albedo_color = Color(0.369667, 0.148306, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohsdm"]
+albedo_color = Color(5.19812e-06, 0.654299, 0.73585, 1)
 
 [node name="library-source" type="Node3D"]
 
@@ -146,3 +198,189 @@ mesh = ExtResource("28_qqcnp")
 [node name="GroundRiverTile" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
 mesh = ExtResource("29_psfa5")
+
+[node name="CliffBlockSlopeWallsRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 7)
+mesh = ExtResource("30_p4ynu")
+
+[node name="CliffBlockSlopeRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)
+mesh = ExtResource("31_q0fjh")
+
+[node name="CliffBlockRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 7)
+mesh = ExtResource("32_l5gf2")
+
+[node name="CliffCaveRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
+mesh = ExtResource("33_foq1m")
+
+[node name="CliffCornerInnerLargeRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 7)
+mesh = ExtResource("34_6l0l2")
+
+[node name="CliffCornerInnerTopRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 7)
+mesh = ExtResource("35_b1e6d")
+
+[node name="CliffCornerInnerRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 7)
+mesh = ExtResource("36_x8yf6")
+
+[node name="CliffCornerLargeRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 7)
+mesh = ExtResource("37_71lqp")
+
+[node name="CliffCornerTopRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 8)
+mesh = ExtResource("38_8kqi8")
+
+[node name="CliffCornerRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 8)
+mesh = ExtResource("39_te62g")
+
+[node name="CliffDiagonalRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 7)
+mesh = ExtResource("40_8qqe0")
+
+[node name="CliffLargeRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, 7)
+mesh = ExtResource("41_buhhq")
+
+[node name="CliffRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 7)
+mesh = ExtResource("42_nkdkl")
+
+[node name="CliffStepsCornerInnerRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 7)
+mesh = ExtResource("43_l8fre")
+
+[node name="CliffStepsCornerRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 7)
+mesh = ExtResource("44_4behe")
+
+[node name="CliffStepsRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0, 7)
+mesh = ExtResource("45_bau4k")
+
+[node name="CliffTopDiagonalRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 7)
+mesh = ExtResource("46_vvakr")
+
+[node name="CliffTopRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 7)
+mesh = ExtResource("47_k0ipi")
+
+[node name="CliffWaterfallTopRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 7)
+mesh = ExtResource("48_d32hs")
+
+[node name="CliffWaterfallRock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0, 7)
+mesh = ExtResource("49_obk7f")
+
+[node name="FenceBend" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 8)
+mesh = ExtResource("50_wsqcb")
+
+[node name="FenceBendCenter" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 8)
+mesh = ExtResource("51_mty16")
+
+[node name="FenceCorner" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 8)
+mesh = ExtResource("52_6x6f5")
+
+[node name="FenceGate" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 8)
+mesh = ExtResource("53_1v1tb")
+
+[node name="FencePlanks" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 8)
+mesh = ExtResource("54_snqoo")
+
+[node name="FencePlanksDouble" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 8)
+mesh = ExtResource("55_0jco6")
+
+[node name="FenceSimple" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 8)
+mesh = ExtResource("56_2thgk")
+
+[node name="FenceSimpleCenter" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 8)
+mesh = ExtResource("57_k8ca1")
+
+[node name="FenceSimpleDiagonal" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 9)
+mesh = ExtResource("58_iyhie")
+
+[node name="FenceSimpleDiagonalCenter" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, 9)
+mesh = ExtResource("59_mrflm")
+
+[node name="FenceSimpleHigh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 9)
+mesh = ExtResource("60_vqyu0")
+
+[node name="FenceSimpleLow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 9)
+mesh = ExtResource("61_p32fa")
+
+[node name="Grass" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 9)
+mesh = ExtResource("62_g88cn")
+
+[node name="StatueObelisk" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 9)
+mesh = ExtResource("63_lb2re")
+
+[node name="StatueRing" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 9)
+mesh = ExtResource("64_0v2kt")
+
+[node name="StumpOld" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 9)
+mesh = ExtResource("65_vtxst")
+
+[node name="TreeCone" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 9)
+mesh = ExtResource("66_nfuyv")
+
+[node name="BridgeCenterStone" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 11)
+mesh = ExtResource("67_yit47")
+
+[node name="BridgeCenterStoneRound" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 11)
+mesh = ExtResource("68_2jtcy")
+
+[node name="BridgeSideStone" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 11)
+mesh = ExtResource("69_f5o0q")
+
+[node name="BridgeSideStoneRound" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 11)
+mesh = ExtResource("70_efsdr")
+
+[node name="BridgeStone" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 11)
+mesh = ExtResource("71_rnecx")
+
+[node name="BridgeStoneNarrow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, 11)
+mesh = ExtResource("72_r8w8b")
+
+[node name="BridgeStoneRoundNarrow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 11)
+mesh = ExtResource("73_cxfy7")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+material_override = SubResource("StandardMaterial3D_phkls")
+mesh = ExtResource("74_xsxvo")
+
+[node name="Air" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
+material_override = SubResource("StandardMaterial3D_ohsdm")
+mesh = ExtResource("75_4sdfm")
